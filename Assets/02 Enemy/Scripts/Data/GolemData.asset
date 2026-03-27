@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91f9baece032cfa4d9443a09f49a04af, type: 3}
+  m_Name: GolemData
+  m_EditorClassIdentifier: 
+  enemyName: Golem
+  maxHp: 100
+  attackSpeed: 2
+  moveSpeed: 3
+  patrolSpeed: 1
+  detectRange: 10
+  loseRange: 5
+  attackRange: 2
+  attackDamage: 10
+  attackRecoverTime: 2
+  attackRate: 3
+  patrolRadius: 3
+  patrolWaitTime: 5
+  prefab: {fileID: 1845945369076765872, guid: d9af52bf624fb004abc7f4d28bdf39e2, type: 3}
