@@ -36,7 +36,10 @@ public class EnemyAnimation : MonoBehaviour
     public void PlayHit()
     {
         if (animator == null) return;
-        animator.SetTrigger(hashHit);
+        {
+            animator.ResetTrigger(hashHit);
+            animator.Play("Enemy_GetHit", 0, 0f);
+        }
     }
 
     public void PlayDie()
