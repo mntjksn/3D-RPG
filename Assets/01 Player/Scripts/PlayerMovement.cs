@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Attack Move")]
     [SerializeField] private float attackMoveSpeed = 2f;
+    [SerializeField] private float shieldMoveSpeed = 0.5f;
 
     private CharacterController characterController;
     private Animator animator;
@@ -51,6 +52,14 @@ public class PlayerMovement : MonoBehaviour
         {
             if (inputDir.magnitude > 0.01f)
                 targetSpeed = attackMoveSpeed;
+            else
+                targetSpeed = 0f;
+        }
+
+        else if (actionLock != null && actionLock.IsShielding)
+        {
+            if (inputDir.magnitude > 0.01f)
+                targetSpeed = shieldMoveSpeed;
             else
                 targetSpeed = 0f;
         }
