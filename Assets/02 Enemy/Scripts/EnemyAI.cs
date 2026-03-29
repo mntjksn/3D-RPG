@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
 
     private NavMeshAgent agent;
     private EnemyAnimation enemyAnimation;
+    private EnemyActionLock enemyActionLock;
     private EnemyAttack enemyAttack;
 
     private float patrolTimer;
@@ -27,6 +28,7 @@ public class EnemyAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         enemyAnimation = GetComponent<EnemyAnimation>();
+        enemyActionLock = GetComponent<EnemyActionLock>();
         enemyAttack = GetComponent<EnemyAttack>();
     }
 
@@ -53,6 +55,19 @@ public class EnemyAI : MonoBehaviour
     {
         if (enemyData == null || target == null)
             return;
+
+        if (enemyActionLock != null && !enemyActionLock.CanMove)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+
+            isPatrolling = false;
+            isChasing = false;
+            isReturning = false;
+
+            enemyAnimation?.SetMoveSpeed(0f);
+            return;
+        }
 
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
         float distanceToSpawn = Vector3.Distance(transform.position, spawnPosition);
