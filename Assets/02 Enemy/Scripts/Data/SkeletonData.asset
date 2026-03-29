@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Skeleton
   maxHp: 100
+  spawnTime: 5
   attackSpeed: 4
   moveSpeed: 6
   patrolSpeed: 5
@@ -21,8 +22,9 @@ MonoBehaviour:
   loseRange: 6
   attackRange: 2
   attackDamage: 10
-  attackRecoverTime: 1.5
-  attackRate: 2
+  attackRecoverTime: 1
+  attackRate: 1.5
+  attackIgnoreTime: 4
   patrolRadius: 5
   patrolWaitTime: 2
   prefab: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}

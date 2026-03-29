@@ -5,9 +5,8 @@ public class EnemyData : ScriptableObject
 {
     [Header("Info")]
     public string enemyName;
-
-    [Header("Hp")]
     public float maxHp = 100f;
+    public float spawnTime = 5f;
 
     [Header("Speed")]
     public float attackSpeed = 3f;
@@ -23,6 +22,7 @@ public class EnemyData : ScriptableObject
     public float attackDamage = 10f;
     public float attackRecoverTime = 0.5f;
     public float attackRate = 1f;
+    public float attackIgnoreTime = 0.5f;
 
     [Header("Patrol")]
     public float patrolRadius = 5f;

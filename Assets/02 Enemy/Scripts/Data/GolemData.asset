@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Golem
   maxHp: 100
+  spawnTime: 5
   attackSpeed: 2
   moveSpeed: 3
   patrolSpeed: 1
@@ -21,8 +22,9 @@ MonoBehaviour:
   loseRange: 5
   attackRange: 2
   attackDamage: 10
-  attackRecoverTime: 2
-  attackRate: 3
+  attackRecoverTime: 0.5
+  attackRate: 2.5
+  attackIgnoreTime: 6
   patrolRadius: 3
   patrolWaitTime: 5
   prefab: {fileID: 1845945369076765872, guid: d9af52bf624fb004abc7f4d28bdf39e2, type: 3}
