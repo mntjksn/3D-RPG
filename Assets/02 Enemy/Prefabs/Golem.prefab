@@ -552,6 +552,8 @@ GameObject:
   - component: {fileID: -7704884512848842708}
   - component: {fileID: 4379335796056913996}
   - component: {fileID: -8469267267087727910}
+  - component: {fileID: 8778395008088293191}
+  - component: {fileID: 2475289428530724337}
   m_Layer: 0
   m_Name: Golem
   m_TagString: Untagged
@@ -681,6 +683,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: c0d4d97183288e34b8255a6084307ac4, type: 2}
+  attackSuperArmorTime: 0.5
+--- !u!114 &8778395008088293191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845945369076765872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18544c58fddd3784ca45fd8b45bcc7bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyData: {fileID: 11400000, guid: c0d4d97183288e34b8255a6084307ac4, type: 2}
+--- !u!114 &2475289428530724337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845945369076765872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a1f64d46789f964da6e09dfce6042dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2125977167109061285
 GameObject:
   m_ObjectHideFlags: 0
