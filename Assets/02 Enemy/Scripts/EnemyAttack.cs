@@ -4,6 +4,7 @@ public class EnemyAttack : MonoBehaviour
 {
     [SerializeField] private EnemyData enemyData;
 
+    private EnemyActionLock enemyActionLock;
     private EnemyAnimation enemyAnimation;
     private Transform target;
 
@@ -11,9 +12,11 @@ public class EnemyAttack : MonoBehaviour
     private bool isAttacking;
 
     public bool CanAttack => attackCooldownTimer <= 0f && !isAttacking;
+    public bool IsAttacking => isAttacking;
 
     private void Awake()
     {
+        enemyActionLock = GetComponent<EnemyActionLock>();
         enemyAnimation = GetComponent<EnemyAnimation>();
     }
 
@@ -29,11 +32,14 @@ public class EnemyAttack : MonoBehaviour
 
     private void Update()
     {
-        attackCooldownTimer -= Time.deltaTime;
+        attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - Time.deltaTime);
     }
 
     public void TryAttack()
     {
+        if (enemyActionLock != null && !enemyActionLock.CanAttack)
+            return;
+
         if (!CanAttack || target == null || enemyData == null)
             return;
 
@@ -45,7 +51,20 @@ public class EnemyAttack : MonoBehaviour
         isAttacking = true;
         attackCooldownTimer = enemyData.attackRate;
 
+        enemyActionLock?.SetAttack(true);
         enemyAnimation?.PlayAttack();
+    }
+
+    public void EndAttack()
+    {
+        isAttacking = false;
+        enemyActionLock?.SetAttack(false);
+    }
+
+    public void CancelAttack()
+    {
+        isAttacking = false;
+        enemyActionLock?.SetAttack(false);
     }
 
     // 애니메이션 이벤트로 호출
@@ -63,11 +82,5 @@ public class EnemyAttack : MonoBehaviour
                // player.TakeDamage(enemyData.attackDamage);
             }
         }
-    }
-
-    // 애니메이션 끝에서 호출
-    public void EndAttack()
-    {
-        isAttacking = false;
     }
 }
