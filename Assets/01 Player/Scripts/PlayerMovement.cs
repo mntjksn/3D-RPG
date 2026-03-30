@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float shieldMoveSpeed = 0.5f;
 
     private CharacterController characterController;
-    private Animator animator;
+    private PlayerAnimation playerAnimation;
     private PlayerActionLock actionLock;
 
     private float verticalVelocity;
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        playerAnimation = GetComponent<PlayerAnimation>();
         actionLock = GetComponent<PlayerActionLock>();
     }
 
@@ -70,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 move = inputDir.normalized * currentSpeed;
 
-        animator.SetFloat("Speed", currentSpeed, 0.1f, Time.deltaTime);
+        playerAnimation?.SetMoveSpeed(currentSpeed);
 
         if (characterController.isGrounded && verticalVelocity < 0)
         {
