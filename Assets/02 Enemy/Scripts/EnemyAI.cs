@@ -32,55 +32,73 @@ public class EnemyAI : MonoBehaviour
         enemyAttack = GetComponent<EnemyAttack>();
     }
 
-    private void Start()
-    {
-        spawnPosition = transform.position;
-
-        if (target == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                target = player.transform;
-        }
-
-        ApplyData();
-
-        enemyAnimation?.PlayIdle();
-
-        enemyAttack?.SetData(enemyData);
-        enemyAttack?.SetTarget(target);
-    }
-
     private void Update()
     {
-        if (enemyData == null || target == null)
+        if (!CanUpdate())
             return;
 
-        if (enemyActionLock != null && !enemyActionLock.CanMove)
-        {
-            agent.isStopped = true;
-            agent.ResetPath();
-
-            isPatrolling = false;
-            isChasing = false;
-            isReturning = false;
-
-            enemyAnimation?.SetMoveSpeed(0f);
+        if (HandleLockedState())
             return;
-        }
 
-        float distanceToTarget = Vector3.Distance(transform.position, target.position);
-        float distanceToSpawn = Vector3.Distance(transform.position, spawnPosition);
+        float distanceToTarget = GetDistanceToTarget();
+        float distanceToSpawn = GetDistanceToSpawn();
 
+        UpdateStateByDistance(distanceToTarget);
+
+        if (HandlePatrolState())
+            return;
+
+        if (HandleReturnState(distanceToTarget, distanceToSpawn))
+            return;
+
+        HandleChaseAndAttack(distanceToTarget);
+        UpdateMoveAnimation();
+    }
+
+    private bool CanUpdate()
+    {
+        return enemyData != null &&
+               target != null &&
+               agent != null &&
+               agent.enabled &&
+               agent.isOnNavMesh;
+    }
+
+    private bool HandleLockedState()
+    {
+        if (enemyActionLock == null || enemyActionLock.CanMove)
+            return false;
+
+        StopAgent();
+        ClearStates();
+        enemyAnimation?.SetMoveSpeed(0f);
+        return true;
+    }
+
+    private float GetDistanceToTarget()
+    {
+        return Vector3.Distance(transform.position, target.position);
+    }
+
+    private float GetDistanceToSpawn()
+    {
+        return Vector3.Distance(transform.position, spawnPosition);
+    }
+
+    // 추적/복귀 상태 갱신
+    private void UpdateStateByDistance(float distanceToTarget)
+    {
         if (!isChasing && !isReturning && distanceToTarget <= enemyData.detectRange)
         {
             isChasing = true;
+            isPatrolling = false;
         }
 
         if (isChasing && distanceToTarget >= enemyData.loseRange)
         {
             isChasing = false;
             isReturning = true;
+
             agent.isStopped = false;
             agent.SetDestination(spawnPosition);
         }
@@ -90,76 +108,126 @@ public class EnemyAI : MonoBehaviour
             isReturning = false;
             isChasing = true;
         }
+    }
 
-        if (!isChasing && !isReturning)
+    // 순찰 상태 처리
+    private bool HandlePatrolState()
+    {
+        if (isChasing || isReturning)
+            return false;
+
+        HandlePatrol();
+        return true;
+    }
+
+    // 복귀 상태 처리
+    private bool HandleReturnState(float distanceToTarget, float distanceToSpawn)
+    {
+        if (!isReturning)
+            return false;
+
+        agent.isStopped = false;
+        agent.speed = enemyData.moveSpeed;
+        agent.SetDestination(spawnPosition);
+
+        if (!agent.pathPending && distanceToSpawn <= 0.2f)
         {
-            HandlePatrol();
-            return;
+            isReturning = false;
+            StopAgent();
+            enemyAnimation?.PlayIdle();
+            enemyAnimation?.SetMoveSpeed(0f);
         }
-
-        if (isReturning)
-        {
-            agent.isStopped = false;
-            agent.speed = enemyData.moveSpeed;
-            agent.SetDestination(spawnPosition);
-
-            if (distanceToSpawn <= 0.2f)
-            {
-                isReturning = false;
-                agent.isStopped = true;
-                agent.ResetPath();
-                enemyAnimation?.PlayIdle();
-            }
-
-            enemyAnimation?.SetMoveSpeed(agent.velocity.magnitude);
-            return;
-        }
-
-        if (distanceToTarget <= enemyData.attackRange)
-        {
-            attackRecoverTimer = enemyData.attackRecoverTime;
-
-            Vector3 lookPos = new Vector3(target.position.x, transform.position.y, target.position.z);
-            transform.LookAt(lookPos);
-
-            if (distanceToTarget > agent.stoppingDistance + 0.1f)
-            {
-                agent.isStopped = false;
-                agent.speed = enemyData.attackSpeed;
-                agent.SetDestination(target.position);
-            }
-            else
-            {
-                agent.isStopped = true;
-            }
-
-            enemyAttack?.TryAttack();
-        }
-
         else
         {
-            agent.isStopped = false;
-
-            if (attackRecoverTimer > 0f)
-            {
-                attackRecoverTimer -= Time.deltaTime;
-                agent.speed = enemyData.attackSpeed;
-            }
-            else
-            {
-                agent.speed = enemyData.moveSpeed;
-            }
-
-            agent.SetDestination(target.position);
+            enemyAnimation?.SetMoveSpeed(agent.velocity.magnitude);
         }
 
+        return true;
+    }
+
+    // 추적/공격 처리
+    private void HandleChaseAndAttack(float distanceToTarget)
+    {
+        if (distanceToTarget <= enemyData.attackRange)
+        {
+            HandleAttackRange(distanceToTarget);
+            return;
+        }
+
+        HandleChaseRange();
+    }
+
+    private void HandleAttackRange(float distanceToTarget)
+    {
+        attackRecoverTimer = enemyData.attackRecoverTime;
+
+        Vector3 lookPos = new Vector3(target.position.x, transform.position.y, target.position.z);
+        transform.LookAt(lookPos);
+
+        if (distanceToTarget > agent.stoppingDistance + 0.1f)
+        {
+            agent.isStopped = false;
+            agent.speed = enemyData.attackSpeed;
+            agent.SetDestination(target.position);
+        }
+        else
+        {
+            StopAgent();
+        }
+
+        enemyAttack?.TryAttack();
+    }
+
+    private void HandleChaseRange()
+    {
+        agent.isStopped = false;
+        agent.speed = GetChaseSpeed();
+        agent.SetDestination(target.position);
+    }
+
+    private float GetChaseSpeed()
+    {
+        if (attackRecoverTimer > 0f)
+        {
+            attackRecoverTimer -= Time.deltaTime;
+            return enemyData.attackSpeed;
+        }
+
+        return enemyData.moveSpeed;
+    }
+
+    private void UpdateMoveAnimation()
+    {
         float moveSpeed = agent.isStopped ? 0f : agent.velocity.magnitude;
         enemyAnimation?.SetMoveSpeed(moveSpeed);
     }
 
+    private void StopAgent()
+    {
+        agent.isStopped = true;
+        agent.ResetPath();
+    }
+
+    private void ClearStates()
+    {
+        isPatrolling = false;
+        isChasing = false;
+        isReturning = false;
+    }
+
+    private void FindTargetIfNeeded()
+    {
+        if (target != null)
+            return;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+            target = player.transform;
+    }
+
     private void ApplyData()
     {
-        if (enemyData == null)
+        if (enemyData == null || agent == null)
             return;
 
         agent.speed = enemyData.moveSpeed;
@@ -168,38 +236,63 @@ public class EnemyAI : MonoBehaviour
         agent.stoppingDistance = enemyData.attackRange;
     }
 
+    // 재사용 시 상태 초기화
+    private void ResetAIState()
+    {
+        FindTargetIfNeeded();
+
+        spawnPosition = transform.position;
+
+        patrolTimer = 0f;
+        attackRecoverTimer = 0f;
+
+        ClearStates();
+
+        enemyActionLock?.ResetToSpawnState();
+        enemyAnimation?.ResetAnimation();
+        enemyAttack?.ResetAttackState();
+
+        ApplyData();
+
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            StopAgent();
+
+        enemyAnimation?.SetMoveSpeed(0f);
+
+        enemyAttack?.SetData(enemyData);
+        enemyAttack?.SetTarget(target);
+    }
+
+    // 순찰 처리
     private void HandlePatrol()
     {
         patrolTimer -= Time.deltaTime;
 
-        // 이동 중
         if (isPatrolling)
         {
             agent.isStopped = false;
             agent.speed = enemyData.patrolSpeed;
 
-            // 목적지 도착하면 멈춤
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 isPatrolling = false;
                 patrolTimer = enemyData.patrolWaitTime;
-                agent.isStopped = true;
+                StopAgent();
+                enemyAnimation?.SetMoveSpeed(0f);
             }
         }
         else
         {
-            // 대기 중 → 시간 지나면 새 위치 이동
-            if (patrolTimer <= 0f)
-            {
-                Vector3 patrolPoint = GetRandomPatrolPoint();
+            if (patrolTimer > 0f)
+                return;
 
-                agent.SetDestination(patrolPoint);
-                isPatrolling = true;
-            }
+            Vector3 patrolPoint = GetRandomPatrolPoint();
+            agent.isStopped = false;
+            agent.SetDestination(patrolPoint);
+            isPatrolling = true;
         }
 
-        float moveSpeed = agent.isStopped ? 0f : agent.velocity.magnitude;
-        enemyAnimation?.SetMoveSpeed(moveSpeed);
+        UpdateMoveAnimation();
     }
 
     private Vector3 GetRandomPatrolPoint()
@@ -208,9 +301,7 @@ public class EnemyAI : MonoBehaviour
         Vector3 randomPos = spawnPosition + new Vector3(randomCircle.x, 0f, randomCircle.y);
 
         if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))
-        {
             return hit.position;
-        }
 
         return spawnPosition;
     }
@@ -218,7 +309,6 @@ public class EnemyAI : MonoBehaviour
     public void SetData(EnemyData data)
     {
         enemyData = data;
-        ApplyData();
-        enemyAttack?.SetData(data);
+        ResetAIState();
     }
 }
