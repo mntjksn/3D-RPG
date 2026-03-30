@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] private float damage = 10f;
-
-    private Animator animator;
+    private PlayerAnimation playerAnimation;
     private PlayerActionLock actionLock;
+    private PlayerStat playerStat;
 
     private bool isAttacking;
 
@@ -14,8 +13,9 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        playerAnimation = GetComponent<PlayerAnimation>();
         actionLock = GetComponent<PlayerActionLock>();
+        playerStat = GetComponent<PlayerStat>();
     }
 
     private void Update()
@@ -28,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 isAttacking = true;
-                animator.SetTrigger("Attack");
+                playerAnimation?.PlayAttack();
 
                 if (actionLock != null)
                     actionLock.SetAttack(true);
@@ -52,12 +52,8 @@ public class PlayerAttack : MonoBehaviour
         targetsInRange.Remove(target);
     }
 
-    // 1타 타이밍에 Animation Event로 호출
     public void AttackHit()
     {
-        Debug.Log("AttackHit 호출됨");
-        Debug.Log("범위 안 적 수: " + targetsInRange.Count);
-
         for (int i = targetsInRange.Count - 1; i >= 0; i--)
         {
             if (targetsInRange[i] == null)
@@ -84,13 +80,22 @@ public class PlayerAttack : MonoBehaviour
             }
         }
 
-        nearestTarget?.TakeDamage(damage);
+        float finalDamage = playerStat != null ? playerStat.AttackPower : 0f;
+        nearestTarget?.TakeDamage(finalDamage);
     }
 
-    // 공격 애니메이션 마지막에 Animation Event로 호출
     public void EndAttack()
     {
         isAttacking = false;
+
+        if (actionLock != null)
+            actionLock.SetAttack(false);
+    }
+
+    public void ResetAttackState()
+    {
+        isAttacking = false;
+        targetsInRange.Clear();
 
         if (actionLock != null)
             actionLock.SetAttack(false);

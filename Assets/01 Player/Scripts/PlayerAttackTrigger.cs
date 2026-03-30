@@ -11,24 +11,31 @@ public class PlayerAttackTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("들어옴: " + other.name);
+        if (playerAttack == null)
+            return;
+
+        if (other.transform.root == transform.root)
+            return;
 
         IDamageable damageable = other.GetComponentInParent<IDamageable>();
-        if (damageable != null)
-        {
-            Debug.Log("데미지 대상 등록: " + other.name);
-            playerAttack.AddTarget(damageable);
-        }
+        if (damageable == null)
+            return;
+
+        playerAttack.AddTarget(damageable);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("나감: " + other.name);
+        if (playerAttack == null)
+            return;
+
+        if (other.transform.root == transform.root)
+            return;
 
         IDamageable damageable = other.GetComponentInParent<IDamageable>();
-        if (damageable != null)
-        {
-            playerAttack.RemoveTarget(damageable);
-        }
+        if (damageable == null)
+            return;
+
+        playerAttack.RemoveTarget(damageable);
     }
 }
