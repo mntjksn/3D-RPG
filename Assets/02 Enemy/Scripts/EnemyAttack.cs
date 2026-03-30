@@ -20,6 +20,16 @@ public class EnemyAttack : MonoBehaviour
         enemyAnimation = GetComponent<EnemyAnimation>();
     }
 
+    private void Update()
+    {
+        UpdateCooldown();
+    }
+
+    private void UpdateCooldown()
+    {
+        attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - Time.deltaTime);
+    }
+
     public void SetTarget(Transform targetTransform)
     {
         target = targetTransform;
@@ -30,20 +40,28 @@ public class EnemyAttack : MonoBehaviour
         enemyData = data;
     }
 
-    private void Update()
+    // 공격 상태 초기화
+    public void ResetAttackState()
     {
-        attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - Time.deltaTime);
+        attackCooldownTimer = 0f;
+        isAttacking = false;
+        enemyActionLock?.SetAttack(false);
     }
 
     public void TryAttack()
     {
-        if (enemyActionLock != null && !enemyActionLock.CanAttack)
-            return;
-
-        if (!CanAttack || target == null || enemyData == null)
+        if (!CanStartAttack())
             return;
 
         StartAttack();
+    }
+
+    private bool CanStartAttack()
+    {
+        if (enemyActionLock != null && !enemyActionLock.CanAttack)
+            return false;
+
+        return CanAttack && target != null && enemyData != null;
     }
 
     private void StartAttack()
@@ -57,11 +75,10 @@ public class EnemyAttack : MonoBehaviour
 
     public void EndAttack()
     {
-        isAttacking = false;
-        enemyActionLock?.SetAttack(false);
+        FinishAttack();
     }
 
-    public void CancelAttack()
+    private void FinishAttack()
     {
         isAttacking = false;
         enemyActionLock?.SetAttack(false);
@@ -70,17 +87,46 @@ public class EnemyAttack : MonoBehaviour
     // 애니메이션 이벤트로 호출
     public void DealDamage()
     {
-        if (target == null) return;
+        if (!CanDealDamage())
+            return;
 
+        if (!IsTargetInRange())
+            return;
+
+        ApplyDamage();
+    }
+
+    private bool CanDealDamage()
+    {
+        return target != null && enemyData != null;
+    }
+
+    private bool IsTargetInRange()
+    {
         float distance = Vector3.Distance(transform.position, target.position);
+        return distance <= enemyData.attackRange + 0.5f;
+    }
 
-        if (distance <= enemyData.attackRange + 0.5f)
+    private void ApplyDamage()
+    {
+        if (target == null)
+            return;
+
+        IDamageable damageable = target.GetComponentInParent<IDamageable>();
+        if (damageable == null)
+            return;
+
+        float finalDamage = enemyData.attackDamage;
+
+        PlayerHealth playerHealth = target.GetComponentInParent<PlayerHealth>();
+        if (playerHealth != null)
         {
-            //PlayerHealth player = target.GetComponent<PlayerHealth>();
-            //f (player != null)
-            {
-               // player.TakeDamage(enemyData.attackDamage);
-            }
+            finalDamage = playerHealth.ModifyIncomingDamage(transform, finalDamage);
         }
+
+        if (finalDamage <= 0f)
+            return;
+
+        damageable.TakeDamage(finalDamage);
     }
 }
