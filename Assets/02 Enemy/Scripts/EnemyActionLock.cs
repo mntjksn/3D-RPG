@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class EnemyActionLock : MonoBehaviour
 {
-    public bool CanMove { get; private set; } = false;
-    public bool CanAttack { get; private set; } = false;
+    public bool CanMove { get; private set; }
+    public bool CanAttack { get; private set; }
 
     public bool IsMoving { get; private set; }
     public bool IsAttacking { get; private set; }
 
-    private void Start()
+    public void ResetToSpawnState()
     {
-        LockRecoverControls();
+        // 생성/부활 직후: 부활 애니메이션 끝나기 전까지 잠금
+        CanMove = false;
+        CanAttack = false;
+
+        IsMoving = false;
+        IsAttacking = false;
     }
 
     public void LockRecoverControls()
@@ -38,9 +43,11 @@ public class EnemyActionLock : MonoBehaviour
     public void OnDie()
     {
         LockRecoverControls();
+        IsMoving = false;
+        IsAttacking = false;
     }
 
-    // DieRecover 끝날 때 Animation Event로 호출
+    // 부활 애니메이션 끝날 때 Animation Event
     public void OnRecoverFinished()
     {
         UnlockRecoverControls();
