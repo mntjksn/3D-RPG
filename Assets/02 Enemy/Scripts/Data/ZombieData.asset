@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Zombie
   maxHp: 100
-  spawnTime: 5
+  exp: 1
+  gold: 10
+  deadBodyDuration: 2
+  respawnDelay: 5
   attackSpeed: 1.5
   moveSpeed: 4
   patrolSpeed: 1.5
@@ -24,7 +27,6 @@ MonoBehaviour:
   attackDamage: 10
   attackRecoverTime: 1.5
   attackRate: 2
-  attackIgnoreTime: 1.5
   patrolRadius: 7
   patrolWaitTime: 4
   prefab: {fileID: 6930373436760084395, guid: 86954bd586b5cbc4380a87a05acbf57f, type: 3}
