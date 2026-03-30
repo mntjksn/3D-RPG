@@ -7,12 +7,19 @@ public class EnemyAnimation : MonoBehaviour
     private readonly int hashSpeed = Animator.StringToHash("Speed");
     private readonly int hashIdle = Animator.StringToHash("Idle");
     private readonly int hashAttack = Animator.StringToHash("Attack");
-    private readonly int hashHit = Animator.StringToHash("Hit");
     private readonly int hashDie = Animator.StringToHash("Die");
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+    }
+
+    public void ResetAnimation()
+    {
+        if (animator == null) return;
+
+        animator.Rebind();
+        animator.Update(0f);
     }
 
     public void SetMoveSpeed(float speed)
@@ -31,15 +38,6 @@ public class EnemyAnimation : MonoBehaviour
     {
         if (animator == null) return;
         animator.SetTrigger(hashAttack);
-    }
-
-    public void PlayHit()
-    {
-        if (animator == null) return;
-        {
-            animator.ResetTrigger(hashHit);
-            animator.Play("Enemy_GetHit", 0, 0f);
-        }
     }
 
     public void PlayDie()
