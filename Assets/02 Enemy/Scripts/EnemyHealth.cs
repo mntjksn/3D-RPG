@@ -7,14 +7,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [SerializeField] private EnemyData enemyData;
 
     private EnemyActionLock enemyActionLock;
-    private EnemyAttack enemyAttack;
     private EnemyAnimation enemyAnimation;
     private EnemySpawner enemySpawner;
+    private EnemyPool enemyPool;
+    private EnemyHealthBar healthBar;
 
-    private float hitIgnoreTimer;
     private float currentHp;
     private bool isDead;
 
+    public EnemyData EnemyData => enemyData;
     public float CurrentHp => currentHp;
     public float MaxHp => enemyData != null ? enemyData.maxHp : 0f;
     public bool IsDead => isDead;
@@ -22,30 +23,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private void Awake()
     {
         enemyActionLock = GetComponent<EnemyActionLock>();
-        enemyAttack = GetComponent<EnemyAttack>();
         enemyAnimation = GetComponent<EnemyAnimation>();
-    }
-
-    private void Start()
-    {
-        if (enemyData != null)
-        {
-            currentHp = enemyData.maxHp;
-        }
-    }
-
-    private void Update()
-    {
-        if (hitIgnoreTimer > 0f)
-            hitIgnoreTimer -= Time.deltaTime;
+        enemyPool = GetComponent<EnemyPool>();
+        healthBar = GetComponentInChildren<EnemyHealthBar>();
     }
 
     public void SetData(EnemyData data)
     {
         enemyData = data;
-        currentHp = enemyData.maxHp;
-        isDead = false;
-        hitIgnoreTimer = 0f;
+        ResetHealthState();
     }
 
     public void SetSpawner(EnemySpawner ownerSpawner)
@@ -53,35 +39,35 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemySpawner = ownerSpawner;
     }
 
-
     public void TakeDamage(float damage)
     {
-        if (isDead)
+        if (!CanTakeDamage())
             return;
 
-        currentHp -= damage;
+        ApplyDamage(damage);
 
-        Debug.Log($"{gameObject.name} 피격! 남은 체력: {currentHp}");
-
-        if (currentHp <= 0f)
+        if (IsDeadByHp())
         {
             Die();
             return;
         }
+    }
 
-        // 이게 핵심
-        if (hitIgnoreTimer > 0f)
-            return;
+    private bool CanTakeDamage()
+    {
+        return !isDead && enemyData != null;
+    }
 
-        // 여기서 Data 값 사용
-        hitIgnoreTimer = enemyData.attackIgnoreTime;
+    private void ApplyDamage(float damage)
+    {
+        currentHp -= damage;
+        healthBar?.UpdateHealthBar(currentHp, MaxHp);
+        Debug.Log($"{enemyData.name} 피격! 남은 체력: {currentHp}");
+    }
 
-        enemyAnimation?.PlayHit();
-
-        if (enemyAttack != null && enemyAttack.IsAttacking)
-        {
-            enemyAttack.CancelAttack();
-        }
+    private bool IsDeadByHp()
+    {
+        return currentHp <= 0f;
     }
 
     private void Die()
@@ -91,21 +77,51 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         isDead = true;
 
-        enemyAttack?.CancelAttack();
-        enemyActionLock?.OnDie();
-
-        Debug.Log($"{gameObject.name} 사망");
-
-        enemyAnimation?.PlayDie();
-
-        enemySpawner?.RequestRespawn(enemyData);
-
-        StartCoroutine(RemoveBodyRoutine());
+        PlayDieReaction();
+        RequestRespawn();
+        StartCoroutine(ReturnToPoolRoutine());
     }
 
-    private IEnumerator RemoveBodyRoutine()
+    // 사망 처리
+    private void PlayDieReaction()
     {
-        yield return new WaitForSeconds(enemyData.spawnTime);
-        Destroy(gameObject);
+        enemyAnimation?.PlayDie();
+        enemyActionLock?.OnDie();
+
+        GiveExpToPlayer();
+    }
+
+    private void RequestRespawn()
+    {
+        enemySpawner?.RequestRespawn(enemyData);
+    }
+
+    // 체력 상태 초기화
+    private void ResetHealthState()
+    {
+        if (enemyData == null)
+            return;
+
+        currentHp = enemyData.maxHp;
+        isDead = false;
+
+        healthBar?.UpdateHealthBar(currentHp, MaxHp);
+    }
+
+    private IEnumerator ReturnToPoolRoutine()
+    {
+        if (enemyData == null)
+            yield break;
+
+        yield return new WaitForSeconds(enemyData.deadBodyDuration);
+        enemyPool?.ReturnToPool();
+    }
+
+    private void GiveExpToPlayer()
+    {
+        if (enemyData == null)
+            return;
+
+        PlayerManager.Instance.AddExp(enemyData.exp);
     }
 }
