@@ -1,0 +1,49 @@
+using UnityEngine;
+
+public class PlayerAnimation : MonoBehaviour
+{
+    private Animator animator;
+
+    private readonly int hashSpeed = Animator.StringToHash("Speed");
+    private readonly int hashAttack = Animator.StringToHash("Attack");
+    private readonly int hashShield = Animator.StringToHash("Shield");
+    private readonly int hashDie = Animator.StringToHash("Die");
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    public void ResetAnimation()
+    {
+        if (animator == null) return;
+
+        animator.Rebind();
+        animator.Update(0f);
+    }
+
+    public void SetMoveSpeed(float speed)
+    {
+        if (animator == null) return;
+        animator.SetFloat(hashSpeed, speed, 0.1f, Time.deltaTime);
+    }
+
+    public void PlayAttack()
+    {
+        if (animator == null) return;
+        animator.SetTrigger(hashAttack);
+    }
+
+    public void PlayShield(bool value)
+    {
+        if (animator == null) return;
+        animator.SetBool(hashShield, value);
+    }
+
+    public void PlayDie()
+    {
+        if (animator == null) return;
+        animator.SetTrigger(hashDie);
+    }
+
+}
