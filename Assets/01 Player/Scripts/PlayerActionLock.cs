@@ -41,6 +41,20 @@ public class PlayerActionLock : MonoBehaviour
         IsShielding = value;
     }
 
+    public void OnDie()
+    {
+        LockRecoverControls();
+        IsShielding = false;
+        IsAttacking = false;
+    }
+
+    public void ResetState()
+    {
+        LockRecoverControls();
+        IsAttacking = false;
+        IsShielding = false;
+    }
+
     // DieRecover 끝날 때 Animation Event로 호출
     public void OnRecoverFinished()
     {
