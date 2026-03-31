@@ -15,7 +15,8 @@ MonoBehaviour:
   enemyName: Zombie
   maxHp: 100
   exp: 1
-  gold: 10
+  minGold: 1
+  maxGold: 10
   deadBodyDuration: 2
   respawnDelay: 5
   attackSpeed: 1.5
@@ -29,4 +30,21 @@ MonoBehaviour:
   attackRate: 2
   patrolRadius: 7
   patrolWaitTime: 4
+  normalDrops:
+  - itemData: {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 5
+  - itemData: {fileID: 11400000, guid: 62142cbe052b65e4c8b6210384149ce6, type: 2}
+    dropChance: 0.03
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 70f96a94f0b9a7d41a1d548e74406a0b, type: 2}
+    dropChance: 0.03
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 1499a9f65a303e14f880cff48e61e175, type: 2}
+    dropChance: 0.03
+    minAmount: 1
+    maxAmount: 1
   prefab: {fileID: 6930373436760084395, guid: 86954bd586b5cbc4380a87a05acbf57f, type: 3}

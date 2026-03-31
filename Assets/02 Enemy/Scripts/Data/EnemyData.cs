@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Search.SearchColumn;
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Game/Enemy Data")]
 public class EnemyData : ScriptableObject
@@ -7,7 +9,10 @@ public class EnemyData : ScriptableObject
     public string enemyName;
     public float maxHp = 100f;
     public int exp = 1;
-    public int gold = 10;
+
+    [Header("Gold Drop")]
+    public int minGold = 1;
+    public int maxGold = 5;
 
     [Header("Respawn")]
     public float deadBodyDuration = 2f;
@@ -31,6 +36,9 @@ public class EnemyData : ScriptableObject
     [Header("Patrol")]
     public float patrolRadius = 5f;
     public float patrolWaitTime = 2f;
+
+    [Header("Drops")]
+    public List<DropEntry> normalDrops = new List<DropEntry>();
 
     [Header("Prefab")]
     public GameObject prefab;

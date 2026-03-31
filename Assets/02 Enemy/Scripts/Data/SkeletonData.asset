@@ -15,7 +15,8 @@ MonoBehaviour:
   enemyName: Skeleton
   maxHp: 500
   exp: 1
-  gold: 10
+  minGold: 15
+  maxGold: 30
   deadBodyDuration: 2
   respawnDelay: 5
   attackSpeed: 4
@@ -29,4 +30,25 @@ MonoBehaviour:
   attackRate: 1.5
   patrolRadius: 5
   patrolWaitTime: 2
+  normalDrops:
+  - itemData: {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 10
+  - itemData: {fileID: 11400000, guid: 7f9bb83f4cfd60b4480138493b4fa1a6, type: 2}
+    dropChance: 0.02
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 03a1f3cb6441685409b24d75a2e6334a, type: 2}
+    dropChance: 0.02
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 228728e45e48c9f4a8dc8e746ae343bc, type: 2}
+    dropChance: 0.02
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 5377a9fa439586d47a115394a7ccb25f, type: 2}
+    dropChance: 0.02
+    minAmount: 1
+    maxAmount: 1
   prefab: {fileID: 165424, guid: 9f4313a771e05c64d8da7ae6bd19a19f, type: 3}

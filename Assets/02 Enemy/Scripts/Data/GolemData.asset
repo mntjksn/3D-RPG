@@ -15,7 +15,8 @@ MonoBehaviour:
   enemyName: Golem
   maxHp: 1000
   exp: 1
-  gold: 10
+  minGold: 50
+  maxGold: 200
   deadBodyDuration: 2
   respawnDelay: 5
   attackSpeed: 2
@@ -29,4 +30,21 @@ MonoBehaviour:
   attackRate: 2.5
   patrolRadius: 3
   patrolWaitTime: 5
+  normalDrops:
+  - itemData: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
+    dropChance: 1
+    minAmount: 1
+    maxAmount: 10
+  - itemData: {fileID: 11400000, guid: dab4aa7b780045242927f3ffed93e9e6, type: 2}
+    dropChance: 0.01
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 55a718212df88894fa6b8b79a866c436, type: 2}
+    dropChance: 0.01
+    minAmount: 1
+    maxAmount: 1
+  - itemData: {fileID: 11400000, guid: 964aa4877f580fc4b90c315d0deb0ce3, type: 2}
+    dropChance: 0.01
+    minAmount: 1
+    maxAmount: 1
   prefab: {fileID: 1845945369076765872, guid: d9af52bf624fb004abc7f4d28bdf39e2, type: 3}

@@ -10,7 +10,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private EnemyAnimation enemyAnimation;
     private EnemySpawner enemySpawner;
     private EnemyPool enemyPool;
-    private EnemyHealthBar healthBar;
+    private EnemyHealthBar enemyHealthBar;
 
     private float currentHp;
     private bool isDead;
@@ -25,7 +25,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyActionLock = GetComponent<EnemyActionLock>();
         enemyAnimation = GetComponent<EnemyAnimation>();
         enemyPool = GetComponent<EnemyPool>();
-        healthBar = GetComponentInChildren<EnemyHealthBar>();
+        enemyHealthBar = GetComponentInChildren<EnemyHealthBar>();
     }
 
     public void SetData(EnemyData data)
@@ -61,8 +61,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private void ApplyDamage(float damage)
     {
         currentHp -= damage;
-        healthBar?.UpdateHealthBar(currentHp, MaxHp);
-        Debug.Log($"{enemyData.name} 피격! 남은 체력: {currentHp}");
+        enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
+        Debug.Log($"{enemyData.enemyName} 피격! 남은 체력: {currentHp}");
     }
 
     private bool IsDeadByHp()
@@ -77,6 +77,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         isDead = true;
 
+        HandleDrops();
         PlayDieReaction();
         RequestRespawn();
         StartCoroutine(ReturnToPoolRoutine());
@@ -105,7 +106,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         currentHp = enemyData.maxHp;
         isDead = false;
 
-        healthBar?.UpdateHealthBar(currentHp, MaxHp);
+        enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
     private IEnumerator ReturnToPoolRoutine()
@@ -123,5 +124,24 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             return;
 
         PlayerManager.Instance.AddExp(enemyData.exp);
+    }
+
+    private void HandleDrops()
+    {
+        if (enemyData == null)
+            return;
+
+        int droppedGold = EnemyDropResolver.RollGold(enemyData);
+        Debug.Log($"{enemyData.enemyName} 골드 드랍: {droppedGold}");
+
+        var drops = EnemyDropResolver.RollDrops(enemyData);
+
+        foreach (var drop in drops)
+        {
+            Debug.Log($"{enemyData.enemyName} 아이템 드랍: {drop.itemData.itemName} x{drop.amount}");
+        }
+
+        // 나중에 여기서 실제 월드 드랍 생성
+        // DropManager.Instance?.SpawnDrops(transform.position, droppedGold, drops);
     }
 }

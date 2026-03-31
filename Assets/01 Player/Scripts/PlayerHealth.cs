@@ -9,6 +9,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private CharacterController characterController;
     private PlayerAttack playerAttack;
     private PlayerShield playerShield;
+    private PlayerHealthBar playerHealthBar;
 
     private bool isDead;
     private Vector3 respawnPosition;
@@ -25,6 +26,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         characterController = GetComponent<CharacterController>();
         playerAttack = GetComponent<PlayerAttack>();
         playerShield = GetComponent<PlayerShield>();
+        playerHealthBar = GetComponentInChildren<PlayerHealthBar>();
     }
 
     private void Start()
@@ -71,6 +73,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void ApplyDamage(float damage)
     {
         playerStat.TakeDamage(damage);
+        playerHealthBar?.UpdateHealthBar(playerStat.CurrentHp, playerStat.MaxHp);
         Debug.Log($"플레이어 피격! 남은 체력: {playerStat.CurrentHp}");
     }
 
@@ -126,6 +129,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             characterController.enabled = true;
 
         playerStat.SetCurrentHp(playerStat.MaxHp);
+        playerHealthBar?.UpdateHealthBar(playerStat.CurrentHp, playerStat.MaxHp);
 
         playerAnimation?.ResetAnimation();
         playerAttack?.ResetAttackState();
