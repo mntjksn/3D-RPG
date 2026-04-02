@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 100
   attackPower: 10
+  shieldPower: 20
+  speed: 8
   startLevel: 1
-  expToLevelUp: 100
-  hpPerLevel: 10
-  attackPerLevel: 2
+  expToLevelUp: 10
