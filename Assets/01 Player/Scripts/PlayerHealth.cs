@@ -57,7 +57,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         if (playerShield != null && playerShield.CanBlock(attacker))
         {
-            float reducedDamage = damage * 0.5f;
+            float shieldPower = playerStat.GetShieldPower();
+            float reducedDamage = damage * (1f - shieldPower / 100f);
             Debug.Log($"방패로 피해 감소! {damage} -> {reducedDamage}");
             return reducedDamage;
         }
