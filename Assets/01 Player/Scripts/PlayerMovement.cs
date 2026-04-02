@@ -4,7 +4,6 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Move")]
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float acceleration = 10f;   // 가속도
     [SerializeField] private float deceleration = 15f;   // 감속도
 
@@ -18,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController characterController;
     private PlayerAnimation playerAnimation;
     private PlayerActionLock actionLock;
+    private PlayerStat playerStat;
 
     private float verticalVelocity;
     private float currentSpeed;
@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         playerAnimation = GetComponent<PlayerAnimation>();
         actionLock = GetComponent<PlayerActionLock>();
+        playerStat = GetComponent<PlayerStat>();
     }
 
     private void Update()
@@ -46,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         if (inputDir.magnitude > 1f)
             inputDir.Normalize();
 
-        float targetSpeed = inputDir.magnitude * moveSpeed;
+        float targetSpeed = inputDir.magnitude * playerStat.GetSpeed();
 
         if (actionLock != null && actionLock.IsAttacking)
         {
