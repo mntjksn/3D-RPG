@@ -19,14 +19,43 @@ public class SaveManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        LoadPlayer();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F5))
+            SavePlayer();
+
+        if (Input.GetKeyDown(KeyCode.F9))
+            LoadPlayer();
+
+        if (Input.GetKeyDown(KeyCode.F10))
+            DeleteSave();
+    }
+
     public void SavePlayer()
     {
-        if (PlayerManager.Instance == null)
-            return;
+        PlayerSaveData saveData = new PlayerSaveData();
 
-        PlayerSaveData saveData = PlayerManager.Instance.GetSaveData();
-        if (saveData == null)
-            return;
+        if (PlayerManager.Instance != null)
+        {
+            PlayerSaveData playerData = PlayerManager.Instance.GetSaveData();
+            if (playerData != null)
+            {
+                saveData.level = playerData.level;
+                saveData.currentExp = playerData.currentExp;
+                saveData.currentHp = playerData.currentHp;
+                saveData.gold = playerData.gold;
+            }
+        }
+
+        if (InventoryManager.Instance != null)
+        {
+            saveData.inventoryItems = InventoryManager.Instance.GetSaveData();
+        }
 
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(SavePath, json);
@@ -36,9 +65,6 @@ public class SaveManager : MonoBehaviour
 
     public void LoadPlayer()
     {
-        if (PlayerManager.Instance == null)
-            return;
-
         if (!File.Exists(SavePath))
         {
             Debug.Log("저장 파일이 없습니다.");
@@ -48,7 +74,18 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(SavePath);
         PlayerSaveData saveData = JsonUtility.FromJson<PlayerSaveData>(json);
 
-        PlayerManager.Instance.LoadFromSaveData(saveData);
+        if (saveData == null)
+        {
+            Debug.LogWarning("저장 데이터를 불러오지 못했습니다.");
+            return;
+        }
+
+        if (PlayerManager.Instance != null)
+            PlayerManager.Instance.LoadFromSaveData(saveData);
+
+        if (InventoryManager.Instance != null)
+            InventoryManager.Instance.LoadFromSaveData(saveData.inventoryItems);
+
         Debug.Log("불러오기 완료");
     }
 
