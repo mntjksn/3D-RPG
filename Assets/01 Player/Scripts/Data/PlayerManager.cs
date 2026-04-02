@@ -13,10 +13,13 @@ public class PlayerManager : MonoBehaviour
     public float CurrentHp => playerStat != null ? playerStat.CurrentHp : 0f;
     public float MaxHp => playerStat != null ? playerStat.MaxHp : 0f;
     public float AttackPower => playerStat != null ? playerStat.AttackPower : 0f;
+    public float ShieldPower => playerStat != null ? playerStat.ShieldPower : 0f;
+    public float Speed => playerStat != null ? playerStat.Speed : 0f;
 
     public int Level => playerStat != null ? playerStat.Level : 0;
     public int CurrentExp => playerStat != null ? playerStat.CurrentExp : 0;
     public int ExpToNextLevel => playerStat != null ? playerStat.GetExpToNextLevel() : 0;
+    public int Gold => playerStat != null ? playerStat.Gold : 0;
 
     public bool IsDead => playerHealth != null && playerHealth.IsDead;
 
@@ -56,6 +59,15 @@ public class PlayerManager : MonoBehaviour
 
         playerStat.AddExp(amount);
         Debug.Log($"°æÇèÄ¡ È¹µæ! ÇöÀç EXP: {playerStat.CurrentExp}");
+    }
+
+    public void AddGold(int amount)
+    {
+        if (playerStat == null)
+            return;
+
+        playerStat.AddGold(amount);
+        Debug.Log($"°ñµå È¹µæ! ÇöÀç Gold: {playerStat.Gold}");
     }
 
     public PlayerSaveData GetSaveData()
