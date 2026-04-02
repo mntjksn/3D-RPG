@@ -8,13 +8,17 @@ public class PlayerStat : MonoBehaviour
     private int level;
     private int currentExp;
     private float currentHp;
+    private int gold;
 
     public int Level => level;
     public int CurrentExp => currentExp;
     public float CurrentHp => currentHp;
+    public int Gold => gold;
 
     public float MaxHp => GetMaxHp();
     public float AttackPower => GetAttackPower();
+    public float ShieldPower => GetShieldPower();
+    public float Speed => GetSpeed();
 
     private void Awake()
     {
@@ -32,6 +36,7 @@ public class PlayerStat : MonoBehaviour
         level = playerData.startLevel;
         currentExp = 0;
         currentHp = GetMaxHp();
+        gold = 0;
     }
 
     public void SetCurrentHp(float value)
@@ -53,6 +58,23 @@ public class PlayerStat : MonoBehaviour
             return;
 
         SetCurrentHp(currentHp - damage);
+    }
+
+    public void AddGold(int amount)
+    {
+        if (playerData == null || amount <= 0)
+            return;
+
+        gold += amount;
+    }
+
+    public bool UseGold(int amount)
+    {
+        if (amount <= 0 || gold < amount)
+            return false;
+
+        gold -= amount;
+        return true;
     }
 
     public void AddExp(int amount)
@@ -79,7 +101,7 @@ public class PlayerStat : MonoBehaviour
         if (playerData == null)
             return 0f;
 
-        return playerData.maxHp + (level - playerData.startLevel) * playerData.hpPerLevel;
+        return playerData.maxHp;
     }
 
     public float GetAttackPower()
@@ -87,7 +109,23 @@ public class PlayerStat : MonoBehaviour
         if (playerData == null)
             return 0f;
 
-        return playerData.attackPower + (level - playerData.startLevel) * playerData.attackPerLevel;
+        return playerData.attackPower;
+    }
+
+    public float GetShieldPower()
+    {
+        if (playerData == null)
+            return 0f;
+
+        return playerData.shieldPower;
+    }
+
+    public float GetSpeed()
+    {
+        if (playerData == null)
+            return 0f;
+
+        return playerData.speed;
     }
 
     public PlayerSaveData GetSaveData()
@@ -96,7 +134,8 @@ public class PlayerStat : MonoBehaviour
         {
             level = level,
             currentExp = currentExp,
-            currentHp = currentHp
+            currentHp = currentHp,
+            gold = gold
         };
     }
 
@@ -107,7 +146,8 @@ public class PlayerStat : MonoBehaviour
 
         level = Mathf.Max(playerData.startLevel, saveData.level);
         currentExp = Mathf.Max(0, saveData.currentExp);
-        currentHp = Mathf.Clamp(saveData.currentHp, 0f, GetMaxHp());
+        currentHp = Mathf.Max(0, GetMaxHp());
+        gold = Mathf.Max(0, saveData.gold);
     }
 
     private bool CanLevelUp()
