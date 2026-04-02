@@ -132,16 +132,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             return;
 
         int droppedGold = EnemyDropResolver.RollGold(enemyData);
-        Debug.Log($"{enemyData.enemyName} 골드 드랍: {droppedGold}");
-
         var drops = EnemyDropResolver.RollDrops(enemyData);
 
-        foreach (var drop in drops)
-        {
-            Debug.Log($"{enemyData.enemyName} 아이템 드랍: {drop.itemData.itemName} x{drop.amount}");
-        }
-
-        // 나중에 여기서 실제 월드 드랍 생성
-        // DropManager.Instance?.SpawnDrops(transform.position, droppedGold, drops);
+        DropManager.Instance?.SpawnDrops(transform.position, droppedGold, drops);
     }
 }
