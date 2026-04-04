@@ -42,11 +42,9 @@ public class WorldDrop : MonoBehaviour
         {
             PlayerManager.Instance.AddGold(goldAmount);
         }
-
         else if (itemData != null)
         {
             Debug.Log($"æ∆¿Ã≈€ »πµÊ: {itemData.itemName} x{amount}");
-
             InventoryManager.Instance.AddItem(itemData, amount);
         }
 
