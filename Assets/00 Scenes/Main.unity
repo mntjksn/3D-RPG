@@ -15418,6 +15418,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f099cdd37050254c800e75bda6b6dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemDatabase:
+  - {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
+  - {fileID: 11400000, guid: 70f96a94f0b9a7d41a1d548e74406a0b, type: 2}
+  - {fileID: 11400000, guid: 1499a9f65a303e14f880cff48e61e175, type: 2}
+  - {fileID: 11400000, guid: 62142cbe052b65e4c8b6210384149ce6, type: 2}
+  - {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
+  - {fileID: 11400000, guid: 03a1f3cb6441685409b24d75a2e6334a, type: 2}
+  - {fileID: 11400000, guid: 5377a9fa439586d47a115394a7ccb25f, type: 2}
+  - {fileID: 11400000, guid: 228728e45e48c9f4a8dc8e746ae343bc, type: 2}
+  - {fileID: 11400000, guid: 7f9bb83f4cfd60b4480138493b4fa1a6, type: 2}
+  - {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
+  - {fileID: 11400000, guid: dab4aa7b780045242927f3ffed93e9e6, type: 2}
+  - {fileID: 11400000, guid: 55a718212df88894fa6b8b79a866c436, type: 2}
+  - {fileID: 11400000, guid: 964aa4877f580fc4b90c315d0deb0ce3, type: 2}
 --- !u!1 &380196907
 GameObject:
   m_ObjectHideFlags: 0
@@ -18664,6 +18678,8 @@ MonoBehaviour:
   slotPrefab: {fileID: 1588096563561756189, guid: 1957e93c43fa6d04cb1eebfeda0dee73, type: 3}
   slotParent: {fileID: 467149763}
   slotCount: 20
+  equipmentButton: {fileID: 1020181075}
+  itemButton: {fileID: 518030482}
 --- !u!1 &468408570
 GameObject:
   m_ObjectHideFlags: 0
