@@ -8,8 +8,12 @@ public class InventorySlotUI : MonoBehaviour
     [SerializeField] private TMP_Text countText;
 
     private int slotIndex;
+    private ItemData currentItemData;
+    private int currentCount;
 
     public int SlotIndex => slotIndex;
+    public ItemData CurrentItemData => currentItemData;
+    public int CurrentCount => currentCount;
 
     public void SetIndex(int index)
     {
@@ -19,6 +23,9 @@ public class InventorySlotUI : MonoBehaviour
 
     public void SetEmpty()
     {
+        currentItemData = null;
+        currentCount = 0;
+
         if (iconImage != null)
         {
             iconImage.sprite = null;
@@ -29,15 +36,18 @@ public class InventorySlotUI : MonoBehaviour
             countText.text = string.Empty;
     }
 
-    public void SetItem(Sprite icon, int count)
+    public void SetItem(ItemData itemData, int count)
     {
+        currentItemData = itemData;
+        currentCount = count;
+
         if (iconImage != null)
         {
-            iconImage.sprite = icon;
-            iconImage.enabled = icon != null;
+            iconImage.sprite = itemData != null ? itemData.icon : null;
+            iconImage.enabled = itemData != null && itemData.icon != null;
         }
 
         if (countText != null)
-            countText.text = count > 2 ? count.ToString() : string.Empty;
+            countText.text = count > 1 ? count.ToString() : string.Empty;
     }
 }
