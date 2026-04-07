@@ -1,9 +1,15 @@
+using System;
 using UnityEngine;
 
 public class PlayerStat : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private PlayerData playerData;
+
+    public event Action<int> OnLevelChanged;
+    public event Action<int, int> OnExpChanged;
+    public event Action<float, float> OnHpChanged;
+    public event Action<int> OnGoldChanged;
 
     private int level;
     private int currentExp;
@@ -37,11 +43,19 @@ public class PlayerStat : MonoBehaviour
         currentExp = 0;
         currentHp = GetMaxHp();
         gold = 0;
+
+        NotifyAll();
     }
 
     public void SetCurrentHp(float value)
     {
-        currentHp = Mathf.Clamp(value, 0f, GetMaxHp());
+        float newHp = Mathf.Clamp(value, 0f, GetMaxHp());
+
+        if (Mathf.Approximately(currentHp, newHp))
+            return;
+
+        currentHp = newHp;
+        OnHpChanged?.Invoke(currentHp, GetMaxHp());
     }
 
     public void Heal(float amount)
@@ -66,6 +80,7 @@ public class PlayerStat : MonoBehaviour
             return;
 
         gold += amount;
+        OnGoldChanged?.Invoke(gold);
     }
 
     public bool UseGold(int amount)
@@ -74,6 +89,7 @@ public class PlayerStat : MonoBehaviour
             return false;
 
         gold -= amount;
+        OnGoldChanged?.Invoke(gold);
         return true;
     }
 
@@ -86,6 +102,8 @@ public class PlayerStat : MonoBehaviour
 
         while (CanLevelUp())
             LevelUp();
+
+        OnExpChanged?.Invoke(currentExp, GetExpToNextLevel());
     }
 
     public int GetExpToNextLevel()
@@ -162,5 +180,16 @@ public class PlayerStat : MonoBehaviour
         currentHp = GetMaxHp();
 
         Debug.Log($"레벨업! 현재 레벨: {level}");
+
+        OnLevelChanged?.Invoke(level);
+        OnHpChanged?.Invoke(currentHp, GetMaxHp());
+    }
+
+    private void NotifyAll()
+    {
+        OnLevelChanged?.Invoke(level);
+        OnExpChanged?.Invoke(currentExp, GetExpToNextLevel());
+        OnHpChanged?.Invoke(currentHp, GetMaxHp());
+        OnGoldChanged?.Invoke(gold);
     }
 }

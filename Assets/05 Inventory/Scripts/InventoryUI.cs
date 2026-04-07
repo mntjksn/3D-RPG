@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    [Header("Inventory Panel")]
+    [SerializeField] private GameObject inventoryPanel;
+
     [Header("Slot Settings")]
     [SerializeField] private InventorySlotUI slotPrefab;
     [SerializeField] private Transform slotParent;
@@ -12,6 +15,10 @@ public class InventoryUI : MonoBehaviour
     [Header("Tab Buttons")]
     [SerializeField] private Button equipmentButton;
     [SerializeField] private Button itemButton;
+    [SerializeField] private Button closeButton;
+
+    [Header("Action Lock")]
+    [SerializeField] private PlayerActionLock playerActionLock;
 
     private readonly List<InventorySlotUI> slots = new List<InventorySlotUI>();
     private InventoryTabType currentTab = InventoryTabType.Equipment;
@@ -33,6 +40,7 @@ public class InventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged += RefreshUI;
 
         Cursor.lockState = CursorLockMode.Confined;
+        playerActionLock.LockRecoverControls();
     }
 
     private void OnDisable()
@@ -41,6 +49,7 @@ public class InventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
 
         Cursor.lockState = CursorLockMode.Locked;
+        playerActionLock.UnlockRecoverControls();
     }
 
     private void BindButtons()
@@ -50,6 +59,9 @@ public class InventoryUI : MonoBehaviour
 
         if (itemButton != null)
             itemButton.onClick.AddListener(OnClickItemTab);
+
+        if (closeButton != null)
+            closeButton.onClick.AddListener(CloseInventory);
     }
 
     private void CreateSlots()
@@ -122,7 +134,7 @@ public class InventoryUI : MonoBehaviour
         if (InventoryManager.Instance == null)
             return result;
 
-        List<InventoryItemSaveData> allItems = InventoryManager.Instance.GetAllItems();
+        List<InventoryItemSaveData> allItems = InventoryManager.Instance.GetSaveData();
 
         foreach (InventoryItemSaveData saveData in allItems)
         {
@@ -169,5 +181,10 @@ public class InventoryUI : MonoBehaviour
     {
         currentTab = InventoryTabType.Item;
         RefreshUI();
+    }
+
+    public void CloseInventory()
+    {
+        inventoryPanel.SetActive(!inventoryPanel.activeSelf);
     }
 }

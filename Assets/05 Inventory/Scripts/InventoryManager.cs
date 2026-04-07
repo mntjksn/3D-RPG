@@ -49,6 +49,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void InitializeInventory()
+    {
+        items.Clear();
+        OnInventoryChanged?.Invoke();
+    }
+
     public void AddItem(ItemData itemData, int amount = 1)
     {
         if (itemData == null || string.IsNullOrEmpty(itemData.itemId) || amount <= 0)
@@ -60,7 +66,6 @@ public class InventoryManager : MonoBehaviour
             items.Add(itemData.itemId, amount);
 
         Debug.Log($"{itemData.itemName} {amount}개 획득. 현재 수량: {items[itemData.itemId]}");
-
         OnInventoryChanged?.Invoke();
     }
 
@@ -81,28 +86,15 @@ public class InventoryManager : MonoBehaviour
         return itemData;
     }
 
-    public List<InventoryItemSaveData> GetAllItems()
-    {
-        List<InventoryItemSaveData> list = new List<InventoryItemSaveData>();
-
-        foreach (var pair in items)
-        {
-            list.Add(new InventoryItemSaveData
-            {
-                itemId = pair.Key,
-                amount = pair.Value
-            });
-        }
-
-        return list;
-    }
-
     public List<InventoryItemSaveData> GetSaveData()
     {
         List<InventoryItemSaveData> saveList = new List<InventoryItemSaveData>();
 
         foreach (var pair in items)
         {
+            if (pair.Value <= 0)
+                continue;
+
             saveList.Add(new InventoryItemSaveData
             {
                 itemId = pair.Key,
@@ -128,7 +120,10 @@ public class InventoryManager : MonoBehaviour
             if (data == null || string.IsNullOrEmpty(data.itemId))
                 continue;
 
-            items[data.itemId] = Mathf.Max(0, data.amount);
+            if (data.amount <= 0)
+                continue;
+
+            items[data.itemId] = data.amount;
         }
 
         Debug.Log($"인벤토리 로드 완료: {items.Count}개");

@@ -52,6 +52,14 @@ public class PlayerManager : MonoBehaviour
             Debug.LogWarning("PlayerHealth 컴포넌트가 없습니다.");
     }
 
+    public void InitializePlayer()
+    {
+        if (playerStat == null)
+            return;
+
+        playerStat.InitializeStat();
+    }
+
     public void AddExp(int amount)
     {
         if (playerStat == null)
