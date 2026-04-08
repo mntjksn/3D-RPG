@@ -14,6 +14,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private bool isDead;
     private Vector3 respawnPosition;
 
+    [Header("Auto Heal")]
+    [SerializeField] private float healDelay = 3f;      // 몇 초 후 시작
+    [SerializeField] private float healPerSecond = 5f;  // 초당 회복량
+
+    private float lastHitTime;
+
+    [Header("Respawn Delay")]
     [SerializeField] private float respawnDelay = 3f;
 
     public bool IsDead => isDead;
@@ -32,6 +39,40 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void Start()
     {
         respawnPosition = transform.position;
+    }
+
+    private void OnEnable()
+    {
+        if (playerStat != null)
+            playerStat.OnHpChanged += HandleHpChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (playerStat != null)
+            playerStat.OnHpChanged -= HandleHpChanged;
+    }
+
+    private void Update()
+    {
+        if (isDead || playerStat == null)
+            return;
+
+        // 아직 대기 시간 안 지났으면 회복 안함
+        if (Time.time < lastHitTime + healDelay)
+            return;
+
+        // 이미 풀피면 회복 안함
+        if (playerStat.CurrentHp >= playerStat.MaxHp)
+            return;
+
+        float healAmount = healPerSecond * Time.deltaTime;
+        playerStat.Heal(healAmount);
+    }
+
+    private void HandleHpChanged(float currentHp, float maxHp)
+    {
+        playerHealthBar?.UpdateHealthBar(currentHp, maxHp);
     }
 
     public void TakeDamage(float damage)
@@ -74,7 +115,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void ApplyDamage(float damage)
     {
         playerStat.TakeDamage(damage);
-        playerHealthBar?.UpdateHealthBar(playerStat.CurrentHp, playerStat.MaxHp);
+        lastHitTime = Time.time;
         Debug.Log($"플레이어 피격! 남은 체력: {playerStat.CurrentHp}");
     }
 
@@ -130,7 +171,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             characterController.enabled = true;
 
         playerStat.SetCurrentHp(playerStat.MaxHp);
-        playerHealthBar?.UpdateHealthBar(playerStat.CurrentHp, playerStat.MaxHp);
 
         playerAnimation?.ResetAnimation();
         playerAttack?.ResetAttackState();
