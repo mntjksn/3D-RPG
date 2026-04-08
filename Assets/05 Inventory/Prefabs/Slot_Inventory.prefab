@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7221734475787534306}
   - component: {fileID: 429128709779651007}
   - component: {fileID: 1588096563561756189}
+  - component: {fileID: 8933397082986198040}
   m_Layer: 5
   m_Name: Slot_Inventory
   m_TagString: Untagged
@@ -92,6 +93,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconImage: {fileID: 6890355463446679158}
   countText: {fileID: 2452785625275068502}
+  canvasGroup: {fileID: 8933397082986198040}
+--- !u!225 &8933397082986198040
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3488030751779540079}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5216878601788742332
 GameObject:
   m_ObjectHideFlags: 0

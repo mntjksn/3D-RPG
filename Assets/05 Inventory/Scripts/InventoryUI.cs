@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    [Header("Inventory Panel")]
-    [SerializeField] private GameObject inventoryPanel;
+    [Header("Main Panel")]
+    [SerializeField] private GameObject closePanel;
 
     [Header("Slot Settings")]
     [SerializeField] private InventorySlotUI slotPrefab;
@@ -22,6 +22,7 @@ public class InventoryUI : MonoBehaviour
 
     private readonly List<InventorySlotUI> slots = new List<InventorySlotUI>();
     private InventoryTabType currentTab = InventoryTabType.Equipment;
+
     private bool isInitialized;
 
     public IReadOnlyList<InventorySlotUI> Slots => slots;
@@ -39,8 +40,13 @@ public class InventoryUI : MonoBehaviour
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.OnInventoryChanged += RefreshUI;
 
+        currentTab = InventoryTabType.Equipment;
+        RefreshUI();
+
         Cursor.lockState = CursorLockMode.Confined;
-        playerActionLock.LockRecoverControls();
+
+        if (playerActionLock != null)
+            playerActionLock.LockRecoverControls();
     }
 
     private void OnDisable()
@@ -49,7 +55,9 @@ public class InventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
 
         Cursor.lockState = CursorLockMode.Locked;
-        playerActionLock.UnlockRecoverControls();
+
+        if (playerActionLock != null)
+            playerActionLock.UnlockRecoverControls();
     }
 
     private void BindButtons()
@@ -83,7 +91,7 @@ public class InventoryUI : MonoBehaviour
         for (int i = 0; i < slotCount; i++)
         {
             InventorySlotUI slot = Instantiate(slotPrefab, slotParent);
-            slot.SetIndex(i);
+            slot.SetIndex(-1);   // 실제 인벤토리 슬롯 번호는 RefreshUI에서 넣음
             slot.SetEmpty();
             slots.Add(slot);
         }
@@ -97,9 +105,7 @@ public class InventoryUI : MonoBehaviour
             return;
 
         for (int i = slotParent.childCount - 1; i >= 0; i--)
-        {
             Destroy(slotParent.GetChild(i).gameObject);
-        }
     }
 
     public void RefreshUI()
@@ -107,55 +113,47 @@ public class InventoryUI : MonoBehaviour
         if (!isInitialized)
             return;
 
-        foreach (InventorySlotUI slot in slots)
-            slot.SetEmpty();
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].SetIndex(-1);
+            slots[i].SetEmpty();
+        }
 
         if (InventoryManager.Instance == null)
             return;
 
-        List<InventoryItemSaveData> filteredItems = GetFilteredItems();
+        var inventorySlots = InventoryManager.Instance.Slots;
 
-        for (int i = 0; i < filteredItems.Count && i < slots.Count; i++)
+        int displayIndex = 0;
+
+        for (int realIndex = 0; realIndex < inventorySlots.Count; realIndex++)
         {
-            InventoryItemSaveData saveData = filteredItems[i];
-            ItemData itemData = InventoryManager.Instance.GetItemData(saveData.itemId);
+            InventorySlotData slotData = inventorySlots[realIndex];
 
+            if (slotData == null || slotData.IsEmpty())
+                continue;
+
+            ItemData itemData = InventoryManager.Instance.GetItemData(slotData.itemId);
             if (itemData == null)
                 continue;
 
-            slots[i].SetItem(itemData, saveData.amount);
-        }
-    }
+            bool canShow = currentTab == InventoryTabType.Equipment
+                ? IsEquipment(itemData)
+                : IsItem(itemData);
 
-    private List<InventoryItemSaveData> GetFilteredItems()
-    {
-        List<InventoryItemSaveData> result = new List<InventoryItemSaveData>();
-
-        if (InventoryManager.Instance == null)
-            return result;
-
-        List<InventoryItemSaveData> allItems = InventoryManager.Instance.GetSaveData();
-
-        foreach (InventoryItemSaveData saveData in allItems)
-        {
-            ItemData itemData = InventoryManager.Instance.GetItemData(saveData.itemId);
-
-            if (itemData == null)
+            if (!canShow)
                 continue;
 
-            if (currentTab == InventoryTabType.Equipment)
-            {
-                if (IsEquipment(itemData))
-                    result.Add(saveData);
-            }
-            else
-            {
-                if (IsItem(itemData))
-                    result.Add(saveData);
-            }
-        }
+            if (displayIndex >= slots.Count)
+                break;
 
-        return result;
+            // 화면에는 앞에서부터 채우되,
+            // 이 슬롯이 실제 인벤토리 몇 번 슬롯인지 따로 저장
+            slots[displayIndex].SetIndex(realIndex);
+            slots[displayIndex].SetItem(itemData, slotData.amount);
+
+            displayIndex++;
+        }
     }
 
     private bool IsEquipment(ItemData itemData)
@@ -185,6 +183,7 @@ public class InventoryUI : MonoBehaviour
 
     public void CloseInventory()
     {
-        inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+        if (closePanel != null)
+            closePanel.SetActive(!closePanel.activeSelf);
     }
 }
