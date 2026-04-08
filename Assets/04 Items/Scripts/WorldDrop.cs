@@ -9,6 +9,13 @@ public class WorldDrop : MonoBehaviour
     private int amount;
     private int goldAmount;
 
+    private Camera mainCamera;
+
+    private void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
     public void SetupGold(int gold)
     {
         goldAmount = gold;
@@ -23,9 +30,15 @@ public class WorldDrop : MonoBehaviour
         goldAmount = 0;
 
         if (iconRenderer != null && itemData != null)
-        {
             iconRenderer.sprite = itemData.icon;
-        }
+    }
+
+    private void LateUpdate()
+    {
+        if (mainCamera == null || iconRenderer == null)
+            return;
+
+        iconRenderer.transform.rotation = mainCamera.transform.rotation;
     }
 
     private void OnTriggerEnter(Collider other)
