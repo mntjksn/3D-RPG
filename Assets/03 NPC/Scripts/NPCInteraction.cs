@@ -2,7 +2,16 @@ using UnityEngine;
 
 public class NPCInteraction : MonoBehaviour
 {
+    [Header("NPC Type")]
+    [SerializeField] private NPCType npcType;
+
+    [Header("UI")]
     [SerializeField] private GameObject interactUI;
+
+    [Header("Panels")]
+    [SerializeField] private GameObject shopPanel;
+    [SerializeField] private GameObject questPanel;
+    [SerializeField] private GameObject upgradePanel;
 
     private bool playerInRange = false;
 
@@ -44,13 +53,48 @@ public class NPCInteraction : MonoBehaviour
             return;
 
         if (Input.GetKeyDown(KeyCode.F))
-        {
             Interact();
-        }
     }
 
     private void Interact()
     {
-        Debug.Log($"{name}: 상호작용 실행");
+        switch (npcType)
+        {
+            case NPCType.Shop:
+                OpenShop();
+                break;
+
+            case NPCType.Quest:
+                OpenQuest();
+                break;
+
+            case NPCType.Upgrade:
+                OpenUpgrade();
+                break;
+        }
+    }
+
+    private void OpenShop()
+    {
+        Debug.Log($"{name}: 상점 열기");
+
+        if (shopPanel != null)
+            shopPanel.SetActive(true);
+    }
+
+    private void OpenQuest()
+    {
+        Debug.Log($"{name}: 퀘스트 열기");
+
+        if (questPanel != null)
+            questPanel.SetActive(true);
+    }
+
+    private void OpenUpgrade()
+    {
+        Debug.Log($"{name}: 업그레이드 열기");
+
+        if (upgradePanel != null)
+            upgradePanel.SetActive(true);
     }
 }
