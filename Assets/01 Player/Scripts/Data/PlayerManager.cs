@@ -67,6 +67,9 @@ public class PlayerManager : MonoBehaviour
 
         playerStat.AddExp(amount);
         Debug.Log($"°æÇèÄ¡ È¹µæ! ÇöÀç EXP: {playerStat.CurrentExp}");
+
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.MarkDirty();
     }
 
     public void AddGold(int amount)
@@ -76,6 +79,9 @@ public class PlayerManager : MonoBehaviour
 
         playerStat.AddGold(amount);
         Debug.Log($"°ñµå È¹µæ! ÇöÀç Gold: {playerStat.Gold}");
+
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.MarkDirty();
     }
 
     public PlayerSaveData GetSaveData()
