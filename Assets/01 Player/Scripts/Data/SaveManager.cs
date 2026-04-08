@@ -9,7 +9,12 @@ public class SaveManager : MonoBehaviour
 
     private string SavePath => Path.Combine(Application.persistentDataPath, "player_save.json");
 
-    private bool hasLoadedOnce = false;
+    [Header("Auto Save")]
+    [SerializeField] private float autoSaveInterval = 15f;
+
+    private float autoSaveTimer = 0f;
+    private bool isDirty = false;
+    private bool hasLoadedInThisScene = false;
 
     private void Awake()
     {
@@ -35,33 +40,44 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(LoadPlayerRoutine());
+        StartCoroutine(LoadWhenReady());
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F5))
+        autoSaveTimer += Time.unscaledDeltaTime;
+
+        if (autoSaveTimer >= autoSaveInterval)
+        {
+            autoSaveTimer = 0f;
+
+            if (isDirty)
+                SavePlayer();
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (isDirty)
             SavePlayer();
+    }
 
-        if (Input.GetKeyDown(KeyCode.F9))
-            StartCoroutine(LoadPlayerRoutine());
-
-        if (Input.GetKeyDown(KeyCode.F10))
-            DeleteSave();
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause && isDirty)
+            SavePlayer();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (!hasLoadedOnce)
-            StartCoroutine(LoadPlayerRoutine());
+        hasLoadedInThisScene = false;
+        StartCoroutine(LoadWhenReady());
     }
 
-    private IEnumerator LoadPlayerRoutine()
+    private IEnumerator LoadWhenReady()
     {
-        yield return null;
-
-        float timeout = 3f;
         float timer = 0f;
+        float timeout = 5f;
 
         while ((PlayerManager.Instance == null || InventoryManager.Instance == null) && timer < timeout)
         {
@@ -69,8 +85,16 @@ public class SaveManager : MonoBehaviour
             yield return null;
         }
 
+        if (hasLoadedInThisScene)
+            yield break;
+
         LoadPlayer();
-        hasLoadedOnce = true;
+        hasLoadedInThisScene = true;
+    }
+
+    public void MarkDirty()
+    {
+        isDirty = true;
     }
 
     public void SavePlayer()
@@ -88,22 +112,21 @@ public class SaveManager : MonoBehaviour
                 saveData.gold = playerData.gold;
             }
         }
-        else
-        {
-            Debug.LogWarning("PlayerManager.Instance가 없습니다. 플레이어 데이터 저장 실패");
-        }
 
         if (InventoryManager.Instance != null)
         {
             saveData.inventoryItems = InventoryManager.Instance.GetSaveData();
         }
-        else
+
+        if (EquipmentManager.Instance != null)
         {
-            Debug.LogWarning("InventoryManager.Instance가 없습니다. 인벤토리 데이터 저장 실패");
+            saveData.equipmentData = EquipmentManager.Instance.GetSaveData();
         }
 
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(SavePath, json);
+
+        isDirty = false;
 
         Debug.Log($"저장 완료: {SavePath}");
     }
@@ -120,6 +143,10 @@ public class SaveManager : MonoBehaviour
             if (InventoryManager.Instance != null)
                 InventoryManager.Instance.InitializeInventory();
 
+            if (EquipmentManager.Instance != null)
+                EquipmentManager.Instance.InitializeEquipment();
+
+            isDirty = false;
             return;
         }
 
@@ -134,13 +161,14 @@ public class SaveManager : MonoBehaviour
 
         if (PlayerManager.Instance != null)
             PlayerManager.Instance.LoadFromSaveData(saveData);
-        else
-            Debug.LogWarning("PlayerManager.Instance가 없어서 플레이어 데이터 로드 실패");
 
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.LoadFromSaveData(saveData.inventoryItems);
-        else
-            Debug.LogWarning("InventoryManager.Instance가 없어서 인벤토리 데이터 로드 실패");
+
+        if (EquipmentManager.Instance != null)
+            EquipmentManager.Instance.LoadFromSaveData(saveData.equipmentData);
+
+        isDirty = false;
 
         Debug.Log("불러오기 완료");
     }
@@ -148,15 +176,16 @@ public class SaveManager : MonoBehaviour
     public void DeleteSave()
     {
         if (File.Exists(SavePath))
-        {
             File.Delete(SavePath);
-            Debug.Log("저장 파일 삭제 완료");
-        }
 
         if (PlayerManager.Instance != null)
             PlayerManager.Instance.InitializePlayer();
 
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.InitializeInventory();
+
+        isDirty = false;
+
+        Debug.Log("저장 파일 삭제 완료");
     }
 }
