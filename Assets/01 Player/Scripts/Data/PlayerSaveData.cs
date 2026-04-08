@@ -9,4 +9,5 @@ public class PlayerSaveData
     public int gold;
 
     public List<InventoryItemSaveData> inventoryItems = new List<InventoryItemSaveData>();
+    public EquipmentSaveData equipmentData = new EquipmentSaveData();
 }
