@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: Leather_Boot
   itemName: "\uAC00\uC8FD \uC7A5\uD654"
-  description: 
   icon: {fileID: 21300000, guid: 29a1226f7b5e20240942612e151c3c4c, type: 3}
   itemType: 3
+  buyPrice: 1500
   sellPrice: 500
   isStackable: 0
   maxStack: 1
   equipSlot: 3
   attackPower: 0
-  defensePower: 0
+  shieldPower: 0
   moveSpeedBonus: 2
   maxHpBonus: 0

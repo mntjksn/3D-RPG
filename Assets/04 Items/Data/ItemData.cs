@@ -24,9 +24,9 @@ public class ItemData : ScriptableObject
     [Header("Common")]
     public string itemId;
     public string itemName;
-    [TextArea] public string description;
     public Sprite icon;
     public ItemType itemType;
+    public int buyPrice = 1;
     public int sellPrice = 1;
 
     [Header("Inventory")]
@@ -38,7 +38,7 @@ public class ItemData : ScriptableObject
 
     [Header("Equip Stats")]
     public int attackPower;
-    public int defensePower;
+    public int shieldPower;
     public float moveSpeedBonus;
     public int maxHpBonus;
 }

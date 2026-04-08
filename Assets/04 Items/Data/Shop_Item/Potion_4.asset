@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc518782b267b624399dfcce02a479fc, type: 3}
-  m_Name: Wood_Shield
+  m_Name: Potion_4
   m_EditorClassIdentifier: 
-  itemId: Wood_Shield
-  itemName: "\uB098\uBB34 \uBC29\uD328"
-  icon: {fileID: 21300000, guid: 615f3cdaa1374bd4db14286066f31cde, type: 3}
-  itemType: 4
-  buyPrice: 150
-  sellPrice: 100
-  isStackable: 0
-  maxStack: 1
-  equipSlot: 4
+  itemId: Potion_4
+  itemName: "\uCD5C\uACE0\uAE09 \uACE0\uAE30"
+  icon: {fileID: 21300000, guid: 14e62563269c11443b9c936be93b95f4, type: 3}
+  itemType: 0
+  buyPrice: 500
+  sellPrice: 200
+  isStackable: 1
+  maxStack: 999
+  equipSlot: 0
   attackPower: 0
-  shieldPower: 20
+  shieldPower: 0
   moveSpeedBonus: 0
   maxHpBonus: 0

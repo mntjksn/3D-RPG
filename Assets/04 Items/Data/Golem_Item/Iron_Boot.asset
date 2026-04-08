@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: Iron_Boot
   itemName: "\uCCA0 \uC2E0\uBC1C"
-  description: 
   icon: {fileID: 21300000, guid: 5170e0068a8cf184fb119834fa7ba0f3, type: 3}
   itemType: 3
+  buyPrice: 7500
   sellPrice: 1000
   isStackable: 0
   maxStack: 0
   equipSlot: 3
   attackPower: 0
-  defensePower: 0
+  shieldPower: 0
   moveSpeedBonus: 5
   maxHpBonus: 0
