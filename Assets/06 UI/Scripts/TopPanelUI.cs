@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 public class TopPanelUI : MonoBehaviour
 {
-    [Header("UI")]
     [SerializeField] private TMP_Text levelText;
-    [SerializeField] private TMP_Text expText;
+    [SerializeField] private TMP_Text expPercentText;
     [SerializeField] private Slider expSlider;
     [SerializeField] private TMP_Text goldText;
 
@@ -14,13 +13,7 @@ public class TopPanelUI : MonoBehaviour
 
     private void Start()
     {
-        BindPlayerStat();
-        RefreshNow();
-    }
-
-    private void OnEnable()
-    {
-        BindPlayerStat();
+        Bind();
         Subscribe();
         RefreshNow();
     }
@@ -30,7 +23,7 @@ public class TopPanelUI : MonoBehaviour
         Unsubscribe();
     }
 
-    private void BindPlayerStat()
+    private void Bind()
     {
         if (PlayerManager.Instance != null)
             playerStat = PlayerManager.Instance.Stat;
@@ -40,10 +33,6 @@ public class TopPanelUI : MonoBehaviour
     {
         if (playerStat == null)
             return;
-
-        playerStat.OnLevelChanged -= UpdateLevelUI;
-        playerStat.OnExpChanged -= UpdateExpUI;
-        playerStat.OnGoldChanged -= UpdateGoldUI;
 
         playerStat.OnLevelChanged += UpdateLevelUI;
         playerStat.OnExpChanged += UpdateExpUI;
@@ -60,7 +49,7 @@ public class TopPanelUI : MonoBehaviour
         playerStat.OnGoldChanged -= UpdateGoldUI;
     }
 
-    public void RefreshNow()
+    private void RefreshNow()
     {
         if (playerStat == null)
             return;
@@ -72,24 +61,16 @@ public class TopPanelUI : MonoBehaviour
 
     private void UpdateLevelUI(int level)
     {
-        levelText.text = $"{level}";
+        levelText.text = level.ToString();
     }
 
     private void UpdateExpUI(int currentExp, int maxExp)
     {
-        if (maxExp <= 0)
-        {
-            expSlider.maxValue = 1f;
-            expSlider.value = 0f;
-            expText.text = "0%";
-            return;
-        }
-
-        float percent = (float)currentExp / maxExp;
+        float percent = maxExp > 0 ? (float)currentExp / maxExp : 0f;
 
         expSlider.maxValue = 1f;
         expSlider.value = percent;
-        expText.text = $"{Mathf.RoundToInt(percent * 100f)}%";
+        expPercentText.text = $"{Mathf.RoundToInt(percent * 100f)}%";
     }
 
     private void UpdateGoldUI(int gold)
