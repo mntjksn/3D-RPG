@@ -38,7 +38,7 @@ public class DropManager : MonoBehaviour
         if (goldDropPrefab == null)
             return;
 
-        Vector3 spawnPos = center + Vector3.up * 1f + GetRandomOffset();
+        Vector3 spawnPos = center + Vector3.up * 0.5f + GetRandomOffset();
         WorldDrop drop = Instantiate(goldDropPrefab, spawnPos, Quaternion.identity);
         drop.SetupGold(goldAmount);
     }
@@ -48,7 +48,7 @@ public class DropManager : MonoBehaviour
         if (itemDropPrefab == null || itemData == null || amount <= 0)
             return;
 
-        Vector3 spawnPos = center + Vector3.up * 1f + GetRandomOffset();
+        Vector3 spawnPos = center + Vector3.up * 0.5f + GetRandomOffset();
         WorldDrop drop = Instantiate(itemDropPrefab, spawnPos, Quaternion.identity);
         drop.SetupItem(itemData, amount);
     }
