@@ -66,7 +66,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (playerStat.CurrentHp >= playerStat.MaxHp)
             return;
 
-        float healAmount = healPerSecond * Time.deltaTime;
+        float healAmount = playerStat.MaxHp * healPerSecond * Time.deltaTime;
         playerStat.Heal(healAmount);
     }
 
@@ -213,15 +213,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         switch (itemData.itemId)
         {
             case "potion_hp_small":
-                playerStat.Heal(playerStat.MaxHp * 0.2f);
+                playerStat.Heal(playerStat.MaxHp * 0.1f);
                 return true;
 
             case "potion_hp_medium":
-                playerStat.Heal(playerStat.MaxHp * 0.4f);
+                playerStat.Heal(playerStat.MaxHp * 0.3f);
                 return true;
 
             case "potion_hp_large":
-                playerStat.Heal(playerStat.MaxHp * 0.7f);
+                playerStat.Heal(playerStat.MaxHp * 0.5f);
                 return true;
 
             case "potion_hp_full":
