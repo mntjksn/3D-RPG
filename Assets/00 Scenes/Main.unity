@@ -29339,7 +29339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healDelay: 5
-  healPerSecond: 5
+  healPerSecond: 0.01
   respawnDelay: 3
 --- !u!114 &671473473
 MonoBehaviour:
