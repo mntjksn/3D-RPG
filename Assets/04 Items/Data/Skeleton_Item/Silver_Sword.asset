@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Silver_Sword
   m_EditorClassIdentifier: 
   itemId: Silver_Sword
-  itemName: "\uCCA0 \uAC80"
+  itemName: "\uC740 \uAC80"
+  description: "\uB0A0\uCE74\uB85C\uC6B4 \uC740 \uAC80\n\n\uACF5\uACA9\uB825 + 40"
   icon: {fileID: 21300000, guid: 95052c6b62fb3de4695beaa99f842ac2, type: 3}
-  itemType: 1
-  buyPrice: 1000
-  sellPrice: 500
+  itemType: 2
+  buyPrice: 6000
+  sellPrice: 3000
   isStackable: 0
   maxStack: 1
   equipSlot: 1

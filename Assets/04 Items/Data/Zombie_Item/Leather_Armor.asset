@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: Leather_Ammor
   itemName: "\uAC00\uC8FD \uAC11\uC637"
+  description: "\uBD80\uB4DC\uB7EC\uC6B4 \uAC00\uC8FD \uAC11\uC637\n\n\uCD5C\uB300
+    \uCCB4\uB825 + 100"
   icon: {fileID: 21300000, guid: e37ee0b1cbe20c5458102626b95a6b7c, type: 3}
-  itemType: 2
-  buyPrice: 200
+  itemType: 3
+  buyPrice: 400
   sellPrice: 100
   isStackable: 0
   maxStack: 1

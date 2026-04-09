@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc518782b267b624399dfcce02a479fc, type: 3}
-  m_Name: Potion_2
+  m_Name: potion_hp_large
   m_EditorClassIdentifier: 
-  itemId: Potion_2
-  itemName: "\uC911\uAE09 \uD3EC\uC158"
-  icon: {fileID: 21300000, guid: 44dc65116207f4b46aa85443dae5ad96, type: 3}
-  itemType: 0
-  buyPrice: 50
-  sellPrice: 25
+  itemId: potion_hp_large
+  itemName: "\uACE0\uAE09 \uD3EC\uC158"
+  description: "\uC0C1\uB2F9\uD55C \uD68C\uBCF5\uB7C9\uC758 \uD3EC\uC158\n\n\uCD5C\uB300
+    \uCCB4\uB825 70% \uD68C\uBCF5"
+  icon: {fileID: 21300000, guid: 7b3876a2b72c44540a4bbd5aaba9e506, type: 3}
+  itemType: 1
+  buyPrice: 500
+  sellPrice: 100
   isStackable: 1
   maxStack: 999
   equipSlot: 0

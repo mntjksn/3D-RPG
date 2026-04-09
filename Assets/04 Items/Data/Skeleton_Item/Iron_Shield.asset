@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: Iron_Shield
   itemName: "\uCCA0 \uBC29\uD328"
+  description: "\uD2BC\uD2BC\uD55C \uCCA0 \uBC29\uD328\n\n\uC274\uB4DC \uD53C\uD574
+    \uAC10\uC18C + 40%"
   icon: {fileID: 21300000, guid: 256205b9c6ca12c45ab7762da8a65631, type: 3}
-  itemType: 4
-  buyPrice: 1000
-  sellPrice: 500
+  itemType: 5
+  buyPrice: 5000
+  sellPrice: 1500
   isStackable: 0
   maxStack: 1
   equipSlot: 4

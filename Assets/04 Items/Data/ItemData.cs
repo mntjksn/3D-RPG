@@ -3,6 +3,7 @@ using UnityEngine;
 public enum ItemType
 {
     Material,
+    Consumable,
     Weapon,
     Armor,
     Shoes,
@@ -24,6 +25,7 @@ public class ItemData : ScriptableObject
     [Header("Common")]
     public string itemId;
     public string itemName;
+    [TextArea] public string description;
     public Sprite icon;
     public ItemType itemType;
     public int buyPrice = 1;
