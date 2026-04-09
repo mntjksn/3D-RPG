@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: Wood_Armor
   itemName: "\uB098\uBB34 \uAC11\uC637"
   description: "\uD2BC\uD2BC\uD55C \uB098\uBB34 \uAC11\uC637\n\n\uCD5C\uB300 \uCCB4\uB825
-    + 200"
+    + 800"
   icon: {fileID: 21300000, guid: 541ae020fad5efc48a89a38c6218a601, type: 3}
   itemType: 3
   buyPrice: 5000
@@ -26,4 +26,4 @@ MonoBehaviour:
   attackPower: 0
   shieldPower: 0
   moveSpeedBonus: 0
-  maxHpBonus: 200
+  maxHpBonus: 800

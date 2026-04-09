@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: Silver_Sword
   itemName: "\uC740 \uAC80"
-  description: "\uB0A0\uCE74\uB85C\uC6B4 \uC740 \uAC80\n\n\uACF5\uACA9\uB825 + 40"
+  description: "\uB0A0\uCE74\uB85C\uC6B4 \uC740 \uAC80\n\n\uACF5\uACA9\uB825 + 80"
   icon: {fileID: 21300000, guid: 95052c6b62fb3de4695beaa99f842ac2, type: 3}
   itemType: 2
   buyPrice: 6000
@@ -22,7 +22,7 @@ MonoBehaviour:
   isStackable: 0
   maxStack: 1
   equipSlot: 1
-  attackPower: 40
+  attackPower: 80
   shieldPower: 0
   moveSpeedBonus: 0
   maxHpBonus: 0
