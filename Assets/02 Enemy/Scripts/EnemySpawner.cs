@@ -151,6 +151,7 @@ public class EnemySpawner : MonoBehaviour
         enemyObj.transform.position = spawnPosition;
         enemyObj.transform.rotation = Quaternion.identity;
         enemyObj.SetActive(true);
+        enemyObj.GetComponent<CapsuleCollider>().enabled = true;
 
         EnemyPool poolMember = enemyObj.GetComponent<EnemyPool>();
         poolMember?.SetLastSpawnPosition(spawnPosition);

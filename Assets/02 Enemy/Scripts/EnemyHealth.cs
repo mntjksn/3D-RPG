@@ -76,6 +76,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
+        gameObject.GetComponent<CapsuleCollider>().enabled = false;
 
         HandleDrops();
         PlayDieReaction();
