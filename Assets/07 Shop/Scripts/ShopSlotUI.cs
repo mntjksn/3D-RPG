@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ShopSlotUI : MonoBehaviour
+public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text countText;
@@ -28,7 +29,6 @@ public class ShopSlotUI : MonoBehaviour
 
     public void SetEmpty()
     {
-        slotIndex = -1;
         currentItemData = null;
 
         if (iconImage != null)
@@ -53,6 +53,19 @@ public class ShopSlotUI : MonoBehaviour
 
         if (countText != null)
             countText.text = string.Empty;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (currentItemData == null)
+            return;
+
+        ItemTooltipUI.Instance?.Show(currentItemData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ItemTooltipUI.Instance?.Hide();
     }
 
     private void OnClickSlot()

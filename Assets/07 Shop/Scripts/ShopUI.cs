@@ -142,7 +142,8 @@ public class ShopUI : MonoBehaviour
 
     private bool IsItem(ItemData itemData)
     {
-        return itemData.itemType == ItemType.Material;
+        return itemData.itemType == ItemType.Material
+            || itemData.itemType == ItemType.Consumable;
     }
 
     public void OnClickEquipmentTab()

@@ -37,6 +37,7 @@ public class ShopManager : MonoBehaviour
     private void OnEnable()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
 
         if (playerActionLock != null)
             playerActionLock.LockRecoverControls();
@@ -45,6 +46,7 @@ public class ShopManager : MonoBehaviour
     private void OnDisable()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (playerActionLock != null)
             playerActionLock.UnlockRecoverControls();
