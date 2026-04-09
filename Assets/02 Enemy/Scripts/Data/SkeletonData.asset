@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Skeleton
   maxHp: 500
-  exp: 1
-  minGold: 15
-  maxGold: 30
+  exp: 10
+  minGold: 20
+  maxGold: 100
   deadBodyDuration: 2
-  respawnDelay: 5
+  respawnDelay: 20
   attackSpeed: 4
   moveSpeed: 6
   patrolSpeed: 5
@@ -28,8 +28,8 @@ MonoBehaviour:
   attackDamage: 50
   attackRecoverTime: 1
   attackRate: 1.5
-  patrolRadius: 5
-  patrolWaitTime: 2
+  patrolRadius: 6
+  patrolWaitTime: 3
   normalDrops:
   - itemData: {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
     dropChance: 1

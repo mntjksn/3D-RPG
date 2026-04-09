@@ -14,22 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Golem
   maxHp: 1000
-  exp: 1
-  minGold: 50
-  maxGold: 200
+  exp: 50
+  minGold: 300
+  maxGold: 1000
   deadBodyDuration: 2
-  respawnDelay: 5
+  respawnDelay: 30
   attackSpeed: 2
   moveSpeed: 3
   patrolSpeed: 2
   detectRange: 10
   loseRange: 5
   attackRange: 2
-  attackDamage: 100
+  attackDamage: 300
   attackRecoverTime: 0.5
   attackRate: 2.5
-  patrolRadius: 3
-  patrolWaitTime: 5
+  patrolRadius: 5
+  patrolWaitTime: 10
   normalDrops:
   - itemData: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
     dropChance: 1

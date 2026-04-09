@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Zombie
   maxHp: 100
-  exp: 1
+  exp: 2
   minGold: 1
   maxGold: 10
   deadBodyDuration: 2
-  respawnDelay: 5
+  respawnDelay: 10
   attackSpeed: 1.5
   moveSpeed: 4
   patrolSpeed: 1.5
   detectRange: 10
   loseRange: 3
   attackRange: 2
-  attackDamage: 10
+  attackDamage: 20
   attackRecoverTime: 1.5
   attackRate: 2
   patrolRadius: 7
