@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlotUI : MonoBehaviour,
+    IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler,
+    IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text countText;
@@ -32,7 +34,6 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void SetEmpty()
     {
-        slotIndex = -1;
         currentItemData = null;
         currentCount = 0;
 
@@ -61,12 +62,30 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             countText.text = count > 1 ? count.ToString() : string.Empty;
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (isDragging)
+            return;
+
+        if (currentItemData == null || currentCount <= 0)
+            return;
+
+        ItemTooltipUI.Instance?.Show(currentItemData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ItemTooltipUI.Instance?.Hide();
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (slotIndex < 0 || currentItemData == null)
             return;
 
         isDragging = true;
+
+        ItemTooltipUI.Instance?.Hide();
 
         InventoryDragData.Clear();
         InventoryDragData.DraggedItem = currentItemData;
@@ -105,6 +124,8 @@ public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrop(PointerEventData eventData)
     {
+        ItemTooltipUI.Instance?.Hide();
+
         if (InventoryManager.Instance == null)
             return;
 

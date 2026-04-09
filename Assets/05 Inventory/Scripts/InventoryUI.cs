@@ -44,6 +44,7 @@ public class InventoryUI : MonoBehaviour
         RefreshUI();
 
         Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
 
         if (playerActionLock != null)
             playerActionLock.LockRecoverControls();
@@ -55,6 +56,7 @@ public class InventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
 
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         if (playerActionLock != null)
             playerActionLock.UnlockRecoverControls();
@@ -166,7 +168,8 @@ public class InventoryUI : MonoBehaviour
 
     private bool IsItem(ItemData itemData)
     {
-        return itemData.itemType == ItemType.Material;
+        return itemData.itemType == ItemType.Material
+            || itemData.itemType == ItemType.Consumable;
     }
 
     public void OnClickEquipmentTab()
