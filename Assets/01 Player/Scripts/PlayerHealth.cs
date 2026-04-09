@@ -87,8 +87,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             Die();
             return;
         }
-
-        PlayHitReaction();
     }
 
     public float ModifyIncomingDamage(Transform attacker, float damage)
@@ -122,11 +120,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private bool IsDeadByHp()
     {
         return playerStat.CurrentHp <= 0f;
-    }
-
-    private void PlayHitReaction()
-    {
-        // 피격 애니메이션 / 넉백 / 이펙트
     }
 
     private void Die()
@@ -180,26 +173,63 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         Debug.Log("플레이어 부활");
     }
 
-    public void Heal(float amount)
+    public bool TryUsePotion(ItemData itemData)
     {
-        if (isDead || playerStat == null)
-            return;
+        if (isDead || itemData == null || playerStat == null)
+            return false;
 
-        playerStat.Heal(amount);
-        Debug.Log($"플레이어 회복! 현재 체력: {playerStat.CurrentHp}");
+        if (playerStat.CurrentHp >= playerStat.MaxHp)
+        {
+            Debug.Log("이미 체력이 가득 찼습니다.");
+            return false;
+        }
+
+        if (itemData.itemType != ItemType.Consumable)
+            return false;
+
+        if (InventoryManager.Instance == null)
+            return false;
+
+        if (InventoryManager.Instance.GetItemCount(itemData.itemId) <= 0)
+        {
+            Debug.Log("포션이 없습니다.");
+            return false;
+        }
+
+        bool used = ApplyPotionEffect(itemData);
+        if (!used)
+            return false;
+
+        bool removed = InventoryManager.Instance.RemoveItem(itemData.itemId, 1);
+        if (!removed)
+            return false;
+
+        Debug.Log($"{itemData.itemName} 사용");
+        return true;
     }
 
-    public void Revive()
+    private bool ApplyPotionEffect(ItemData itemData)
     {
-        if (playerStat == null)
-            return;
+        switch (itemData.itemId)
+        {
+            case "potion_hp_small":
+                playerStat.Heal(playerStat.MaxHp * 0.2f);
+                return true;
 
-        StopAllCoroutines();
-        Respawn();
-    }
+            case "potion_hp_medium":
+                playerStat.Heal(playerStat.MaxHp * 0.4f);
+                return true;
 
-    public void SetRespawnPosition(Vector3 position)
-    {
-        respawnPosition = position;
+            case "potion_hp_large":
+                playerStat.Heal(playerStat.MaxHp * 0.7f);
+                return true;
+
+            case "potion_hp_full":
+                playerStat.Heal(playerStat.MaxHp);
+                return true;
+        }
+
+        Debug.LogWarning($"정의되지 않은 포션입니다: {itemData.itemId}");
+        return false;
     }
 }

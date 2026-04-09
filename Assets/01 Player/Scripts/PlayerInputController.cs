@@ -5,9 +5,15 @@ public class PlayerInputController : MonoBehaviour
     [Header("Inventory")]
     [SerializeField] private GameObject inventoryPanel;
 
-    void Update()
+    [Header("Potion")]
+    [SerializeField] private PotionSlotUI potionSlotUI;
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
-            inventoryPanel.SetActive(!inventoryPanel.activeSelf);
+            inventoryPanel.SetActive((true));
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            potionSlotUI.TryUseRegisteredPotion();
     }
 }
