@@ -79,7 +79,10 @@ public class SaveManager : MonoBehaviour
         float timer = 0f;
         float timeout = 5f;
 
-        while ((PlayerManager.Instance == null || InventoryManager.Instance == null) && timer < timeout)
+        while ((PlayerManager.Instance == null
+             || InventoryManager.Instance == null
+             || EquipmentManager.Instance == null
+             || PotionSlotManager.Instance == null) && timer < timeout)
         {
             timer += Time.unscaledDeltaTime;
             yield return null;
@@ -114,14 +117,13 @@ public class SaveManager : MonoBehaviour
         }
 
         if (InventoryManager.Instance != null)
-        {
             saveData.inventoryItems = InventoryManager.Instance.GetSaveData();
-        }
 
         if (EquipmentManager.Instance != null)
-        {
             saveData.equipmentData = EquipmentManager.Instance.GetSaveData();
-        }
+
+        if (PotionSlotManager.Instance != null)
+            saveData.potionSlot = PotionSlotManager.Instance.GetSaveData();
 
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(SavePath, json);
@@ -136,16 +138,7 @@ public class SaveManager : MonoBehaviour
         if (!File.Exists(SavePath))
         {
             Debug.Log("저장 파일이 없습니다. 기본값으로 시작합니다.");
-
-            if (PlayerManager.Instance != null)
-                PlayerManager.Instance.InitializePlayer();
-
-            if (InventoryManager.Instance != null)
-                InventoryManager.Instance.InitializeInventory();
-
-            if (EquipmentManager.Instance != null)
-                EquipmentManager.Instance.InitializeEquipment();
-
+            InitializeAll();
             isDirty = false;
             return;
         }
@@ -156,6 +149,8 @@ public class SaveManager : MonoBehaviour
         if (saveData == null)
         {
             Debug.LogWarning("저장 데이터를 불러오지 못했습니다.");
+            InitializeAll();
+            isDirty = false;
             return;
         }
 
@@ -168,6 +163,9 @@ public class SaveManager : MonoBehaviour
         if (EquipmentManager.Instance != null)
             EquipmentManager.Instance.LoadFromSaveData(saveData.equipmentData);
 
+        if (PotionSlotManager.Instance != null)
+            PotionSlotManager.Instance.LoadFromSaveData(saveData.potionSlot);
+
         isDirty = false;
 
         Debug.Log("불러오기 완료");
@@ -178,14 +176,24 @@ public class SaveManager : MonoBehaviour
         if (File.Exists(SavePath))
             File.Delete(SavePath);
 
+        InitializeAll();
+        isDirty = false;
+
+        Debug.Log("저장 파일 삭제 완료");
+    }
+
+    private void InitializeAll()
+    {
         if (PlayerManager.Instance != null)
             PlayerManager.Instance.InitializePlayer();
 
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.InitializeInventory();
 
-        isDirty = false;
+        if (EquipmentManager.Instance != null)
+            EquipmentManager.Instance.InitializeEquipment();
 
-        Debug.Log("저장 파일 삭제 완료");
+        if (PotionSlotManager.Instance != null)
+            PotionSlotManager.Instance.InitializePotion();
     }
 }

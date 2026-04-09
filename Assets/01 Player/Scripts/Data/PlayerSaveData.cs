@@ -10,4 +10,5 @@ public class PlayerSaveData
 
     public List<InventoryItemSaveData> inventoryItems = new List<InventoryItemSaveData>();
     public EquipmentSaveData equipmentData = new EquipmentSaveData();
+    public PotionSlotSaveData potionSlot = new PotionSlotSaveData();
 }
