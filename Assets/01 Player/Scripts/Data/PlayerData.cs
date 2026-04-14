@@ -8,6 +8,7 @@ public class PlayerData : ScriptableObject
     public float attackPower = 10f;
     public float shieldPower = 20f;
     public float speed = 8f;
+    public float regen = 0.01f;
 
     [Header("Level")]
     public int startLevel = 1;
