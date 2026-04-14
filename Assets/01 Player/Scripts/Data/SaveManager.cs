@@ -82,7 +82,8 @@ public class SaveManager : MonoBehaviour
         while ((PlayerManager.Instance == null
              || InventoryManager.Instance == null
              || EquipmentManager.Instance == null
-             || PotionSlotManager.Instance == null) && timer < timeout)
+             || PotionSlotManager.Instance == null
+             || UpgradeManager.Instance == null) && timer < timeout)
         {
             timer += Time.unscaledDeltaTime;
             yield return null;
@@ -125,6 +126,9 @@ public class SaveManager : MonoBehaviour
         if (PotionSlotManager.Instance != null)
             saveData.potionSlot = PotionSlotManager.Instance.GetSaveData();
 
+        if (UpgradeManager.Instance != null)
+            saveData.upgradeData = UpgradeManager.Instance.GetSaveData();
+
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(SavePath, json);
 
@@ -166,6 +170,9 @@ public class SaveManager : MonoBehaviour
         if (PotionSlotManager.Instance != null)
             PotionSlotManager.Instance.LoadFromSaveData(saveData.potionSlot);
 
+        if (UpgradeManager.Instance != null)
+            UpgradeManager.Instance.LoadFromSaveData(saveData.upgradeData);
+
         isDirty = false;
 
         Debug.Log("불러오기 완료");
@@ -195,5 +202,8 @@ public class SaveManager : MonoBehaviour
 
         if (PotionSlotManager.Instance != null)
             PotionSlotManager.Instance.InitializePotion();
+
+        if (UpgradeManager.Instance != null)
+            UpgradeManager.Instance.InitializeUpgrade();
     }
 }
