@@ -73,6 +73,6 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (slotIndex < 0 || currentItemData == null)
             return;
 
-        ShopManager.Instance?.OnClickShopSlot(this);
+        ShopPanelUI.Instance?.OnClickShopSlot(this);
     }
 }

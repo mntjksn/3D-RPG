@@ -64,6 +64,6 @@ public class ShopInventorySlotUI : MonoBehaviour
         if (slotIndex < 0 || currentItemData == null)
             return;
 
-        ShopManager.Instance?.OnClickShopInventorySlot(this);
+        ShopPanelUI.Instance?.OnClickShopInventorySlot(this);
     }
 }

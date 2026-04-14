@@ -151,10 +151,9 @@ public class TradePopupUI : MonoBehaviour
         int quantity = GetQuantity();
 
         if (currentTradeType == TradeType.Buy)
-            ShopManager.Instance.TryBuy(currentSlotIndex, quantity);
+            ShopPanelUI.Instance?.ConfirmBuy(currentSlotIndex, quantity);
         else
-            ShopManager.Instance.TrySell(currentSlotIndex, quantity);
-
+            ShopPanelUI.Instance?.ConfirmSell(currentSlotIndex, quantity);
         Close();
     }
 
