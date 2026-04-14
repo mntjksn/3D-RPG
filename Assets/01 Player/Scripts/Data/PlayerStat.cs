@@ -27,6 +27,7 @@ public class PlayerStat : MonoBehaviour
     public float AttackPower => GetAttackPower();
     public float ShieldPower => GetShieldPower();
     public float Speed => GetSpeed();
+    public float Regen => GetRegen();
 
     private void Awake()
     {
@@ -154,6 +155,12 @@ public class PlayerStat : MonoBehaviour
                 totalHp += armor.maxHpBonus;
         }
 
+        if (UpgradeManager.Instance != null)
+        {
+            int HpLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp);
+            totalHp += HpLevel * 50;
+        }
+
         return totalHp;
     }
 
@@ -170,6 +177,12 @@ public class PlayerStat : MonoBehaviour
 
             if (weapon != null)
                 totalAttack += weapon.attackPower;
+        }
+
+        if (UpgradeManager.Instance != null)
+        {
+            int attackLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack);
+            totalAttack += attackLevel * 5;
         }
 
         return totalAttack;
@@ -209,6 +222,22 @@ public class PlayerStat : MonoBehaviour
         }
 
         return totalSpeed;
+    }
+
+    public float GetRegen()
+    {
+        if (playerData == null)
+            return 0f;
+
+        float totaRegen = playerData.regen;
+
+        if (UpgradeManager.Instance != null)
+        {
+            float regenLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen);
+            totaRegen += regenLevel * 0.01f;
+        }
+
+        return totaRegen;
     }
 
     public PlayerSaveData GetSaveData()
