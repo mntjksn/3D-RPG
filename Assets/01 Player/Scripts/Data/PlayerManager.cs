@@ -15,6 +15,8 @@ public class PlayerManager : MonoBehaviour
     public float AttackPower => playerStat != null ? playerStat.AttackPower : 0f;
     public float ShieldPower => playerStat != null ? playerStat.ShieldPower : 0f;
     public float Speed => playerStat != null ? playerStat.Speed : 0f;
+    public float Regen => playerStat != null ? playerStat.Regen : 0f;
+
 
     public int Level => playerStat != null ? playerStat.Level : 0;
     public int CurrentExp => playerStat != null ? playerStat.CurrentExp : 0;
