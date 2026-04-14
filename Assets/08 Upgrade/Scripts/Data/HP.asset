@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: HP
   m_EditorClassIdentifier: 
   upgradeType: 1
-  upgradeName: Hp
   baseValue: 1
   valuePerLevel: 50
   maxLevel: 10

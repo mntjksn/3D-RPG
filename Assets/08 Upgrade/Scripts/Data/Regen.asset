@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Regen
   m_EditorClassIdentifier: 
   upgradeType: 2
-  upgradeName: Regen
   baseValue: 1
   valuePerLevel: 0.01
   maxLevel: 10
