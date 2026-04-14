@@ -34,7 +34,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
     dropChance: 1
     minAmount: 1
-    maxAmount: 10
+    maxAmount: 3
   - itemData: {fileID: 11400000, guid: dab4aa7b780045242927f3ffed93e9e6, type: 2}
     dropChance: 0.01
     minAmount: 1

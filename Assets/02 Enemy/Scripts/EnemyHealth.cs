@@ -15,6 +15,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private float currentHp;
     private bool isDead;
 
+    private float lastHitTime;
+
+    [Header("Auto Heal")]
+    [SerializeField] private float regen = 0.05f;
+    [SerializeField] private float healDelay = 5f;      // 몇 초 후 시작
+
     public EnemyData EnemyData => enemyData;
     public float CurrentHp => currentHp;
     public float MaxHp => enemyData != null ? enemyData.maxHp : 0f;
@@ -26,6 +32,23 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyAnimation = GetComponent<EnemyAnimation>();
         enemyPool = GetComponent<EnemyPool>();
         enemyHealthBar = GetComponentInChildren<EnemyHealthBar>();
+    }
+
+    private void Update()
+    {
+        if (isDead || enemyData == null)
+            return;
+
+        if (Time.time < lastHitTime + healDelay)
+            return;
+
+        if (currentHp >= MaxHp)
+            return;
+
+        float healAmount = MaxHp * regen * Time.deltaTime;
+        currentHp = Mathf.Min(currentHp + healAmount, MaxHp);
+
+        enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
     public void SetData(EnemyData data)
@@ -62,6 +85,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         currentHp -= damage;
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
+        lastHitTime = Time.time;
         Debug.Log($"{enemyData.enemyName} 피격! 남은 체력: {currentHp}");
     }
 
@@ -106,6 +130,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         currentHp = enemyData.maxHp;
         isDead = false;
+        lastHitTime = Time.time;
 
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
