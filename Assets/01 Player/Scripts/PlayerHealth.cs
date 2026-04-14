@@ -16,7 +16,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     [Header("Auto Heal")]
     [SerializeField] private float healDelay = 3f;      // 몇 초 후 시작
-    [SerializeField] private float healPerSecond = 5f;  // 초당 회복량
 
     private float lastHitTime;
 
@@ -66,7 +65,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (playerStat.CurrentHp >= playerStat.MaxHp)
             return;
 
-        float healAmount = playerStat.MaxHp * healPerSecond * Time.deltaTime;
+        float healAmount = playerStat.MaxHp * playerStat.GetRegen() * Time.deltaTime;
         playerStat.Heal(healAmount);
     }
 
@@ -163,6 +162,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (characterController != null)
             characterController.enabled = true;
 
+        lastHitTime = Time.time;
         playerStat.SetCurrentHp(playerStat.MaxHp);
 
         playerAnimation?.ResetAnimation();
@@ -196,13 +196,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             return false;
         }
 
-        bool used = ApplyPotionEffect(itemData);
-        if (!used)
-            return false;
-
         bool removed = InventoryManager.Instance.RemoveItem(itemData.itemId, 1);
         if (!removed)
             return false;
+
+        bool used = ApplyPotionEffect(itemData);
+        if (!used)
+        {
+            InventoryManager.Instance.AddItem(itemData, 1);
+            return false;
+        }
 
         Debug.Log($"{itemData.itemName} 사용");
         return true;
