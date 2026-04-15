@@ -130,6 +130,11 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         playerStat.SetCurrentHp(0f);
 
+        int currentGold = playerStat.Gold;
+        int penalty = Mathf.Max(10, Mathf.FloorToInt(currentGold * 0.25f));
+        penalty = Mathf.Min(penalty, currentGold);
+        playerStat.UseGold(penalty);
+
         playerAttack?.ResetAttackState();
         playerShield?.ResetShieldState();
 
