@@ -16587,6 +16587,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questDatabase:
   - {fileID: 11400000, guid: dcfe4c9141b22f94b999fcd2b0d0426b, type: 2}
+  - {fileID: 11400000, guid: b622e6a39b131534fbdcdd41020fd5a5, type: 2}
+  - {fileID: 11400000, guid: 8ab97bf0bc5310a4fa1ae594c156b393, type: 2}
+  - {fileID: 11400000, guid: 91cab1ed472e5b94fbbaad9feb2c4dcc, type: 2}
+  - {fileID: 11400000, guid: 5d1497bf17f9efe47adba438d9995de7, type: 2}
+  - {fileID: 11400000, guid: f5f2c308d4ee9f642bdc52c966cac865, type: 2}
+  - {fileID: 11400000, guid: 81bc372df8ff8d347bf9d239a6ba1c48, type: 2}
+  - {fileID: 11400000, guid: 13239b117ee943b4c812257b0eaa04b3, type: 2}
+  - {fileID: 11400000, guid: 78849a4af3ac59d4399cfffaaf5fcf32, type: 2}
+  - {fileID: 11400000, guid: 17db3e9083ba08c48a879902d252b4da, type: 2}
+  - {fileID: 11400000, guid: 5fe6580f2f766f24dad02abe4f4b69c7, type: 2}
+  - {fileID: 11400000, guid: f8122023f6a7f444d8e6f6ce89ca8e54, type: 2}
+  - {fileID: 11400000, guid: 8da139740aadced40a1163c50b70f180, type: 2}
+  - {fileID: 11400000, guid: 4564fdc01b76f734ebd4aca0e426c89b, type: 2}
 --- !u!1 &380196907
 GameObject:
   m_ObjectHideFlags: 0
@@ -34150,7 +34163,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: -15}
+  m_AnchoredPosition: {x: 15, y: -15}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &788942872
@@ -44766,7 +44779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 12.5}
+  m_AnchoredPosition: {x: 15, y: 11}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1027036605
@@ -64042,6 +64055,8 @@ MonoBehaviour:
   panelRoot: {fileID: 1471130669}
   dialogueText: {fileID: 1706329546}
   guideText: {fileID: 582267132}
+  progressDialogue: {fileID: 11400000, guid: a6be73198a2f9264e838911816290c33, type: 2}
+  noQuestDialogue: {fileID: 11400000, guid: 4904335b263b5cd479a82b76fd2f01cc, type: 2}
   nextKey: 32
   playerActionLock: {fileID: 671473462}
 --- !u!1 &1476671114
