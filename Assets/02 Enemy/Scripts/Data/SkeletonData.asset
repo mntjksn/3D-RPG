@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f9baece032cfa4d9443a09f49a04af, type: 3}
   m_Name: SkeletonData
   m_EditorClassIdentifier: 
-  enemyName: Skeleton
+  enemyName: "\uC2A4\uCF08\uB808\uD1A4"
   maxHp: 500
   exp: 10
   minGold: 20
-  maxGold: 100
+  maxGold: 50
   deadBodyDuration: 2
-  respawnDelay: 20
+  respawnDelay: 60
   attackSpeed: 4
   moveSpeed: 6
   patrolSpeed: 5
@@ -34,7 +34,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
     dropChance: 1
     minAmount: 1
-    maxAmount: 5
+    maxAmount: 3
   - itemData: {fileID: 11400000, guid: 7f9bb83f4cfd60b4480138493b4fa1a6, type: 2}
     dropChance: 0.02
     minAmount: 1

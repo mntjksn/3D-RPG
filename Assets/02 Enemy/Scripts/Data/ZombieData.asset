@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f9baece032cfa4d9443a09f49a04af, type: 3}
   m_Name: ZombieData
   m_EditorClassIdentifier: 
-  enemyName: Zombie
+  enemyName: "\uC880\uBE44"
   maxHp: 100
   exp: 2
   minGold: 1
-  maxGold: 10
+  maxGold: 5
   deadBodyDuration: 2
-  respawnDelay: 10
+  respawnDelay: 30
   attackSpeed: 1.5
   moveSpeed: 4
   patrolSpeed: 1.5
@@ -34,7 +34,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
     dropChance: 1
     minAmount: 1
-    maxAmount: 10
+    maxAmount: 5
   - itemData: {fileID: 11400000, guid: 62142cbe052b65e4c8b6210384149ce6, type: 2}
     dropChance: 0.03
     minAmount: 1

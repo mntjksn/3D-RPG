@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f9baece032cfa4d9443a09f49a04af, type: 3}
   m_Name: GolemData
   m_EditorClassIdentifier: 
-  enemyName: Golem
+  enemyName: "\uACE8\uB818"
   maxHp: 1000
   exp: 50
   minGold: 300
-  maxGold: 1000
+  maxGold: 500
   deadBodyDuration: 2
-  respawnDelay: 30
+  respawnDelay: 120
   attackSpeed: 2
   moveSpeed: 3
   patrolSpeed: 2
@@ -34,7 +34,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
     dropChance: 1
     minAmount: 1
-    maxAmount: 3
+    maxAmount: 2
   - itemData: {fileID: 11400000, guid: dab4aa7b780045242927f3ffed93e9e6, type: 2}
     dropChance: 0.01
     minAmount: 1
