@@ -83,7 +83,8 @@ public class SaveManager : MonoBehaviour
              || InventoryManager.Instance == null
              || EquipmentManager.Instance == null
              || PotionSlotManager.Instance == null
-             || UpgradeManager.Instance == null) && timer < timeout)
+             || UpgradeManager.Instance == null
+             || QuestManager.Instance == null) && timer < timeout)
         {
             timer += Time.unscaledDeltaTime;
             yield return null;
@@ -129,6 +130,9 @@ public class SaveManager : MonoBehaviour
         if (UpgradeManager.Instance != null)
             saveData.upgradeData = UpgradeManager.Instance.GetSaveData();
 
+        if (QuestManager.Instance != null)
+            saveData.questData = QuestManager.Instance.GetSaveData();
+
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(SavePath, json);
 
@@ -158,9 +162,6 @@ public class SaveManager : MonoBehaviour
             return;
         }
 
-        if (PlayerManager.Instance != null)
-            PlayerManager.Instance.LoadFromSaveData(saveData);
-
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.LoadFromSaveData(saveData.inventoryItems);
 
@@ -173,8 +174,13 @@ public class SaveManager : MonoBehaviour
         if (UpgradeManager.Instance != null)
             UpgradeManager.Instance.LoadFromSaveData(saveData.upgradeData);
 
-        isDirty = false;
+        if (QuestManager.Instance != null)
+            QuestManager.Instance.LoadFromSaveData(saveData.questData);
 
+        if (PlayerManager.Instance != null)
+            PlayerManager.Instance.LoadFromSaveData(saveData);
+
+        isDirty = false;
         Debug.Log("불러오기 완료");
     }
 
@@ -205,5 +211,8 @@ public class SaveManager : MonoBehaviour
 
         if (UpgradeManager.Instance != null)
             UpgradeManager.Instance.InitializeUpgrade();
+
+        if (QuestManager.Instance != null)
+            QuestManager.Instance.InitializeQuest();
     }
 }

@@ -12,4 +12,5 @@ public class PlayerSaveData
     public EquipmentSaveData equipmentData = new EquipmentSaveData();
     public PotionSlotSaveData potionSlot = new PotionSlotSaveData();
     public UpgradeSaveData upgradeData = new UpgradeSaveData();
+    public QuestSaveData questData = new QuestSaveData();
 }
