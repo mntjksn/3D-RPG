@@ -102,6 +102,9 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         isDead = true;
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
 
+        if (enemyData != null)
+            QuestService.NotifyKill(enemyData.enemyName); 
+
         HandleDrops();
         PlayDieReaction();
         RequestRespawn();
