@@ -11,6 +11,10 @@ public class QuestPanelUI : MonoBehaviour
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private TMP_Text guideText;
 
+    [Header("Fallback Dialogue")]
+    [SerializeField] private QuestDialogueData progressDialogue;
+    [SerializeField] private QuestDialogueData noQuestDialogue;
+
     [Header("Input")]
     [SerializeField] private KeyCode nextKey = KeyCode.Space;
 
@@ -22,6 +26,7 @@ public class QuestPanelUI : MonoBehaviour
     
     private int currentIndex;
     private bool isPlaying;
+    private bool isNoQuestMode;
 
     private void OnEnable()
     {
@@ -43,13 +48,6 @@ public class QuestPanelUI : MonoBehaviour
             playerActionLock.LockRecoverControls();
 
         currentDisplayQuestData = GetDisplayQuestData();
-
-        if (currentDisplayQuestData == null)
-        {
-            ClosePanel();
-            return;
-        }
-
         currentDialogue = GetCurrentDialogue(currentDisplayQuestData);
 
         if (currentDialogue == null || currentDialogue.lines == null || currentDialogue.lines.Count == 0)
@@ -67,33 +65,65 @@ public class QuestPanelUI : MonoBehaviour
         RefreshText();
     }
 
+    private QuestData GetDisplayQuestData()
+    {
+        if (questData == null)
+            return null;
+
+        QuestData currentQuest = questData;
+
+        while (currentQuest != null)
+        {
+            QuestStateData state = QuestManager.Instance != null
+                ? QuestManager.Instance.GetState(currentQuest.questId)
+                : null;
+
+            // 아직 안 받은 퀘스트
+            if (state == null || !state.isAccepted)
+                return currentQuest;
+
+            // 진행 중이거나 완료했지만 보상 안 받음
+            if (!state.isRewardClaimed)
+                return currentQuest;
+
+            // 보상까지 받았으면 다음 퀘스트 검사
+            currentQuest = currentQuest.nextQuest;
+        }
+
+        // 전부 끝난 상태
+        return null;
+    }
+
     private QuestDialogueData GetCurrentDialogue(QuestData displayQuestData)
     {
+        isNoQuestMode = false;
+
+        // 더 이상 줄 퀘스트가 없으면 공통 no quest 대사
         if (displayQuestData == null)
-            return null;
+        {
+            isNoQuestMode = true;
+            return noQuestDialogue;
+        }
 
         QuestStateData state = QuestManager.Instance != null
             ? QuestManager.Instance.GetState(displayQuestData.questId)
             : null;
 
-        // 아직 안 받음
+        // 아직 안 받은 상태 → 시작 대사
         if (state == null || !state.isAccepted)
             return displayQuestData.startDialogue;
 
-        // 진행 중
+        // 진행 중 → 공통 진행중 대사
         if (!state.isCompleted)
-            return displayQuestData.progressDialogue != null
-                ? displayQuestData.progressDialogue
-                : displayQuestData.startDialogue;
+            return progressDialogue;
 
-        // 완료했지만 보상 안 받음
+        // 완료했지만 보상 안 받음 → 개별 완료 대사
         if (!state.isRewardClaimed)
-            return displayQuestData.completeDialogue != null
-                ? displayQuestData.completeDialogue
-                : displayQuestData.progressDialogue;
+            return displayQuestData.completeDialogue;
 
-        // 여기까지 왔으면 이 퀘스트는 끝난 상태
-        return displayQuestData.noQuestDialogue;
+        // 여기까지 오면 사실상 no quest
+        isNoQuestMode = true;
+        return noQuestDialogue;
     }
 
     private void NextLine()
@@ -114,6 +144,9 @@ public class QuestPanelUI : MonoBehaviour
         if (dialogueText == null || currentDialogue == null)
             return;
 
+        if (currentIndex < 0 || currentIndex >= currentDialogue.lines.Count)
+            return;
+
         dialogueText.text = currentDialogue.lines[currentIndex];
     }
 
@@ -121,14 +154,23 @@ public class QuestPanelUI : MonoBehaviour
     {
         isPlaying = false;
 
+        // "임무 없음" 대사면 아무 처리 없이 닫기
+        if (isNoQuestMode)
+        {
+            ClosePanel();
+            return;
+        }
+
         if (currentDisplayQuestData != null && QuestManager.Instance != null)
         {
             QuestStateData state = QuestManager.Instance.GetState(currentDisplayQuestData.questId);
 
+            // 아직 안 받았으면 수락
             if (state == null || !state.isAccepted)
             {
                 QuestManager.Instance.AcceptQuest(currentDisplayQuestData);
             }
+            // 완료했고 보상 안 받았으면 보상 지급
             else if (state.isCompleted && !state.isRewardClaimed)
             {
                 QuestService.ClaimReward(currentDisplayQuestData);
@@ -136,34 +178,6 @@ public class QuestPanelUI : MonoBehaviour
         }
 
         ClosePanel();
-    }
-
-    private QuestData GetDisplayQuestData()
-    {
-        if (questData == null)
-            return null;
-
-        QuestData currentQuest = questData;
-
-        while (currentQuest != null)
-        {
-            QuestStateData state = QuestManager.Instance != null
-                ? QuestManager.Instance.GetState(currentQuest.questId)
-                : null;
-
-            // 아직 안 받은 퀘스트면 이걸 보여줌
-            if (state == null || !state.isAccepted)
-                return currentQuest;
-
-            // 진행 중이거나 완료 보상 전이면 이것도 현재 퀘스트
-            if (!state.isRewardClaimed)
-                return currentQuest;
-
-            // 보상까지 끝났으면 다음 퀘스트 검사
-            currentQuest = currentQuest.nextQuest;
-        }
-
-        return null;
     }
 
     private void ClosePanel()
