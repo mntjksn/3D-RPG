@@ -76,6 +76,9 @@ public static class ShopService
 
         ShopManager.Instance?.NotifyTradeSuccess();
 
+        if (itemData != null)
+            QuestService.NotifyBuyItem(itemData.itemName, quantity);
+
         Debug.Log($"구매 완료: {itemData.itemName} / 수량: {quantity} / 가격: {totalPrice}");
         return true;
     }
@@ -128,6 +131,9 @@ public static class ShopService
         playerStat.AddGold(totalSellPrice);
 
         ShopManager.Instance?.NotifyTradeSuccess();
+
+        if (itemData != null)
+            QuestService.NotifySellItem(itemData.itemName, quantity);
 
         Debug.Log($"판매 완료: {itemData.itemName} / 수량: {quantity} / 가격: {totalSellPrice}");
         return true;

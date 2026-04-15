@@ -70,6 +70,8 @@ public static class UpgradeService
         {
             manager.AddLevel(type);
             manager.OnUpgradeSuccess?.Invoke(type);
+
+            QuestService.NotifyUpgrade(type.ToString());
         }
 
         SaveManager.Instance?.MarkDirty();

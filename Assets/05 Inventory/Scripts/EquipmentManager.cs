@@ -58,6 +58,9 @@ public class EquipmentManager : MonoBehaviour
 
         Debug.Log($"ÀåÂø ¿Ï·á: {newItem.itemName} -> {slotType}");
 
+        if (newItem != null)
+            QuestService.NotifyEquipItem(newItem.itemName);
+
         OnEquipmentChanged?.Invoke();
         MarkSaveDirty();
         return true;

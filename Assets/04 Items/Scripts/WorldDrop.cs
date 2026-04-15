@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.Rendering.PostProcessing.SubpixelMorphologicalAntialiasing;
 
 public class WorldDrop : MonoBehaviour
 {
@@ -59,6 +60,9 @@ public class WorldDrop : MonoBehaviour
         {
             Debug.Log($"æ∆¿Ã≈€ »πµÊ: {itemData.itemName} x{amount}");
             InventoryManager.Instance.AddItem(itemData, amount);
+
+            if (itemData != null)
+                QuestService.NotifyCollectItem(itemData.itemName, amount);
         }
 
         Destroy(gameObject);

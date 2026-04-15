@@ -1,3 +1,4 @@
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -29,6 +30,9 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
 
         PotionSlotManager.Instance?.SetPotion(itemData.itemId);
         RefreshUI();
+
+        if (itemData != null)
+            QuestService.NotifyEquipItem(itemData.itemName);
 
         Debug.Log($"{itemData.itemName} 포션 슬롯 등록");
     }
