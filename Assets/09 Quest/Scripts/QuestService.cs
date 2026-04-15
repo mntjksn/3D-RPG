@@ -126,19 +126,16 @@ public static class QuestService
 
     public static void NotifyUpgrade(string targetId)
     {
-        QuestManager manager = QuestManager.Instance;
-        if (manager == null || string.IsNullOrEmpty(targetId))
+        var manager = QuestManager.Instance;
+        if (manager == null)
             return;
 
-        foreach (QuestData questData in manager.GetActiveQuestDatas())
+        foreach (var questData in manager.GetActiveQuestDatas())
         {
-            if (questData == null)
-                continue;
-
             if (questData.questType != QuestType.Upgrade)
                 continue;
 
-            if (!string.Equals(questData.targetId, targetId))
+            if (questData.targetId != targetId)
                 continue;
 
             AddProgress(questData, 1);
