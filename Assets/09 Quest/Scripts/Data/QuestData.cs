@@ -28,9 +28,7 @@ public class QuestData : ScriptableObject
 
     [Header("대화")]
     public QuestDialogueData startDialogue;
-    public QuestDialogueData progressDialogue;
     public QuestDialogueData completeDialogue;
-    public QuestDialogueData noQuestDialogue;
 
     [Header("연계")]
     public QuestData nextQuest;
