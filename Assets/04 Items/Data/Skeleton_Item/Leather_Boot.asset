@@ -18,8 +18,8 @@ MonoBehaviour:
     + 2"
   icon: {fileID: 21300000, guid: 29a1226f7b5e20240942612e151c3c4c, type: 3}
   itemType: 4
-  buyPrice: 4000
-  sellPrice: 1000
+  buyPrice: 7000
+  sellPrice: 3500
   isStackable: 0
   maxStack: 1
   equipSlot: 3
