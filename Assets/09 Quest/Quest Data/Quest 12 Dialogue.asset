@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cda962ed693fe4cb309255159f3173, type: 3}
+  m_Name: Quest 12 Dialogue
+  m_EditorClassIdentifier: 
+  dialogueId: Quest 12 Dialogue
+  lines:
+  - "\uC815\uB9D0 \uAC15\uD574\uC84C\uAD6C\uB098."
+  - "\uB9C8\uC744 \uBAAC\uC2A4\uD130 \uC911 \uAC00\uC7A5 \uAC15\uD55C \uB140\uC11D\uC774
+    \uC788\uB294\uB370.\n\uD639\uC2DC \uAD00\uC2EC\uC774 \uC788\uB294\uAC00?"
+  - "\uAE38 \uB530\uB77C \uCB49 \uC62C\uB77C\uAC00\uBA74\n\uBC14\uC704\uC0B0\uC774
+    \uB098\uC624\uB124."
+  - "\uAC70\uAE30\uC5D0 \uC788\uB294 \uB140\uC11D\uC774\uC9C0.."
+  - "\uC5EC\uD0DC \uC0C1\uB300\uD558\uB358 \uB140\uC11D\uB4E4\uACFC\n\uCC28\uC6D0\uC774
+    \uB2E4\uB97C \uAC70\uC57C.."
+  - "\uB369\uCE58\uB3C4 \uB9CC\uD07C\uC774\uB098 \uCCB4\uB825\uB3C4 \uC5B4\uB9C8\uBB34\uC2DC
+    \uD558\uC9C0..\n\uD55C \uB300 \uB9DE\uC73C\uBA74 \uC8FD\uC744 \uC218\uB3C4 \uC788\uB2E4\uB124."
+  - "\uC6B0\uC120 \uADF8 \uB140\uC11D\uC744 1\uB9C8\uB9AC\uB9CC \uC7A1\uC544 \uBCF4\uACA0\uB098?"
+  - "\uC900\uBE44\uB97C \uB2E8\uB2E8\uD788 \uD558\uACE0 \uAC00\uB294 \uAC8C \uC88B\uC744
+    \uAC70\uC57C.."

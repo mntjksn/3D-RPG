@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0313b1eef2659434ba6a6d20ddff1443, type: 3}
+  m_Name: Quest 10
+  m_EditorClassIdentifier: 
+  questId: Quest_10
+  questName: "\uC544\uC774\uD15C \uD68D\uB4DD"
+  description: "\uC2A4\uCF08\uB808\uD1A4\uC744 \uC7A1\uC544 \uC2A4\uCF08\uB808\uD1A4
+    \uBF08 30\uAC1C\uB97C \uBAA8\uC544\uBCF4\uC790."
+  questType: 1
+  targetId: "\uC2A4\uCF08\uB808\uD1A4 \uBF08"
+  targetCount: 30
+  rewardGold: 5000
+  rewardExp: 7000
+  rewardItem: {fileID: 11400000, guid: 506350dbf89cb6d44a1a0cd4153ddaf2, type: 2}
+  rewardItemCount: 5
+  startDialogue: {fileID: 11400000, guid: fab717ecc840d674ca4f3ef55847fbc9, type: 2}
+  completeDialogue: {fileID: 11400000, guid: 85750819d28af024c80f70b89b498eb9, type: 2}
+  nextQuest: {fileID: 11400000, guid: 5fe6580f2f766f24dad02abe4f4b69c7, type: 2}

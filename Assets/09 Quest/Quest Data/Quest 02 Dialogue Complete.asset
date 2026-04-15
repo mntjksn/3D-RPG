@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cda962ed693fe4cb309255159f3173, type: 3}
+  m_Name: Quest 02 Dialogue Complete
+  m_EditorClassIdentifier: 
+  dialogueId: Quest 02 Dialogue Complete
+  lines:
+  - "\uC790\uB124 \uC654\uAD6C\uB9CC."
+  - "\uC0C1\uC810 \uC774\uC6A9\uC740 \uC880 \uC775\uC219\uD574\uC84C\uB098?"
+  - "\uC5EC\uAE30 \uBCC4\uAC70 \uC544\uB2C8\uC9C0\uB9CC 50\uACE8\uB4DC \uC8FC\uACA0\uB124."
+  - "\uC5EC\uC720\uAC00 \uC0DD\uAE30\uBA74 \uB610 \uB9D0 \uAC78\uC5B4 \uC8FC\uAC8C\uB098."

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cda962ed693fe4cb309255159f3173, type: 3}
+  m_Name: Quest 14 Dialogue
+  m_EditorClassIdentifier: 
+  dialogueId: Quest 14 Dialogue
+  lines:
+  - "\uC774\uC81C \uAC15\uD574\uC9C8 \uB9CC\uD07C \uAC15\uD574\uC9C4 \uAC70 \uAC19\uAD70."
+  - "\uBB34\uB9AC\uD55C \uBD80\uD0C1\uC77C \uC218\uB3C4 \uC788\uB294\uB370\n\uB4E4\uC5B4
+    \uC8FC\uACA0\uB098?"
+  - "\uACE8\uB818 20\uB9C8\uB9AC\uB9CC \uC7A1\uC544\uC92C\uC73C\uBA74 \uD558\uB124."
+  - "\uC790\uB124 \uB9D0\uACE0 \uC7A1\uC744 \uC218 \uC788\uB294 \uC0AC\uB78C\uC774
+    \uC5C6\uB124.."
+  - "\uC5ED\uC2DC \uC790\uB124\uB294 \uD574\uC904 \uC904 \uC54C\uC558\uB124."
+  - "\uC2DC\uAC04\uC774 \uAF64 \uAC78\uB9AC\uACA0\uC9C0\uB9CC..\n\uD574\uACB0\uD574\uC904\uAC70\uB77C
+    \uBBFF\uACE0 \uC788\uB124.."

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0313b1eef2659434ba6a6d20ddff1443, type: 3}
+  m_Name: Quest 08
+  m_EditorClassIdentifier: 
+  questId: Quest_08
+  questName: "\uC880\uBE44 \uCC98\uCE58"
+  description: "\uC880\uBE44 50\uB9C8\uB9AC\uB97C \uC7A1\uC544\uBCF4\uC790."
+  questType: 0
+  targetId: "\uC880\uBE44"
+  targetCount: 50
+  rewardGold: 5000
+  rewardExp: 500
+  rewardItem: {fileID: 11400000, guid: 8b67e6faefdd2e44dafc28758f4c95bd, type: 2}
+  rewardItemCount: 20
+  startDialogue: {fileID: 11400000, guid: 6a74b42f27bc0e74286c3e39b8afad43, type: 2}
+  completeDialogue: {fileID: 11400000, guid: da5eb885e5feb2a4ea45ba2b716bb5bd, type: 2}
+  nextQuest: {fileID: 11400000, guid: 78849a4af3ac59d4399cfffaaf5fcf32, type: 2}

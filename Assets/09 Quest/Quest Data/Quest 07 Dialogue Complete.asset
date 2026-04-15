@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cda962ed693fe4cb309255159f3173, type: 3}
+  m_Name: Quest 07 Dialogue Complete
+  m_EditorClassIdentifier: 
+  dialogueId: Quest 07 Dialogue Complete
+  lines:
+  - "\uC624.\n\uD68D\uB4DD\uD588\uB098 \uBCF4\uAD6C\uB9CC."
+  - "\uAC80\uC740 \uACF5\uACA9\uB825\uC744 \uC62C\uB824\uC8FC\uC9C0..\n\uAC11\uC637\uC740
+    \uCCB4\uB825, \uBC29\uD328\uB294 \uD53C\uD574 \uAC10\uC18C\uB7C9, \uC2E0\uBC1C\uC740
+    \uC774\uB3D9\uC18D\uB3C4\uB97C\n\uCC38\uACE0\uD558\uAC8C\uB098.."
+  - "\uACE0\uC0DD\uD588\uAD6C\uB9CC..\n\uBCF4\uC0C1\uC73C\uB85C 300\uACE8\uB4DC\uC640
+    \uC911\uAE09 \uD3EC\uC158 10\uAC1C\uB97C \uC8FC\uACA0\uB124."
+  - "\uC5B8\uC81C\uB4E0 \uB610 \uCC3E\uC544\uC624\uAC8C."

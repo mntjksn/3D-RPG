@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0313b1eef2659434ba6a6d20ddff1443, type: 3}
+  m_Name: Quest 09
+  m_EditorClassIdentifier: 
+  questId: Quest_09
+  questName: "\uC2A4\uCF08\uB808\uD1A4 \uCC98\uCE58"
+  description: "\uC2A4\uCF08\uB808\uD1A4 3\uB9C8\uB9AC\uB97C \uC7A1\uC544\uBCF4\uC790."
+  questType: 0
+  targetId: "\uC2A4\uCF08\uB808\uD1A4"
+  targetCount: 3
+  rewardGold: 1000
+  rewardExp: 200
+  rewardItem: {fileID: 0}
+  rewardItemCount: 0
+  startDialogue: {fileID: 11400000, guid: 4ab114c7bd43ede428f57aa65f4984bb, type: 2}
+  completeDialogue: {fileID: 11400000, guid: dd6a5492cc7e2914dbf3bdf963c54255, type: 2}
+  nextQuest: {fileID: 11400000, guid: 17db3e9083ba08c48a879902d252b4da, type: 2}

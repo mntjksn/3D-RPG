@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0313b1eef2659434ba6a6d20ddff1443, type: 3}
+  m_Name: Quest 05
+  m_EditorClassIdentifier: 
+  questId: Quest_05
+  questName: "\uC5C5\uADF8\uB808\uC774\uB4DC \uC131\uACF5"
+  description: "\uACF5\uACA9\uB825 \uC5C5\uADF8\uB808\uC774\uB4DC\uB97C 1\uD68C \uC131\uACF5\uD574
+    \uBCF4\uC790."
+  questType: 5
+  targetId: Attack
+  targetCount: 1
+  rewardGold: 0
+  rewardExp: 20
+  rewardItem: {fileID: 11400000, guid: 7959fd7fb02f5e84a94cdb0e9f06ae3c, type: 2}
+  rewardItemCount: 5
+  startDialogue: {fileID: 11400000, guid: fbc9cf46a3ef46a469bd9b5ee7ca4029, type: 2}
+  completeDialogue: {fileID: 11400000, guid: 283f7448fb930264ab08fdf8cfa5e523, type: 2}
+  nextQuest: {fileID: 11400000, guid: f5f2c308d4ee9f642bdc52c966cac865, type: 2}

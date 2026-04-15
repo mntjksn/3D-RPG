@@ -13,18 +13,16 @@ MonoBehaviour:
   m_Name: Quest 01
   m_EditorClassIdentifier: 
   questId: Quest_01
-  questName: "\uC880\uBE44 \uD1A0\uBC8C"
-  description: "\uB9C8\uC744 \uC606\uC5D0 \uC788\uB294 \uC880\uBE44\uB97C 3\uB9C8\uB9AC
+  questName: "\uC880\uBE44 \uCC98\uCE58"
+  description: "\uB9C8\uC744 \uC606\uC5D0 \uC788\uB294 \uC880\uBE44\uB97C 5\uB9C8\uB9AC
     \uC7A1\uC544\uBCF4\uC790."
   questType: 0
-  targetId: Zombie
-  targetCount: 3
-  rewardGold: 500
-  rewardExp: 50
+  targetId: "\uC880\uBE44"
+  targetCount: 5
+  rewardGold: 100
+  rewardExp: 20
   rewardItem: {fileID: 0}
   rewardItemCount: 0
   startDialogue: {fileID: 11400000, guid: 9a953480f6b05f240a466d568dd69d7a, type: 2}
-  progressDialogue: {fileID: 11400000, guid: a6be73198a2f9264e838911816290c33, type: 2}
   completeDialogue: {fileID: 11400000, guid: b4cf9fcb3bf4fd042a3e8344986d8747, type: 2}
-  noQuestDialogue: {fileID: 11400000, guid: 4904335b263b5cd479a82b76fd2f01cc, type: 2}
-  nextQuest: {fileID: 0}
+  nextQuest: {fileID: 11400000, guid: b622e6a39b131534fbdcdd41020fd5a5, type: 2}

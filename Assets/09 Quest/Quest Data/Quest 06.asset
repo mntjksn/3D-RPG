@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0313b1eef2659434ba6a6d20ddff1443, type: 3}
+  m_Name: Quest 06
+  m_EditorClassIdentifier: 
+  questId: Quest_06
+  questName: "\uC544\uC774\uD15C \uD310\uB9E4"
+  description: "\uC369\uC740 \uC0B4\uC810 20\uAC1C\uB97C \uD310\uB9E4\uD574 \uBCF4\uC790."
+  questType: 4
+  targetId: "\uC369\uC740 \uC0B4\uC810"
+  targetCount: 20
+  rewardGold: 0
+  rewardExp: 20
+  rewardItem: {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
+  rewardItemCount: 50
+  startDialogue: {fileID: 11400000, guid: d3a9b8adbd6e4054bb12128aa4766825, type: 2}
+  completeDialogue: {fileID: 11400000, guid: 0d7c5cef01179154ead6445fc633e745, type: 2}
+  nextQuest: {fileID: 11400000, guid: 81bc372df8ff8d347bf9d239a6ba1c48, type: 2}
