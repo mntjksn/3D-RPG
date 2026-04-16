@@ -233,4 +233,52 @@ public class QuestManager : MonoBehaviour
 
         return Mathf.Clamp01((float)state.currentCount / questData.targetCount);
     }
+
+    public QuestData GetNextQuestInOrder()
+    {
+        for (int i = 0; i < questDatabase.Count; i++)
+        {
+            QuestData questData = questDatabase[i];
+
+            if (questData == null)
+                continue;
+
+            QuestStateData state = GetState(questData.questId);
+
+            if (state == null)
+                return questData;
+
+            if (!state.isAccepted)
+                return questData;
+
+            if (state.isAccepted && !state.isRewardClaimed)
+                return questData;
+        }
+
+        return null;
+    }
+
+    public QuestMarkState GetNextQuestMarkState()
+    {
+        QuestData questData = GetNextQuestInOrder();
+
+        if (questData == null)
+            return QuestMarkState.None;
+
+        QuestStateData state = GetState(questData.questId);
+
+        if (state == null)
+            return QuestMarkState.Available;
+
+        if (!state.isAccepted)
+            return QuestMarkState.Available;
+
+        if (state.isAccepted && !state.isCompleted)
+            return QuestMarkState.Progress;
+
+        if (state.isCompleted && !state.isRewardClaimed)
+            return QuestMarkState.Complete;
+
+        return QuestMarkState.None;
+    }
 }

@@ -21,7 +21,7 @@ MonoBehaviour:
   buyPrice: 20
   sellPrice: 5
   isStackable: 1
-  maxStack: 999
+  maxStack: 99
   equipSlot: 0
   attackPower: 0
   shieldPower: 0

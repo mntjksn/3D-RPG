@@ -368,7 +368,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         // 나머지는 임시로 99
-        return 999;
+        return itemData.maxStack;
     }
 
     private void MarkSaveDirty()

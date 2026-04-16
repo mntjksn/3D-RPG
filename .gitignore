@@ -12,3 +12,4 @@
 *.apk
 *.unitypackage
 .vsconfig
+Assets/Firebase/Plugins/
