@@ -267,18 +267,38 @@ public class InventoryManager : MonoBehaviour
 
     public void CompactInventory()
     {
-        List<InventorySlotData> filledSlots = new List<InventorySlotData>();
+        Dictionary<string, int> stackedItems = new Dictionary<string, int>();
 
         for (int i = 0; i < slots.Count; i++)
         {
-            if (slots[i] != null && !slots[i].IsEmpty())
-                filledSlots.Add(new InventorySlotData(slots[i].itemId, slots[i].amount));
+            InventorySlotData slot = slots[i];
+            if (slot == null || slot.IsEmpty())
+                continue;
+
+            if (!stackedItems.ContainsKey(slot.itemId))
+                stackedItems[slot.itemId] = 0;
+
+            stackedItems[slot.itemId] += slot.amount;
         }
 
         slots.Clear();
 
-        for (int i = 0; i < filledSlots.Count; i++)
-            slots.Add(filledSlots[i]);
+        foreach (var pair in stackedItems)
+        {
+            ItemData itemData = GetItemData(pair.Key);
+            if (itemData == null)
+                continue;
+
+            int remain = pair.Value;
+            int maxStack = GetMaxStack(itemData);
+
+            while (remain > 0)
+            {
+                int addAmount = Mathf.Min(maxStack, remain);
+                slots.Add(new InventorySlotData(pair.Key, addAmount));
+                remain -= addAmount;
+            }
+        }
 
         while (slots.Count < maxSlotCount)
             slots.Add(new InventorySlotData());
