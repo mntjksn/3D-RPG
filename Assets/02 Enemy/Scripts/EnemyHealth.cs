@@ -11,6 +11,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private EnemySpawner enemySpawner;
     private EnemyPool enemyPool;
     private EnemyHealthBar enemyHealthBar;
+    private HitFlash hitFlash;
 
     private float currentHp;
     private bool isDead;
@@ -32,6 +33,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyAnimation = GetComponent<EnemyAnimation>();
         enemyPool = GetComponent<EnemyPool>();
         enemyHealthBar = GetComponentInChildren<EnemyHealthBar>();
+        hitFlash = GetComponent<HitFlash>();
     }
 
     private void Update()
@@ -85,6 +87,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         currentHp -= damage;
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
+        hitFlash?.PlayFlash();
         lastHitTime = Time.time;
         Debug.Log($"{enemyData.enemyName} 피격! 남은 체력: {currentHp}");
     }

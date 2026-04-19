@@ -10,6 +10,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private PlayerAttack playerAttack;
     private PlayerShield playerShield;
     private PlayerHealthBar playerHealthBar;
+    private HitFlash hitFlash;
 
     private bool isDead;
     private Vector3 respawnPosition;
@@ -33,6 +34,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         playerAttack = GetComponent<PlayerAttack>();
         playerShield = GetComponent<PlayerShield>();
         playerHealthBar = GetComponentInChildren<PlayerHealthBar>();
+        hitFlash = GetComponent<HitFlash>();
     }
 
     private void Start()
@@ -112,6 +114,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void ApplyDamage(float damage)
     {
         playerStat.TakeDamage(damage);
+        hitFlash?.PlayFlash();
         lastHitTime = Time.time;
         Debug.Log($"플레이어 피격! 남은 체력: {playerStat.CurrentHp}");
     }
