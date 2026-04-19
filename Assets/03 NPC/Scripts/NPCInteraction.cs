@@ -2,18 +2,13 @@ using UnityEngine;
 
 public class NPCInteraction : MonoBehaviour
 {
-    [Header("NPC Type")]
-    [SerializeField] private NPCType npcType;
+    [Header("Open Panel")]
+    [SerializeField] private UIPanelType panelType;
 
     [Header("UI")]
     [SerializeField] private GameObject interactUI;
 
-    [Header("Panels")]
-    [SerializeField] private GameObject shopPanel;
-    [SerializeField] private GameObject questPanel;
-    [SerializeField] private GameObject upgradePanel;
-
-    private bool playerInRange = false;
+    private bool playerInRange;
 
     private void Start()
     {
@@ -30,8 +25,6 @@ public class NPCInteraction : MonoBehaviour
 
         if (interactUI != null)
             interactUI.SetActive(true);
-
-        Debug.Log($"{name}: 플레이어가 범위 안에 들어옴");
     }
 
     private void OnTriggerExit(Collider other)
@@ -43,8 +36,6 @@ public class NPCInteraction : MonoBehaviour
 
         if (interactUI != null)
             interactUI.SetActive(false);
-
-        Debug.Log($"{name}: 플레이어가 범위 밖으로 나감");
     }
 
     private void Update()
@@ -58,43 +49,12 @@ public class NPCInteraction : MonoBehaviour
 
     private void Interact()
     {
-        switch (npcType)
-        {
-            case NPCType.Shop:
-                OpenShop();
-                break;
+        if (UIManager.Instance == null)
+            return;
 
-            case NPCType.Quest:
-                OpenQuest();
-                break;
+        bool opened = UIManager.Instance.TryOpenPanel(panelType);
 
-            case NPCType.Upgrade:
-                OpenUpgrade();
-                break;
-        }
-    }
-
-    private void OpenShop()
-    {
-        Debug.Log($"{name}: 상점 열기");
-
-        if (shopPanel != null)
-            shopPanel.SetActive(true);
-    }
-
-    private void OpenQuest()
-    {
-        Debug.Log($"{name}: 퀘스트 열기");
-
-        if (questPanel != null)
-            questPanel.SetActive(true);
-    }
-
-    private void OpenUpgrade()
-    {
-        Debug.Log($"{name}: 업그레이드 열기");
-
-        if (upgradePanel != null)
-            upgradePanel.SetActive(true);
+        if (!opened)
+            Debug.Log("이미 다른 창이 열려 있음");
     }
 }
