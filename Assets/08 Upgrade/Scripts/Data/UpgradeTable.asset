@@ -16,36 +16,40 @@ MonoBehaviour:
   - goldCost: 100
     successChance: 0.9
     item: {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
-    amount: 20
+    amount: 10
   - goldCost: 300
     successChance: 0.8
     item: {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
-    amount: 50
-  - goldCost: 700
+    amount: 30
+  - goldCost: 500
     successChance: 0.7
     item: {fileID: 11400000, guid: 536209ce272383c4f8cb08eaf2cf614c, type: 2}
-    amount: 100
-  - goldCost: 1500
+    amount: 50
+  - goldCost: 700
     successChance: 0.5
     item: {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
-    amount: 15
-  - goldCost: 2500
+    amount: 10
+  - goldCost: 1000
     successChance: 0.4
     item: {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
-    amount: 30
-  - goldCost: 4000
+    amount: 20
+  - goldCost: 2000
     successChance: 0.3
     item: {fileID: 11400000, guid: 6a6c5d12cb4fae748b2b11ed22a7c54b, type: 2}
-    amount: 50
-  - goldCost: 7000
+    amount: 30
+  - goldCost: 3000
     successChance: 0.15
     item: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
-    amount: 10
-  - goldCost: 10000
+    amount: 5
+  - goldCost: 5000
     successChance: 0.1
     item: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
-    amount: 20
-  - goldCost: 20000
+    amount: 10
+  - goldCost: 7000
     successChance: 0.05
+    item: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
+    amount: 20
+  - goldCost: 10000
+    successChance: 0.02
     item: {fileID: 11400000, guid: 232bc4a56ac2eac49a3f4bc2bd0fa1ce, type: 2}
     amount: 30

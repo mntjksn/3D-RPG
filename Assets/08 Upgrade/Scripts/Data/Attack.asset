@@ -15,5 +15,5 @@ MonoBehaviour:
   upgradeType: 0
   baseValue: 1
   valuePerLevel: 5
-  maxLevel: 10
+  maxLevel: 11
   upgradeTable: {fileID: 11400000, guid: dfaa4d198ed019341ab0fb9a3333aac3, type: 2}
