@@ -187,6 +187,6 @@ public class InventoryUI : MonoBehaviour
     public void CloseInventory()
     {
         if (closePanel != null)
-            closePanel.SetActive(false);
+            UIManager.Instance.ClosePanel(UIPanelType.Inventory);
     }
 }
