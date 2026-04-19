@@ -633,6 +633,7 @@ GameObject:
   - component: {fileID: -3401852113991565256}
   - component: {fileID: 1805054586130077611}
   - component: {fileID: -844189688464000581}
+  - component: {fileID: 3500918800595063203}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -776,6 +777,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 76ed198f3ca202f46a755f72a06ef2ec, type: 2}
+  regen: 0.05
+  healDelay: 5
 --- !u!114 &1805054586130077611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -800,6 +803,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36e67d0882c08584996ff2d8ce3ff6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3500918800595063203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5a555a826325f448777fef216a57cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers: []
+  flashDuration: 0.15
 --- !u!1 &165938
 GameObject:
   m_ObjectHideFlags: 0

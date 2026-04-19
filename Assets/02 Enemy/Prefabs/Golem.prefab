@@ -555,6 +555,7 @@ GameObject:
   - component: {fileID: 8778395008088293191}
   - component: {fileID: 2475289428530724337}
   - component: {fileID: 4512368917789535476}
+  - component: {fileID: 50358901153420987}
   m_Layer: 0
   m_Name: Golem
   m_TagString: Untagged
@@ -698,6 +699,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: c0d4d97183288e34b8255a6084307ac4, type: 2}
+  regen: 0.05
+  healDelay: 5
 --- !u!114 &2475289428530724337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -722,6 +725,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36e67d0882c08584996ff2d8ce3ff6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &50358901153420987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845945369076765872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5a555a826325f448777fef216a57cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers: []
+  flashDuration: 0.15
 --- !u!1 &2125977167109061285
 GameObject:
   m_ObjectHideFlags: 0
