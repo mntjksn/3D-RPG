@@ -31533,6 +31533,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   potionSlotUI: {fileID: 1990788263}
+--- !u!114 &671473474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671473456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5a555a826325f448777fef216a57cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers: []
+  flashDuration: 0.15
 --- !u!1 &671743251
 GameObject:
   m_ObjectHideFlags: 0
@@ -34882,6 +34896,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1556040939566342, guid: c20397bf1592dc040b827e8716b0bd41, type: 3}
       insertIndex: -1
       addedObject: {fileID: 671473473}
+    - targetCorrespondingSourceObject: {fileID: 1556040939566342, guid: c20397bf1592dc040b827e8716b0bd41, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 671473474}
   m_SourcePrefab: {fileID: 100100000, guid: c20397bf1592dc040b827e8716b0bd41, type: 3}
 --- !u!1 &725971828
 GameObject:
