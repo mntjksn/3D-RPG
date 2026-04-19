@@ -128,6 +128,6 @@ public class ShopPanelUI : MonoBehaviour
     public void CloseShop()
     {
         if (shopPanel != null)
-            shopPanel.SetActive(false);
+            UIManager.Instance.ClosePanel(UIPanelType.Shop);
     }
 }
