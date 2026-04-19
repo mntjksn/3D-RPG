@@ -6,6 +6,7 @@ public class PlayerActionLock : MonoBehaviour
     public bool CanAttack { get; private set; } = false;
     public bool CanShield { get; private set; } = false;
     public bool CanLook { get; private set; } = false;
+    public bool CanUI { get; private set; } = false;
 
     public bool IsAttacking { get; private set; }
     public bool IsShielding { get; private set; }
@@ -21,6 +22,7 @@ public class PlayerActionLock : MonoBehaviour
         CanAttack = false;
         CanLook = false;
         CanShield = false;
+        CanUI = false;
     }
 
     public void UnlockRecoverControls()
@@ -29,6 +31,7 @@ public class PlayerActionLock : MonoBehaviour
         CanAttack = true;
         CanLook = true;
         CanShield = true;
+        CanUI = true;
     }
 
     public void SetAttack(bool value)
