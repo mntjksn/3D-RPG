@@ -4,10 +4,10 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     [Header("Base Stats")]
-    public float maxHp = 100f;
-    public float attackPower = 10f;
-    public float shieldPower = 20f;
-    public float speed = 8f;
+    public int maxHp = 100;
+    public int attackPower = 10;
+    public int shieldPower = 20;
+    public int speed = 8;
     public float regen = 0.01f;
 
     [Header("Level")]

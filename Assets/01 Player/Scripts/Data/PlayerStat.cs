@@ -140,12 +140,12 @@ public class PlayerStat : MonoBehaviour
         return playerData.expToLevelUp * level;
     }
 
-    public float GetMaxHp()
+    public int GetMaxHp()
     {
         if (playerData == null)
-            return 0f;
+            return 0;
 
-        float totalHp = playerData.maxHp;
+        int totalHp = playerData.maxHp;
 
         if (EquipmentManager.Instance != null)
         {
@@ -157,19 +157,19 @@ public class PlayerStat : MonoBehaviour
 
         if (UpgradeManager.Instance != null)
         {
-            int HpLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp);
+            int HpLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp) - 1;
             totalHp += HpLevel * 50;
         }
 
         return totalHp;
     }
 
-    public float GetAttackPower()
+    public int GetAttackPower()
     {
         if (playerData == null)
-            return 0f;
+            return 0;
 
-        float totalAttack = playerData.attackPower;
+        int totalAttack = playerData.attackPower;
 
         if (EquipmentManager.Instance != null)
         {
@@ -181,19 +181,19 @@ public class PlayerStat : MonoBehaviour
 
         if (UpgradeManager.Instance != null)
         {
-            int attackLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack);
+            int attackLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack) - 1;
             totalAttack += attackLevel * 5;
         }
 
         return totalAttack;
     }
 
-    public float GetShieldPower()
+    public int GetShieldPower()
     {
         if (playerData == null)
-            return 0f;
+            return 0;
 
-        float totalDefense = playerData.shieldPower;
+        int totalDefense = playerData.shieldPower;
 
         if (EquipmentManager.Instance != null)
         {
@@ -206,12 +206,12 @@ public class PlayerStat : MonoBehaviour
         return totalDefense;
     }
 
-    public float GetSpeed()
+    public int GetSpeed()
     {
         if (playerData == null)
-            return 0f;
+            return 0;
 
-        float totalSpeed = playerData.speed;
+        int totalSpeed = playerData.speed;
 
         if (EquipmentManager.Instance != null)
         {
@@ -234,7 +234,7 @@ public class PlayerStat : MonoBehaviour
         if (UpgradeManager.Instance != null)
         {
             float regenLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen);
-            totaRegen += regenLevel * 0.01f;
+            totaRegen = regenLevel * 0.01f;
         }
 
         return totaRegen;
