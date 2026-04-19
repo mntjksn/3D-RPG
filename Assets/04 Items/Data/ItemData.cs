@@ -41,6 +41,6 @@ public class ItemData : ScriptableObject
     [Header("Equip Stats")]
     public int attackPower;
     public int shieldPower;
-    public float moveSpeedBonus;
+    public int moveSpeedBonus;
     public int maxHpBonus;
 }
