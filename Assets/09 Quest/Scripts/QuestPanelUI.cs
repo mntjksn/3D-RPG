@@ -186,7 +186,7 @@ public class QuestPanelUI : MonoBehaviour
             playerActionLock.UnlockRecoverControls();
 
         if (panelRoot != null)
-            panelRoot.SetActive(false);
+            UIManager.Instance.ClosePanel(UIPanelType.Quest);
         else
             gameObject.SetActive(false);
     }

@@ -164,6 +164,6 @@ public class UpgradeUI : MonoBehaviour
     public void CloseUpgrade()
     {
         if (upgradePanel != null)
-            upgradePanel.SetActive(false);
+            UIManager.Instance.ClosePanel(UIPanelType.Upgrade);
     }
 }
