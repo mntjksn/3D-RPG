@@ -77,24 +77,8 @@ public class UIManager : MonoBehaviour
         currentOpenPanelType = panelType;
         currentOpenPanelObject = targetPanel;
 
+        SoundManager.Instance.PlaySFX(SfxType.Interaction);
         return true;
-    }
-
-    public bool TogglePanel(UIPanelType panelType)
-    {
-        if (panelType == UIPanelType.None)
-            return false;
-
-        if (currentOpenPanelType == panelType)
-        {
-            ClosePanel(panelType);
-            return true;
-        }
-
-        if (currentOpenPanelType != UIPanelType.None)
-            return false;
-
-        return TryOpenPanel(panelType);
     }
 
     public void ClosePanel(UIPanelType panelType)
@@ -105,6 +89,7 @@ public class UIManager : MonoBehaviour
         if (!panelDict.TryGetValue(panelType, out GameObject targetPanel) || targetPanel == null)
             return;
 
+        SoundManager.Instance.PlaySFX(SfxType.Interaction);
         targetPanel.SetActive(false);
 
         if (currentOpenPanelType == panelType)
