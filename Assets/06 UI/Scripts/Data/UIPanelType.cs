@@ -5,5 +5,6 @@ public enum UIPanelType
     PlayerInfo,
     Shop,
     Quest,
-    Upgrade
+    Upgrade,
+    Setting
 }
