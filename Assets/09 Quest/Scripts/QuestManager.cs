@@ -109,6 +109,7 @@ public class QuestManager : MonoBehaviour
         questStates[questData.questId] = state;
 
         Debug.Log($"퀘스트 수락: {questData.questName}");
+        SoundManager.Instance.PlaySFX(SfxType.Interaction);
         OnQuestAccepted?.Invoke(questData);
 
         SaveManager.Instance?.MarkDirty();
@@ -133,6 +134,7 @@ public class QuestManager : MonoBehaviour
         {
             state.isCompleted = true;
             Debug.Log($"퀘스트 완료: {questData.questName}");
+            SoundManager.Instance.PlaySFX(SfxType.Interaction);
             OnQuestCompleted?.Invoke(questData);
         }
 
@@ -150,6 +152,7 @@ public class QuestManager : MonoBehaviour
         state.isRewardClaimed = true;
 
         Debug.Log($"퀘스트 보상 수령: {questData.questName}");
+        SoundManager.Instance.PlaySFX(SfxType.BuySell);
         OnQuestRewardClaimed?.Invoke(questData);
 
         SaveManager.Instance?.MarkDirty();

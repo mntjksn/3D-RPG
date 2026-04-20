@@ -71,6 +71,7 @@ public static class UpgradeService
             manager.AddLevel(type);
             manager.OnUpgradeSuccess?.Invoke(type);
 
+            SoundManager.Instance.PlaySFX(SfxType.BuySell);
             QuestService.NotifyUpgrade(type.ToString());
         }
 

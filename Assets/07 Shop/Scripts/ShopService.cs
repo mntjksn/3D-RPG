@@ -80,6 +80,7 @@ public static class ShopService
             QuestService.NotifyBuyItem(itemData.itemName, quantity);
 
         Debug.Log($"구매 완료: {itemData.itemName} / 수량: {quantity} / 가격: {totalPrice}");
+        SoundManager.Instance.PlaySFX(SfxType.BuySell);
         return true;
     }
 
@@ -136,6 +137,7 @@ public static class ShopService
             QuestService.NotifySellItem(itemData.itemName, quantity);
 
         Debug.Log($"판매 완료: {itemData.itemName} / 수량: {quantity} / 가격: {totalSellPrice}");
+        SoundManager.Instance.PlaySFX(SfxType.BuySell);
         return true;
     }
 }

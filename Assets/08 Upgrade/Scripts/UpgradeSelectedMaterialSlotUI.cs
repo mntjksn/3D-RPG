@@ -27,6 +27,7 @@ public class UpgradeSelectedMaterialSlotUI : MonoBehaviour, IDropHandler
         if (upgradeUI != null)
         {
             upgradeUI.OnDropMaterial(upgradeType, UpgradeDragData.DraggedItem);
+            SoundManager.Instance.PlaySFX(SfxType.Equip);
         }
     }
 
