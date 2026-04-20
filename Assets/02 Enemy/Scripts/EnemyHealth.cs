@@ -87,6 +87,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         currentHp -= damage;
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
+        SoundManager.Instance.PlaySFX(SfxType.PlayerHit);
         hitFlash?.PlayFlash();
         lastHitTime = Time.time;
         Debug.Log($"{enemyData.enemyName} 피격! 남은 체력: {currentHp}");

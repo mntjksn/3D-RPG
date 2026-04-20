@@ -14,6 +14,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float attackMoveSpeed = 2f;
     [SerializeField] private float shieldMoveSpeed = 0.5f;
 
+    [Header("Footstep")]
+    [SerializeField] private float minFootstepInterval = 0.3f; // 최대 속도일 때
+    [SerializeField] private float maxFootstepInterval = 0.6f; // 거의 안 움직일 때
+
     private CharacterController characterController;
     private PlayerAnimation playerAnimation;
     private PlayerActionLock actionLock;
@@ -21,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float verticalVelocity;
     private float currentSpeed;
+    private float footstepTimer = 0.1f;
+    private float lastFootstepTime;
 
     private void Awake()
     {
@@ -56,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
             else
                 targetSpeed = 0f;
         }
-
         else if (actionLock != null && actionLock.IsShielding)
         {
             if (inputDir.magnitude > 0.01f)
@@ -82,5 +87,43 @@ public class PlayerMovement : MonoBehaviour
         move.y = verticalVelocity;
 
         characterController.Move(move * Time.deltaTime);
+
+        HandleFootstepSound(inputDir);
+    }
+
+    private void HandleFootstepSound(Vector3 inputDir)
+    {
+        if (actionLock != null && (actionLock.IsAttacking || actionLock.IsShielding))
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        bool isMoving = inputDir.magnitude > 0.1f && characterController.isGrounded && currentSpeed > 0.1f;
+
+        if (!isMoving)
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        footstepTimer -= Time.deltaTime;
+
+        if (footstepTimer <= 0f)
+        {
+            // 최소 간격 강제 (중첩 방지 핵심)
+            if (Time.time - lastFootstepTime < 0.1f)
+                return;
+
+            SoundManager.Instance.PlaySFX(SfxType.Footstep);
+
+            lastFootstepTime = Time.time;
+
+            float maxSpeed = Mathf.Max(playerStat.GetSpeed(), 0.01f);
+            float speedRatio = Mathf.Clamp01(currentSpeed / maxSpeed);
+
+            float interval = Mathf.Lerp(maxFootstepInterval, minFootstepInterval, speedRatio);
+            footstepTimer = interval;
+        }
     }
 }

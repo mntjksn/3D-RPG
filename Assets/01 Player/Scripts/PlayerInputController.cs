@@ -18,10 +18,13 @@ public class PlayerInputController : MonoBehaviour
             return;
 
         if (Input.GetKeyDown(KeyCode.I))
-            UIManager.Instance.TogglePanel(UIPanelType.Inventory);
+            UIManager.Instance.TryOpenPanel(UIPanelType.Inventory);
 
         if (Input.GetKeyDown(KeyCode.O))
-            UIManager.Instance.TogglePanel(UIPanelType.PlayerInfo);
+            UIManager.Instance.TryOpenPanel(UIPanelType.PlayerInfo);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            UIManager.Instance.TryOpenPanel(UIPanelType.Setting);
 
         if (Input.GetKeyDown(KeyCode.Q))
         {

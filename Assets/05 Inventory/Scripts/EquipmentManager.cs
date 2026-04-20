@@ -57,6 +57,7 @@ public class EquipmentManager : MonoBehaviour
         equippedItems[slotType] = newItem;
 
         Debug.Log($"장착 완료: {newItem.itemName} -> {slotType}");
+        SoundManager.Instance.PlaySFX(SfxType.Equip);
 
         if (newItem != null)
             QuestService.NotifyEquipItem(newItem.itemName);
@@ -87,6 +88,7 @@ public class EquipmentManager : MonoBehaviour
             equippedItems.Remove(slotType);
 
             Debug.Log($"같은 장비 재드래그 -> 장착 해제: {oldItem.itemName}");
+            SoundManager.Instance.PlaySFX(SfxType.Equip);
 
             OnEquipmentChanged?.Invoke();
             MarkSaveDirty();
@@ -99,6 +101,7 @@ public class EquipmentManager : MonoBehaviour
         equippedItems[slotType] = newItem;
 
         Debug.Log($"장착 교체 완료: {newItem.itemName} -> {slotType}");
+        SoundManager.Instance.PlaySFX(SfxType.Equip);
 
         OnEquipmentChanged?.Invoke();
         MarkSaveDirty();
@@ -120,6 +123,7 @@ public class EquipmentManager : MonoBehaviour
         equippedItems.Remove(slotType);
 
         Debug.Log($"장비 해제: {itemData.itemName}");
+        SoundManager.Instance.PlaySFX(SfxType.Equip);
 
         OnEquipmentChanged?.Invoke();
         MarkSaveDirty();

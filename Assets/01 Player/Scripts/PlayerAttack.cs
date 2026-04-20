@@ -100,4 +100,9 @@ public class PlayerAttack : MonoBehaviour
         if (actionLock != null)
             actionLock.SetAttack(false);
     }
+
+    public void PlayAttackSFX()
+    {
+        SoundManager.Instance.PlaySFX(SfxType.PlayerAttack);
+    }
 }

@@ -55,10 +55,14 @@ public class WorldDrop : MonoBehaviour
         if (goldAmount > 0)
         {
             PlayerManager.Instance.AddGold(goldAmount);
+            SoundManager.Instance.PlaySFX(SfxType.ItemPickup);
         }
+
         else if (itemData != null)
         {
             Debug.Log($"æ∆¿Ã≈€ »πµÊ: {itemData.itemName} x{amount}");
+            SoundManager.Instance.PlaySFX(SfxType.ItemPickup);
+
             InventoryManager.Instance.AddItem(itemData, amount);
 
             if (itemData != null)

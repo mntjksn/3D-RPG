@@ -35,6 +35,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
             QuestService.NotifyEquipItem(itemData.itemName);
 
         Debug.Log($"{itemData.itemName} 포션 슬롯 등록");
+        SoundManager.Instance.PlaySFX(SfxType.Equip);
     }
 
     public ItemData GetRegisteredItemData()

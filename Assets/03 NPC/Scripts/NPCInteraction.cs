@@ -52,6 +52,7 @@ public class NPCInteraction : MonoBehaviour
         if (UIManager.Instance == null)
             return;
 
+        SoundManager.Instance.PlaySFX(SfxType.Interaction);
         bool opened = UIManager.Instance.TryOpenPanel(panelType);
 
         if (!opened)

@@ -99,6 +99,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         {
             float shieldPower = playerStat.GetShieldPower();
             float reducedDamage = damage * (1f - shieldPower / 100f);
+            SoundManager.Instance.PlaySFX(SfxType.PlayerShield);
             Debug.Log($"방패로 피해 감소! {damage} -> {reducedDamage}");
             return reducedDamage;
         }
@@ -216,6 +217,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         }
 
         Debug.Log($"{itemData.itemName} 사용");
+        SoundManager.Instance.PlaySFX(SfxType.PotionUse);
         return true;
     }
 
