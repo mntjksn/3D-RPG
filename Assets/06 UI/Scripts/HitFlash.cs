@@ -4,7 +4,6 @@ using UnityEngine;
 public class HitFlash : MonoBehaviour
 {
     [SerializeField] private Renderer[] renderers;
-    [SerializeField] private float flashDuration = 0.15f;
 
     private Material[] materials;
     private Coroutine flashCoroutine;
