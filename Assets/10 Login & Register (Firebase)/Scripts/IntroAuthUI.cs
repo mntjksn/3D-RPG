@@ -1,8 +1,9 @@
+using Photon.Pun;
+using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
-using System.Text.RegularExpressions;
 
 public class IntroAuthUI : MonoBehaviour
 {
@@ -32,7 +33,6 @@ public class IntroAuthUI : MonoBehaviour
             nicknamePanel.SetActive(false);
 
         isLoggedIn = false;
-
         SetStartButtonInteractable(false);
         ShowMessage("이메일과 비밀번호를 입력하세요.");
 
@@ -47,6 +47,20 @@ public class IntroAuthUI : MonoBehaviour
 
         if (startGameButton != null)
             startGameButton.onClick.AddListener(OnClickStartGame);
+
+        if (emailInput != null)
+            emailInput.onSubmit.AddListener(_ => passwordInput.Select());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (emailInput.isFocused)
+                passwordInput.Select();
+            else if (passwordInput.isFocused)
+                emailInput.Select();
+        }
     }
 
     private async void OnClickLogin()
@@ -67,31 +81,38 @@ public class IntroAuthUI : MonoBehaviour
 
         await FirebaseAuthManager.Instance.Login(email, password, (success, msg) =>
         {
+            ShowMessage(msg);
+
             if (!success)
             {
                 isLoggedIn = false;
                 SetStartButtonInteractable(false);
-                ShowMessage(msg);
                 return;
             }
 
             isLoggedIn = true;
 
-            if (FirebaseAuthManager.Instance.HasNickname())
-            {
-                if (nicknamePanel != null)
-                    nicknamePanel.SetActive(false);
-
-                SetStartButtonInteractable(true);
-                ShowMessage("로그인에 성공했습니다.");
-            }
-            else
+            if (!FirebaseAuthManager.Instance.HasNickname())
             {
                 if (nicknamePanel != null)
                     nicknamePanel.SetActive(true);
-
                 SetStartButtonInteractable(false);
                 ShowMessage("닉네임을 먼저 설정해주세요.");
+                return;
+            }
+
+            if (nicknamePanel != null)
+                nicknamePanel.SetActive(false);
+
+            // Photon 연결 완료 메시지인지 확인
+            if (msg.Contains("연결 완료"))
+            {
+                SetStartButtonInteractable(true);
+            }
+            else
+            {
+                SetStartButtonInteractable(false);
+                ShowMessage("서버 연결 중...");
             }
         });
     }
@@ -162,26 +183,28 @@ public class IntroAuthUI : MonoBehaviour
             if (nicknamePanel != null)
                 nicknamePanel.SetActive(false);
 
-            SetStartButtonInteractable(true);
-            ShowMessage("닉네임 설정이 완료되었습니다.");
+            ShowMessage("서버 연결 중...");
+            SetStartButtonInteractable(false);
+
+            // 닉네임 설정 완료 후 자동으로 Photon 연결
+            string finalNickname = FirebaseAuthManager.Instance.GetNickname();
+            PhotonNetworkManager.Instance.ConnectToPhoton(finalNickname, (photonSuccess, photonMsg) =>
+            {
+                ShowMessage(photonMsg);
+                if (photonSuccess)
+                    SetStartButtonInteractable(true);
+            });
         });
     }
 
     private void OnClickStartGame()
     {
-        if (!isLoggedIn)
-        {
-            ShowMessage("로그인 후 게임을 시작할 수 있습니다.");
-            return;
-        }
+        if (!isLoggedIn) { ShowMessage("로그인 후 게임을 시작할 수 있습니다."); return; }
+        if (FirebaseAuthManager.Instance == null || !FirebaseAuthManager.Instance.HasNickname()) { ShowMessage("닉네임을 먼저 설정해주세요."); return; }
+        if (!PhotonNetwork.IsConnected) { ShowMessage("서버 연결 중입니다. 잠시 후 다시 시도해주세요."); return; }
 
-        if (FirebaseAuthManager.Instance == null || !FirebaseAuthManager.Instance.HasNickname())
-        {
-            ShowMessage("닉네임을 먼저 설정해주세요.");
-            return;
-        }
-
-        SceneManager.LoadScene(mainSceneName);
+        // SceneManager 대신 PhotonNetwork로 씬 이동 (연결 유지됨)
+        PhotonNetwork.LoadLevel(mainSceneName);
     }
 
     private bool ValidateEmailAndPassword(string email, string password)
@@ -236,20 +259,9 @@ public class IntroAuthUI : MonoBehaviour
         return Regex.IsMatch(email, pattern);
     }
 
-    private string GetEmail()
-    {
-        return emailInput != null ? emailInput.text.Trim() : string.Empty;
-    }
-
-    private string GetPassword()
-    {
-        return passwordInput != null ? passwordInput.text.Trim() : string.Empty;
-    }
-
-    private string GetNickname()
-    {
-        return nicknameInput != null ? nicknameInput.text.Trim() : string.Empty;
-    }
+    private string GetEmail() => emailInput != null ? emailInput.text.Trim() : string.Empty;
+    private string GetPassword() => passwordInput != null ? passwordInput.text.Trim() : string.Empty;
+    private string GetNickname() => nicknameInput != null ? nicknameInput.text.Trim() : string.Empty;
 
     private void ShowMessage(string message)
     {

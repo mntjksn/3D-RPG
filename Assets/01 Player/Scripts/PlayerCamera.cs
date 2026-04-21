@@ -1,23 +1,20 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : MonoBehaviourPun
 {
     [Header("Target")]
     [SerializeField] private Transform player;
     [SerializeField] private Transform cameraTransform;
-
     [Header("Sensitivity")]
     [SerializeField] private float mouseSensitivity = 200f;
-
     [Header("Rotation")]
     [SerializeField] private float minXRotation = -20f;
     [SerializeField] private float maxXRotation = 60f;
     [SerializeField] private float cameraSmoothSpeed = 10f;
-
     [Header("Distance")]
     [SerializeField] private float cameraDistance = 4f;
     [SerializeField] private float minCameraDistance = 0.5f;
-
     [Header("Collision")]
     [SerializeField] private float collisionRadius = 0.2f;
     [SerializeField] private LayerMask collisionMask;
@@ -27,11 +24,19 @@ public class PlayerCamera : MonoBehaviour
     private float xRotation = 20f;
     private float currentXRotation = 20f;
     private float currentCameraDistance;
-
     private PlayerActionLock actionLock;
 
     private void Start()
     {
+        // 내 플레이어가 아니면 카메라 오브젝트 비활성화
+        if (!photonView.IsMine)
+        {
+            if (cameraTransform != null)
+                cameraTransform.gameObject.SetActive(false);
+            enabled = false;
+            return;
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -44,14 +49,14 @@ public class PlayerCamera : MonoBehaviour
 
     private void Update()
     {
+        if (!photonView.IsMine) return;
+
         if (actionLock == null || actionLock.CanLook)
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, minXRotation, maxXRotation);
-
             if (player != null)
                 player.Rotate(Vector3.up * mouseX);
         }
@@ -62,12 +67,11 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (cameraTransform == null)
-            return;
+        if (!photonView.IsMine) return;
+        if (cameraTransform == null) return;
 
         Vector3 origin = transform.position;
         Vector3 dir = -transform.forward;
-
         float targetDistance = cameraDistance;
 
         if (Physics.SphereCast(origin, collisionRadius, dir, out RaycastHit hit, cameraDistance, collisionMask))
@@ -77,7 +81,6 @@ public class PlayerCamera : MonoBehaviour
         }
 
         currentCameraDistance = Mathf.Lerp(currentCameraDistance, targetDistance, distanceSmoothSpeed * Time.deltaTime);
-
         cameraTransform.position = origin + dir * currentCameraDistance;
         cameraTransform.rotation = transform.rotation;
     }

@@ -15,9 +15,6 @@ public class ShopPanelUI : MonoBehaviour
     [Header("Player")]
     [SerializeField] private PlayerStat playerStat;
 
-    [Header("Action Lock")]
-    [SerializeField] private PlayerActionLock playerActionLock;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -36,12 +33,6 @@ public class ShopPanelUI : MonoBehaviour
 
     private void OnEnable()
     {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-
-        if (playerActionLock != null)
-            playerActionLock.LockRecoverControls();
-
         if (ShopManager.Instance != null)
             ShopManager.Instance.OnTradeSuccess += RefreshAllUI;
 
@@ -50,12 +41,6 @@ public class ShopPanelUI : MonoBehaviour
 
     private void OnDisable()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        if (playerActionLock != null)
-            playerActionLock.UnlockRecoverControls();
-
         if (ShopManager.Instance != null)
             ShopManager.Instance.OnTradeSuccess -= RefreshAllUI;
     }

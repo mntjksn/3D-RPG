@@ -27,7 +27,6 @@ public class UpgradeUI : MonoBehaviour
 
     [Header("Player")]
     [SerializeField] private PlayerStat playerStat;
-    [SerializeField] private PlayerActionLock playerActionLock;
 
     private void Start()
     {
@@ -39,23 +38,8 @@ public class UpgradeUI : MonoBehaviour
 
     private void OnEnable()
     {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-
-        if (playerActionLock != null)
-            playerActionLock.LockRecoverControls();
-
         UpgradeManager.Instance?.ClearAllSelectedMaterials();
         RefreshAll();
-    }
-
-    private void OnDisable()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        if (playerActionLock != null)
-            playerActionLock.UnlockRecoverControls();
     }
 
     public void RefreshAll()

@@ -35,10 +35,10 @@ public class PlayerManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
+            // gameObject 전체 삭제 대신 이 컴포넌트만 비활성화
+            enabled = false;
             return;
         }
-
         Instance = this;
     }
 

@@ -11,32 +11,11 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
-    [Header("Player")]
-    [SerializeField] private PlayerActionLock playerActionLock;
-
     private bool isInitialized;
 
     private void Start()
     {
         InitSliders();
-    }
-
-    private void OnEnable()
-    {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-
-        if (playerActionLock != null)
-            playerActionLock.LockRecoverControls();
-    }
-
-    private void OnDisable()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        if (playerActionLock != null)
-            playerActionLock.UnlockRecoverControls();
     }
 
     private void InitSliders()

@@ -18,9 +18,6 @@ public class QuestPanelUI : MonoBehaviour
     [Header("Input")]
     [SerializeField] private KeyCode nextKey = KeyCode.Space;
 
-    [Header("Player")]
-    [SerializeField] private PlayerActionLock playerActionLock;
-
     private QuestData currentDisplayQuestData;
     private QuestDialogueData currentDialogue;
     
@@ -44,9 +41,6 @@ public class QuestPanelUI : MonoBehaviour
 
     private void StartDialogue()
     {
-        if (playerActionLock != null)
-            playerActionLock.LockRecoverControls();
-
         currentDisplayQuestData = GetDisplayQuestData();
         currentDialogue = GetCurrentDialogue(currentDisplayQuestData);
 
@@ -182,9 +176,6 @@ public class QuestPanelUI : MonoBehaviour
 
     private void ClosePanel()
     {
-        if (playerActionLock != null)
-            playerActionLock.UnlockRecoverControls();
-
         if (panelRoot != null)
             UIManager.Instance.ClosePanel(UIPanelType.Quest);
         else

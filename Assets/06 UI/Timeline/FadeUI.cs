@@ -15,10 +15,15 @@ public class FadeUI : MonoBehaviour
 
     private void Awake()
     {
+        // 오브젝트 강제 활성화
+        if (fadeRoot != null)
+            fadeRoot.SetActive(true);
+        gameObject.SetActive(true);
+
         if (fadeImage != null)
         {
             Color color = fadeImage.color;
-            color.a = 0f;
+            color.a = 1f;
             fadeImage.color = color;
         }
     }
@@ -88,7 +93,6 @@ public class FadeUI : MonoBehaviour
             textColor.a = 0f;
             loadingText.color = textColor;
             loadingText.gameObject.SetActive(false);
-            fadeRoot.SetActive(false);
         }
 
         fadeCoroutine = null;

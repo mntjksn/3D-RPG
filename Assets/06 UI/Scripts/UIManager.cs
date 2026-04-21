@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour
     private UIPanelType currentOpenPanelType = UIPanelType.None;
     private GameObject currentOpenPanelObject;
 
+    private PlayerActionLock playerActionLock;
+
     public bool IsAnyPanelOpen => currentOpenPanelType != UIPanelType.None;
     public UIPanelType CurrentOpenPanelType => currentOpenPanelType;
 
@@ -33,6 +35,18 @@ public class UIManager : MonoBehaviour
 
         Instance = this;
         InitializePanels();
+    }
+
+    private void Start()
+    {
+        // 나중에 스폰된 플레이어에서 찾도록 지연 처리
+        playerActionLock = null;
+    }
+
+    // 외부에서 플레이어 스폰 후 등록하는 메서드 추가
+    public void RegisterPlayer(PlayerActionLock actionLock)
+    {
+        playerActionLock = actionLock;
     }
 
     private void InitializePanels()
@@ -58,6 +72,12 @@ public class UIManager : MonoBehaviour
 
     public bool TryOpenPanel(UIPanelType panelType)
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+
+        if (playerActionLock != null)
+            playerActionLock.LockRecoverControls();
+
         if (panelType == UIPanelType.None)
             return false;
 
@@ -83,6 +103,12 @@ public class UIManager : MonoBehaviour
 
     public void ClosePanel(UIPanelType panelType)
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (playerActionLock != null)
+            playerActionLock.UnlockRecoverControls();
+
         if (panelType == UIPanelType.None)
             return;
 

@@ -17,9 +17,6 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Button itemButton;
     [SerializeField] private Button closeButton;
 
-    [Header("Action Lock")]
-    [SerializeField] private PlayerActionLock playerActionLock;
-
     private readonly List<InventorySlotUI> slots = new List<InventorySlotUI>();
     private InventoryTabType currentTab = InventoryTabType.Equipment;
 
@@ -42,24 +39,12 @@ public class InventoryUI : MonoBehaviour
 
         currentTab = InventoryTabType.Equipment;
         RefreshUI();
-
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-
-        if (playerActionLock != null)
-            playerActionLock.LockRecoverControls();
     }
 
     private void OnDisable()
     {
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        if (playerActionLock != null)
-            playerActionLock.UnlockRecoverControls();
     }
 
     private void BindButtons()

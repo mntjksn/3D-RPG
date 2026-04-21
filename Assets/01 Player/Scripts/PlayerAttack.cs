@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviourPun
 {
     private PlayerAnimation playerAnimation;
     private PlayerActionLock actionLock;
     private PlayerStat playerStat;
-
     private bool isAttacking;
-
     private readonly List<IDamageable> targetsInRange = new();
 
     private void Awake()
@@ -20,6 +19,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
+        if (!photonView.IsMine) return;
+
         if (isAttacking || (actionLock != null && actionLock.IsShielding))
             return;
 
@@ -29,7 +30,6 @@ public class PlayerAttack : MonoBehaviour
             {
                 isAttacking = true;
                 playerAnimation?.PlayAttack();
-
                 if (actionLock != null)
                     actionLock.SetAttack(true);
             }
@@ -38,22 +38,24 @@ public class PlayerAttack : MonoBehaviour
 
     public void AddTarget(IDamageable target)
     {
+        if (!photonView.IsMine) return;
         if (target == null || targetsInRange.Contains(target))
             return;
-
         targetsInRange.Add(target);
     }
 
     public void RemoveTarget(IDamageable target)
     {
+        if (!photonView.IsMine) return;
         if (target == null)
             return;
-
         targetsInRange.Remove(target);
     }
 
     public void AttackHit()
     {
+        if (!photonView.IsMine) return;
+
         for (int i = targetsInRange.Count - 1; i >= 0; i--)
         {
             if (targetsInRange[i] == null)
@@ -86,23 +88,24 @@ public class PlayerAttack : MonoBehaviour
 
     public void EndAttack()
     {
+        if (!photonView.IsMine) return;
         isAttacking = false;
-
         if (actionLock != null)
             actionLock.SetAttack(false);
     }
 
     public void ResetAttackState()
     {
+        if (!photonView.IsMine) return;
         isAttacking = false;
         targetsInRange.Clear();
-
         if (actionLock != null)
             actionLock.SetAttack(false);
     }
 
     public void PlayAttackSFX()
     {
+        if (!photonView.IsMine) return;
         SoundManager.Instance.PlaySFX(SfxType.PlayerAttack);
     }
 }

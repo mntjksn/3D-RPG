@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class PlayerHealth : MonoBehaviourPun, IDamageable
 {
     private PlayerStat playerStat;
     private PlayerAnimation playerAnimation;
@@ -16,8 +17,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private Vector3 respawnPosition;
 
     [Header("Auto Heal")]
-    [SerializeField] private float healDelay = 3f;      // 몇 초 후 시작
-
+    [SerializeField] private float healDelay = 3f;
     private float lastHitTime;
 
     [Header("Respawn Delay")]
@@ -56,14 +56,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        // 내 플레이어만 힐 처리
+        if (!photonView.IsMine) return;
+
         if (isDead || playerStat == null)
             return;
 
-        // 아직 대기 시간 안 지났으면 회복 안함
         if (Time.time < lastHitTime + healDelay)
             return;
 
-        // 이미 풀피면 회복 안함
         if (playerStat.CurrentHp >= playerStat.MaxHp)
             return;
 
@@ -78,8 +79,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        if (!CanTakeDamage())
-            return;
+        if (!photonView.IsMine) return;
+        if (!CanTakeDamage()) return;
 
         ApplyDamage(damage);
 
@@ -92,25 +93,20 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public float ModifyIncomingDamage(Transform attacker, float damage)
     {
-        if (isDead)
-            return 0f;
+        if (isDead) return 0f;
 
         if (playerShield != null && playerShield.CanBlock(attacker))
         {
             float shieldPower = playerStat.GetShieldPower();
             float reducedDamage = damage * (1f - shieldPower / 100f);
             SoundManager.Instance.PlaySFX(SfxType.PlayerShield);
-            Debug.Log($"방패로 피해 감소! {damage} -> {reducedDamage}");
             return reducedDamage;
         }
 
         return damage;
     }
 
-    private bool CanTakeDamage()
-    {
-        return !isDead && playerStat != null;
-    }
+    private bool CanTakeDamage() => !isDead && playerStat != null;
 
     private void ApplyDamage(float damage)
     {
@@ -120,18 +116,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         Debug.Log($"플레이어 피격! 남은 체력: {playerStat.CurrentHp}");
     }
 
-    private bool IsDeadByHp()
-    {
-        return playerStat.CurrentHp <= 0f;
-    }
+    private bool IsDeadByHp() => playerStat.CurrentHp <= 0f;
 
     private void Die()
     {
-        if (isDead)
-            return;
+        if (isDead) return;
 
         isDead = true;
-
         playerStat.SetCurrentHp(0f);
 
         int currentGold = playerStat.Gold;
@@ -141,12 +132,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         playerAttack?.ResetAttackState();
         playerShield?.ResetShieldState();
-
         playerAnimation?.PlayDie();
         playerActionLock?.OnDie();
 
         Debug.Log("플레이어 사망");
-
         StartCoroutine(RespawnRoutine());
     }
 
@@ -158,8 +147,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     private void Respawn()
     {
-        if (playerStat == null)
-            return;
+        if (playerStat == null) return;
 
         isDead = false;
 
@@ -184,8 +172,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public bool TryUsePotion(ItemData itemData)
     {
-        if (isDead || itemData == null || playerStat == null)
-            return false;
+        if (!photonView.IsMine) return false;
+        if (isDead || itemData == null || playerStat == null) return false;
 
         if (playerStat.CurrentHp >= playerStat.MaxHp)
         {
@@ -193,11 +181,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             return false;
         }
 
-        if (itemData.itemType != ItemType.Consumable)
-            return false;
-
-        if (InventoryManager.Instance == null)
-            return false;
+        if (itemData.itemType != ItemType.Consumable) return false;
+        if (InventoryManager.Instance == null) return false;
 
         if (InventoryManager.Instance.GetItemCount(itemData.itemId) <= 0)
         {
@@ -206,8 +191,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         }
 
         bool removed = InventoryManager.Instance.RemoveItem(itemData.itemId, 1);
-        if (!removed)
-            return false;
+        if (!removed) return false;
 
         bool used = ApplyPotionEffect(itemData);
         if (!used)
@@ -228,15 +212,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             case "potion_hp_small":
                 playerStat.Heal(playerStat.MaxHp * 0.1f);
                 return true;
-
             case "potion_hp_medium":
                 playerStat.Heal(playerStat.MaxHp * 0.3f);
                 return true;
-
             case "potion_hp_large":
                 playerStat.Heal(playerStat.MaxHp * 0.5f);
                 return true;
-
             case "potion_hp_full":
                 playerStat.Heal(playerStat.MaxHp);
                 return true;
