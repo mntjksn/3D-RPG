@@ -6,6 +6,9 @@ using TMPro;
 
 public class FadeUI : MonoBehaviour
 {
+    [Header("페이드 완료 후 활성화할 오브젝트들")]
+    [SerializeField] private GameObject[] activateOnFadeIn;
+
     [SerializeField] private GameObject fadeRoot;
     [SerializeField] private Image fadeImage;
     [SerializeField] private TMP_Text loadingText;
@@ -33,12 +36,18 @@ public class FadeUI : MonoBehaviour
         StartFade(0f, 1f, onComplete);
     }
 
-    public void FadeIn(Action onComplete = null)
+    public void FadeIn(bool activateObjects = false, Action onComplete = null)
     {
         StartFade(1f, 0f, () =>
         {
             if (loadingText != null)
                 loadingText.gameObject.SetActive(false);
+
+            if (activateObjects)
+            {
+                foreach (var obj in activateOnFadeIn)
+                    if (obj != null) obj.SetActive(true);
+            }
 
             onComplete?.Invoke();
         });

@@ -19,8 +19,8 @@ public class IntroTimelineController : MonoBehaviour
 
     private void Start()
     {
-        // 씬 로드 직후 검은화면 → 밝아지면 타임라인 재생
-        fadeUI.FadeIn(() =>
+        // 첫 번째 FadeIn은 오브젝트 활성화 없이
+        fadeUI.FadeIn(false, () =>
         {
             director.Resume();
         });
@@ -33,13 +33,11 @@ public class IntroTimelineController : MonoBehaviour
 
     private void OnTimelineStopped(PlayableDirector obj)
     {
-        // 1. 화면 검게
         fadeUI.FadeOut(() =>
         {
-            // 2. 카메라 전환
             introVirtualCamera.SetActive(false);
-            // 3. 다시 밝게
-            fadeUI.FadeIn();
+            // 마지막 FadeIn은 오브젝트 활성화 포함
+            fadeUI.FadeIn(true);
         });
     }
 }

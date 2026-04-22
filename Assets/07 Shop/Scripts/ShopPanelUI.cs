@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +13,7 @@ public class ShopPanelUI : MonoBehaviour
     [SerializeField] private TradePopupUI tradePopupUI;
     [SerializeField] private Button closeButton;
 
-    [Header("Player")]
-    [SerializeField] private PlayerStat playerStat;
+    private PlayerStat playerStat;
 
     private void Awake()
     {
@@ -33,6 +33,17 @@ public class ShopPanelUI : MonoBehaviour
 
     private void OnEnable()
     {
+        StartCoroutine(InitAndOpen());
+    }
+
+    private IEnumerator InitAndOpen()
+    {
+        yield return new WaitUntil(() =>
+            PlayerManager.Instance != null &&
+            PlayerManager.Instance.Stat != null);
+
+        playerStat = PlayerManager.Instance.Stat;
+
         if (ShopManager.Instance != null)
             ShopManager.Instance.OnTradeSuccess += RefreshAllUI;
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,8 +26,7 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private StatUpgradeData hpData;
     [SerializeField] private StatUpgradeData regenData;
 
-    [Header("Player")]
-    [SerializeField] private PlayerStat playerStat;
+    private PlayerStat playerStat;
 
     private void Start()
     {
@@ -38,6 +38,17 @@ public class UpgradeUI : MonoBehaviour
 
     private void OnEnable()
     {
+        StartCoroutine(InitAndRefresh());
+    }
+
+    private IEnumerator InitAndRefresh()
+    {
+        yield return new WaitUntil(() =>
+            PlayerManager.Instance != null &&
+            PlayerManager.Instance.Stat != null);
+
+        playerStat = PlayerManager.Instance.Stat;
+
         UpgradeManager.Instance?.ClearAllSelectedMaterials();
         RefreshAll();
     }
