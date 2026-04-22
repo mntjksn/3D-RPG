@@ -39,6 +39,18 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - ReceiveMessage
+  - RPC_TakeDamage
+  - RPC_ActivateEnemy
+  - RPC_ReturnEnemy
+  - RPC_PlayAttack
+  - RPC_UpdateHealthBar
+  - RPC_SyncHealthBar
+  - RPC_Pickup
+  - RPC_SetupGold
+  - RPC_SetupItem
+  - RPC_PlayDie
+  - RPC_RespawnVisual
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
