@@ -7,9 +7,9 @@ public class PlayerHealthBar : MonoBehaviour
 
     public void UpdateHealthBar(float currentHp, float maxHp)
     {
-        if (maxHp <= 0f)
+        if (fillImage == null || maxHp <= 0f)
             return;
 
-        fillImage.fillAmount = currentHp / maxHp;
+        fillImage.fillAmount = Mathf.Clamp01(currentHp / maxHp);
     }
 }

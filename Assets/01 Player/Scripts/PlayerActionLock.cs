@@ -53,9 +53,9 @@ public class PlayerActionLock : MonoBehaviour
 
     public void ResetState()
     {
-        LockRecoverControls();
         IsAttacking = false;
         IsShielding = false;
+        UnlockRecoverControls();
     }
 
     // DieRecover 끝날 때 Animation Event로 호출

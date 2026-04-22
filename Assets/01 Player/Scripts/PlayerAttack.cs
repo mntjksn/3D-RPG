@@ -7,6 +7,7 @@ public class PlayerAttack : MonoBehaviourPun
     private PlayerAnimation playerAnimation;
     private PlayerActionLock actionLock;
     private PlayerStat playerStat;
+
     private bool isAttacking;
     private readonly List<IDamageable> targetsInRange = new();
 
@@ -30,6 +31,7 @@ public class PlayerAttack : MonoBehaviourPun
             {
                 isAttacking = true;
                 playerAnimation?.PlayAttack();
+
                 if (actionLock != null)
                     actionLock.SetAttack(true);
             }
@@ -41,6 +43,7 @@ public class PlayerAttack : MonoBehaviourPun
         if (!photonView.IsMine) return;
         if (target == null || targetsInRange.Contains(target))
             return;
+
         targetsInRange.Add(target);
     }
 
@@ -49,6 +52,7 @@ public class PlayerAttack : MonoBehaviourPun
         if (!photonView.IsMine) return;
         if (target == null)
             return;
+
         targetsInRange.Remove(target);
     }
 
@@ -71,8 +75,7 @@ public class PlayerAttack : MonoBehaviourPun
         for (int i = 0; i < targetsInRange.Count; i++)
         {
             MonoBehaviour targetMono = targetsInRange[i] as MonoBehaviour;
-            if (targetMono == null)
-                continue;
+            if (targetMono == null) continue;
 
             float distance = Vector3.Distance(transform.position, targetMono.transform.position);
             if (distance < nearestDistance)
@@ -82,14 +85,28 @@ public class PlayerAttack : MonoBehaviourPun
             }
         }
 
+        if (nearestTarget == null)
+            return;
+
         float finalDamage = playerStat != null ? playerStat.AttackPower : 0f;
-        nearestTarget?.TakeDamage(finalDamage);
+        int attackerActorNumber = photonView.OwnerActorNr;
+
+        if (nearestTarget is EnemyHealth enemyHealth)
+        {
+            enemyHealth.TakeDamage(finalDamage, attackerActorNumber);
+        }
+        else
+        {
+            nearestTarget.TakeDamage(finalDamage);
+        }
     }
 
     public void EndAttack()
     {
         if (!photonView.IsMine) return;
+
         isAttacking = false;
+
         if (actionLock != null)
             actionLock.SetAttack(false);
     }
@@ -97,8 +114,10 @@ public class PlayerAttack : MonoBehaviourPun
     public void ResetAttackState()
     {
         if (!photonView.IsMine) return;
+
         isAttacking = false;
         targetsInRange.Clear();
+
         if (actionLock != null)
             actionLock.SetAttack(false);
     }

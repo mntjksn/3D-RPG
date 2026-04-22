@@ -33,7 +33,6 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         characterController = GetComponent<CharacterController>();
         playerAttack = GetComponent<PlayerAttack>();
         playerShield = GetComponent<PlayerShield>();
-        playerHealthBar = GetComponentInChildren<PlayerHealthBar>();
         hitFlash = GetComponent<HitFlash>();
     }
 
@@ -56,17 +55,10 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
 
     private void Update()
     {
-        // 내 플레이어만 힐 처리
         if (!photonView.IsMine) return;
-
-        if (isDead || playerStat == null)
-            return;
-
-        if (Time.time < lastHitTime + healDelay)
-            return;
-
-        if (playerStat.CurrentHp >= playerStat.MaxHp)
-            return;
+        if (isDead || playerStat == null) return;
+        if (Time.time < lastHitTime + healDelay) return;
+        if (playerStat.CurrentHp >= playerStat.MaxHp) return;
 
         float healAmount = playerStat.MaxHp * playerStat.GetRegen() * Time.deltaTime;
         playerStat.Heal(healAmount);
@@ -75,6 +67,17 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
     private void HandleHpChanged(float currentHp, float maxHp)
     {
         playerHealthBar?.UpdateHealthBar(currentHp, maxHp);
+
+        if (photonView.IsMine)
+            photonView.RPC(nameof(RPC_SyncHealthBar), RpcTarget.Others, currentHp, maxHp, isDead);
+    }
+
+    public void SetHealthBar(PlayerHealthBar healthBar)
+    {
+        playerHealthBar = healthBar;
+
+        if (playerStat != null && playerHealthBar != null)
+            playerHealthBar.UpdateHealthBar(playerStat.CurrentHp, playerStat.MaxHp);
     }
 
     public void TakeDamage(float damage)
@@ -85,10 +88,28 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         ApplyDamage(damage);
 
         if (IsDeadByHp())
-        {
             Die();
-            return;
-        }
+    }
+
+    [PunRPC]
+    public void RPC_TakeDamage(float damage)
+    {
+        if (!photonView.IsMine) return;
+        if (!CanTakeDamage()) return;
+
+        ApplyDamage(damage);
+
+        if (IsDeadByHp())
+            Die();
+    }
+
+    [PunRPC]
+    private void RPC_SyncHealthBar(float currentHp, float maxHp, bool dead)
+    {
+        if (photonView.IsMine) return;
+
+        isDead = dead;
+        playerHealthBar?.UpdateHealthBar(currentHp, maxHp);
     }
 
     public float ModifyIncomingDamage(Transform attacker, float damage)
@@ -106,17 +127,24 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         return damage;
     }
 
-    private bool CanTakeDamage() => !isDead && playerStat != null;
+    private bool CanTakeDamage()
+    {
+        return !isDead && playerStat != null;
+    }
 
     private void ApplyDamage(float damage)
     {
         playerStat.TakeDamage(damage);
         hitFlash?.PlayFlash();
         lastHitTime = Time.time;
+
         Debug.Log($"플레이어 피격! 남은 체력: {playerStat.CurrentHp}");
     }
 
-    private bool IsDeadByHp() => playerStat.CurrentHp <= 0f;
+    private bool IsDeadByHp()
+    {
+        return playerStat.CurrentHp <= 0f;
+    }
 
     private void Die()
     {
@@ -130,13 +158,26 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         penalty = Mathf.Min(penalty, currentGold);
         playerStat.UseGold(penalty);
 
-        playerAttack?.ResetAttackState();
-        playerShield?.ResetShieldState();
-        playerAnimation?.PlayDie();
-        playerActionLock?.OnDie();
+        // 내 로컬 실제 상태 정리
+        if (photonView.IsMine)
+        {
+            playerAttack?.ResetAttackState();
+            playerShield?.ResetShieldState();
+            playerActionLock?.OnDie();
+        }
+
+        // 전체 클라에 죽음 연출
+        photonView.RPC(nameof(RPC_PlayDie), RpcTarget.All);
 
         Debug.Log("플레이어 사망");
         StartCoroutine(RespawnRoutine());
+    }
+
+    [PunRPC]
+    private void RPC_PlayDie()
+    {
+        isDead = true;
+        playerAnimation?.PlayDie();
     }
 
     private IEnumerator RespawnRoutine()
@@ -162,12 +203,25 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         lastHitTime = Time.time;
         playerStat.SetCurrentHp(playerStat.MaxHp);
 
-        playerAnimation?.ResetAnimation();
-        playerAttack?.ResetAttackState();
-        playerShield?.ResetShieldState();
-        playerActionLock?.ResetState();
+        // 내 로컬 실제 상태 해제
+        if (photonView.IsMine)
+        {
+            playerAttack?.ResetAttackState();
+            playerShield?.ResetShieldState();
+            playerActionLock?.ResetState();
+        }
+
+        // 전체 클라에 부활 시각 상태 복구
+        photonView.RPC(nameof(RPC_RespawnVisual), RpcTarget.All);
 
         Debug.Log("플레이어 부활");
+    }
+
+    [PunRPC]
+    private void RPC_RespawnVisual()
+    {
+        isDead = false;
+        playerAnimation?.ResetAnimation();
     }
 
     public bool TryUsePotion(ItemData itemData)
