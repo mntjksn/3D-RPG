@@ -57,12 +57,11 @@ public class SettingManager : MonoBehaviour
     public void ExitGame()
     {
         if (SaveManager.Instance != null)
-            SaveManager.Instance.SavePlayer();
-
+            _ = SaveManager.Instance.SavePlayer(); // async Task »£√‚
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit();
+    Application.Quit();
 #endif
     }
 }

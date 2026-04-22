@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,10 +16,6 @@ public class PlayerInfoUI : MonoBehaviour
     [SerializeField] private Transform detailParent;
     [SerializeField] private StatBlockUI statBlockPrefab;
 
-    [Header("Player")]
-    [SerializeField] private PlayerStat playerStat;
-    [SerializeField] private PlayerActionLock playerActionLock;
-
     private readonly List<StatBlockUI> spawnedBlocks = new List<StatBlockUI>();
 
     private const int BaseAttack = 10;
@@ -27,6 +24,8 @@ public class PlayerInfoUI : MonoBehaviour
     private const double BaseRegen = 0.01;
     private const int BaseSpeed = 8;
 
+    private PlayerStat playerStat;
+
     private void Start()
     {
         BindButtons();
@@ -34,22 +33,18 @@ public class PlayerInfoUI : MonoBehaviour
 
     private void OnEnable()
     {
-        Refresh();
-
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-
-        if (playerActionLock != null)
-            playerActionLock.LockRecoverControls();
+        StartCoroutine(InitAndRefresh());
     }
 
-    private void OnDisable()
+    private IEnumerator InitAndRefresh()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        yield return new WaitUntil(() =>
+            PlayerManager.Instance != null &&
+            PlayerManager.Instance.Stat != null);
 
-        if (playerActionLock != null)
-            playerActionLock.UnlockRecoverControls();
+        playerStat = PlayerManager.Instance.Stat;
+
+        Refresh();
     }
 
     private void BindButtons()

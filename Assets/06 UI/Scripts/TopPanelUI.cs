@@ -15,7 +15,13 @@ public class TopPanelUI : MonoBehaviour
     {
         Bind();
         Subscribe();
-        RefreshNow();
+    }
+
+    private void OnEnable()
+    {
+        Bind();
+        Subscribe();
+        RefreshNow(); // 패널 열릴 때마다 갱신
     }
 
     private void OnDisable()
