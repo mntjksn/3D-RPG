@@ -6,10 +6,15 @@ using UnityEngine.UI;
 public class PotionSlotUI : MonoBehaviour, IDropHandler
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private PlayerHealth playerHealth;
+
+    private PlayerHealth playerHealth;
 
     private void OnEnable()
     {
+        // 동적으로 찾기
+        if (playerHealth == null && PlayerManager.Instance != null)
+            playerHealth = PlayerManager.Instance.Health;
+
         RefreshUI();
     }
 
@@ -48,30 +53,6 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
             return null;
 
         return InventoryManager.Instance.GetItemData(itemId);
-    }
-
-    public bool TryUseRegisteredPotion()
-    {
-        if (playerHealth == null || InventoryManager.Instance == null)
-            return false;
-
-        ItemData potionData = GetRegisteredItemData();
-        if (potionData == null)
-            return false;
-
-        bool used = playerHealth.TryUsePotion(potionData);
-        if (!used)
-            return false;
-
-        int remaining = InventoryManager.Instance.GetItemCount(potionData.itemId);
-        if (remaining <= 0)
-        {
-            ClearSlot();
-            return true;
-        }
-
-        RefreshUI();
-        return true;
     }
 
     public void RefreshUI()
