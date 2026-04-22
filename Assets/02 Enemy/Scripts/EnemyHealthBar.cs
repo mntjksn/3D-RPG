@@ -4,63 +4,108 @@ using UnityEngine.UI;
 public class EnemyHealthBar : MonoBehaviour
 {
     [SerializeField] private Image fillImage;
+    [SerializeField] private float targetSearchInterval = 0.5f;
+    [SerializeField] private float visibleCheckInterval = 0.2f;
 
     private EnemyHealth enemyHealth;
     private Transform player;
+    private Canvas canvas;
 
-    private float checkTimer;
+    private float targetSearchTimer;
+    private float visibleCheckTimer;
 
     private void Awake()
     {
         enemyHealth = GetComponentInParent<EnemyHealth>();
+        canvas = GetComponent<Canvas>();
 
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-            player = playerObj.transform;
+        if (canvas == null)
+            canvas = GetComponentInChildren<Canvas>(true);
     }
 
     private void Start()
     {
-        SetVisible(false); // 처음엔 숨김
+        SetVisible(false);
+        FindNearestPlayer();
     }
 
     private void Update()
     {
-        if (enemyHealth == null || player == null)
+        if (enemyHealth == null || enemyHealth.EnemyData == null)
             return;
 
-        // 매 프레임 말고 0.2초마다 체크
-        checkTimer -= Time.deltaTime;
-        if (checkTimer > 0f)
+        targetSearchTimer -= Time.deltaTime;
+        if (targetSearchTimer <= 0f)
+        {
+            targetSearchTimer = targetSearchInterval;
+            FindNearestPlayer();
+        }
+
+        visibleCheckTimer -= Time.deltaTime;
+        if (visibleCheckTimer > 0f)
             return;
 
-        checkTimer = 0.2f;
+        visibleCheckTimer = visibleCheckInterval;
+
+        bool shouldShow = ShouldShowHealthBar();
+        SetVisible(shouldShow);
+    }
+
+    private void FindNearestPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        float minDist = float.MaxValue;
+        Transform nearest = null;
+
+        foreach (GameObject p in players)
+        {
+            if (p == null || !p.activeInHierarchy)
+                continue;
+
+            float dist = Vector3.Distance(enemyHealth.transform.position, p.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = p.transform;
+            }
+        }
+
+        player = nearest;
+    }
+
+    private bool ShouldShowHealthBar()
+    {
+        if (player == null)
+            return false;
+
+        if (enemyHealth.IsDead)
+            return false;
 
         float distance = Vector3.Distance(player.position, enemyHealth.transform.position);
-
-        bool shouldShow = distance <= enemyHealth.EnemyData.detectRange && !enemyHealth.IsDead;
-
-        SetVisible(shouldShow);
+        return distance <= enemyHealth.EnemyData.detectRange;
     }
 
     public void UpdateHealthBar(float currentHp, float maxHp)
     {
-        if (maxHp <= 0f)
+        if (fillImage == null || maxHp <= 0f)
             return;
 
-        fillImage.fillAmount = currentHp / maxHp;
+        fillImage.fillAmount = Mathf.Clamp01(currentHp / maxHp);
     }
 
     private void SetVisible(bool visible)
     {
-        if (fillImage == null)
-            return;
-
-        // Canvas 기준으로 꺼주는게 더 안전
-        Canvas canvas = GetComponent<Canvas>();
         if (canvas != null)
-            canvas.enabled = visible;
-        else
-            gameObject.SetActive(visible);
+        {
+            if (canvas.enabled != visible)
+                canvas.enabled = visible;
+
+            return;
+        }
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+            renderers[i].enabled = visible;
     }
 }

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -6,23 +7,37 @@ public class EnemyAI : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private EnemyData enemyData;
-
-    [Header("Target")]
     [SerializeField] private Transform target;
 
     private NavMeshAgent agent;
     private EnemyAnimation enemyAnimation;
     private EnemyActionLock enemyActionLock;
     private EnemyAttack enemyAttack;
+    private EnemyAINetworkSync networkSync;
 
     private float patrolTimer;
     private float attackRecoverTimer;
-
     private Vector3 spawnPosition;
 
     private bool isPatrolling;
     private bool isChasing;
     private bool isReturning;
+
+    private float retargetTimer = 0f;
+    private const float retargetInterval = 1f;
+
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
+    private float networkMoveSpeed;
+
+    private int mySpawnerIndex = -1;
+    private int myPoolIndex = -1;
+    private bool isInitialized = false;
+
+    public int SpawnerIndex => mySpawnerIndex;
+    public int PoolIndex => myPoolIndex;
+    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex;
+    public bool IsInitialized => isInitialized;
 
     private void Awake()
     {
@@ -30,38 +45,136 @@ public class EnemyAI : MonoBehaviour
         enemyAnimation = GetComponent<EnemyAnimation>();
         enemyActionLock = GetComponent<EnemyActionLock>();
         enemyAttack = GetComponent<EnemyAttack>();
+        networkSync = GetComponent<EnemyAINetworkSync>();
+    }
+
+    private void OnDisable()
+    {
+        isInitialized = false;
     }
 
     private void Update()
     {
-        if (!CanUpdate())
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateMasterAI();
+        }
+        else
+        {
+            UpdateRemoteAI();
+        }
+    }
+
+    private void UpdateMasterAI()
+    {
+        retargetTimer -= Time.deltaTime;
+        if (target == null || !target.gameObject.activeInHierarchy || retargetTimer <= 0f)
+        {
+            retargetTimer = retargetInterval;
+            FindNearestTarget();
+        }
+
+        if (enemyData == null || agent == null || !agent.enabled || !agent.isOnNavMesh)
             return;
 
         if (HandleLockedState())
             return;
 
-        float distanceToTarget = GetDistanceToTarget();
-        float distanceToSpawn = GetDistanceToSpawn();
+        if (target == null || !target.gameObject.activeInHierarchy)
+        {
+            HandlePatrol();
+        }
+        else
+        {
+            float distanceToTarget = GetDistanceToTarget();
+            float distanceToSpawn = GetDistanceToSpawn();
 
-        UpdateStateByDistance(distanceToTarget);
+            UpdateStateByDistance(distanceToTarget);
 
-        if (HandlePatrolState())
-            return;
+            if (!HandlePatrolState())
+            {
+                if (!HandleReturnState(distanceToTarget, distanceToSpawn))
+                    HandleChaseAndAttack(distanceToTarget);
+            }
+        }
 
-        if (HandleReturnState(distanceToTarget, distanceToSpawn))
-            return;
-
-        HandleChaseAndAttack(distanceToTarget);
         UpdateMoveAnimation();
+
+        if (networkSync != null)
+            networkSync.TrySyncState(transform.position, transform.rotation, agent.isStopped ? 0f : agent.velocity.magnitude);
     }
 
-    private bool CanUpdate()
+    private void UpdateRemoteAI()
     {
-        return enemyData != null &&
-               target != null &&
-               agent != null &&
-               agent.enabled &&
-               agent.isOnNavMesh;
+        if (!isInitialized)
+            return;
+
+        if (agent != null && agent.enabled)
+            agent.enabled = false;
+
+        if (networkPosition != Vector3.zero)
+        {
+            float dist = Vector3.Distance(transform.position, networkPosition);
+
+            if (dist > 3f)
+            {
+                transform.position = networkPosition;
+                transform.rotation = networkRotation;
+            }
+            else
+            {
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    networkPosition,
+                    (networkMoveSpeed + 1f) * Time.deltaTime);
+
+                if (networkMoveSpeed > 0.1f)
+                {
+                    transform.rotation = Quaternion.Lerp(
+                        transform.rotation,
+                        networkRotation,
+                        Time.deltaTime * 15f);
+                }
+            }
+        }
+
+        enemyAnimation?.SetMoveSpeed(networkMoveSpeed);
+    }
+
+    public void ApplyNetworkState(Vector3 position, Quaternion rotation, float moveSpeed)
+    {
+        networkPosition = position;
+        networkRotation = rotation;
+        networkMoveSpeed = moveSpeed;
+    }
+
+    private void FindNearestTarget()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (players.Length == 0)
+        {
+            target = null;
+            enemyAttack?.SetTarget(null);
+            return;
+        }
+
+        float minDist = float.MaxValue;
+        Transform nearest = null;
+
+        foreach (GameObject player in players)
+        {
+            if (!player.activeInHierarchy) continue;
+
+            float dist = Vector3.Distance(transform.position, player.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = player.transform;
+            }
+        }
+
+        target = nearest;
+        enemyAttack?.SetTarget(target);
     }
 
     private bool HandleLockedState()
@@ -75,17 +188,9 @@ public class EnemyAI : MonoBehaviour
         return true;
     }
 
-    private float GetDistanceToTarget()
-    {
-        return Vector3.Distance(transform.position, target.position);
-    }
+    private float GetDistanceToTarget() => Vector3.Distance(transform.position, target.position);
+    private float GetDistanceToSpawn() => Vector3.Distance(transform.position, spawnPosition);
 
-    private float GetDistanceToSpawn()
-    {
-        return Vector3.Distance(transform.position, spawnPosition);
-    }
-
-    // 추적/복귀 상태 갱신
     private void UpdateStateByDistance(float distanceToTarget)
     {
         if (!isChasing && !isReturning && distanceToTarget <= enemyData.detectRange)
@@ -98,7 +203,6 @@ public class EnemyAI : MonoBehaviour
         {
             isChasing = false;
             isReturning = true;
-
             agent.isStopped = false;
             agent.SetDestination(spawnPosition);
         }
@@ -110,21 +214,16 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // 순찰 상태 처리
     private bool HandlePatrolState()
     {
-        if (isChasing || isReturning)
-            return false;
-
+        if (isChasing || isReturning) return false;
         HandlePatrol();
         return true;
     }
 
-    // 복귀 상태 처리
     private bool HandleReturnState(float distanceToTarget, float distanceToSpawn)
     {
-        if (!isReturning)
-            return false;
+        if (!isReturning) return false;
 
         agent.isStopped = false;
         agent.speed = enemyData.moveSpeed;
@@ -145,7 +244,6 @@ public class EnemyAI : MonoBehaviour
         return true;
     }
 
-    // 추적/공격 처리
     private void HandleChaseAndAttack(float distanceToTarget)
     {
         if (distanceToTarget <= enemyData.attackRange)
@@ -215,20 +313,9 @@ public class EnemyAI : MonoBehaviour
         isReturning = false;
     }
 
-    private void FindTargetIfNeeded()
-    {
-        if (target != null)
-            return;
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            target = player.transform;
-    }
-
     private void ApplyData()
     {
-        if (enemyData == null || agent == null)
-            return;
+        if (enemyData == null || agent == null) return;
 
         agent.speed = enemyData.moveSpeed;
         agent.angularSpeed = 600f;
@@ -236,15 +323,21 @@ public class EnemyAI : MonoBehaviour
         agent.stoppingDistance = enemyData.attackRange;
     }
 
-    // 재사용 시 상태 초기화
     private void ResetAIState()
     {
-        FindTargetIfNeeded();
+        if (agent != null && !agent.enabled)
+            agent.enabled = true;
 
+        FindNearestTarget();
         spawnPosition = transform.position;
 
         patrolTimer = 0f;
         attackRecoverTimer = 0f;
+        retargetTimer = 0f;
+
+        networkPosition = Vector3.zero;
+        networkRotation = Quaternion.identity;
+        networkMoveSpeed = 0f;
 
         ClearStates();
 
@@ -258,12 +351,10 @@ public class EnemyAI : MonoBehaviour
             StopAgent();
 
         enemyAnimation?.SetMoveSpeed(0f);
-
-        enemyAttack?.SetData(enemyData);
+        enemyAttack?.SetData(enemyData, mySpawnerIndex, myPoolIndex);
         enemyAttack?.SetTarget(target);
     }
 
-    // 순찰 처리
     private void HandlePatrol()
     {
         patrolTimer -= Time.deltaTime;
@@ -283,8 +374,7 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            if (patrolTimer > 0f)
-                return;
+            if (patrolTimer > 0f) return;
 
             Vector3 patrolPoint = GetRandomPatrolPoint();
             agent.isStopped = false;
@@ -306,9 +396,12 @@ public class EnemyAI : MonoBehaviour
         return spawnPosition;
     }
 
-    public void SetData(EnemyData data)
+    public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;
+        mySpawnerIndex = sIndex;
+        myPoolIndex = pIndex;
+        isInitialized = true;
         ResetAIState();
     }
 }

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
@@ -6,10 +7,20 @@ public class EnemyAttack : MonoBehaviour
 
     private EnemyActionLock enemyActionLock;
     private EnemyAnimation enemyAnimation;
-    private Transform target;
+    private EnemyAttackNetworkSync networkSync;
 
+    private Transform target;
     private float attackCooldownTimer;
     private bool isAttacking;
+
+    private int mySpawnerIndex = -1;
+    private int myPoolIndex = -1;
+    private bool isInitialized = false;
+
+    public int SpawnerIndex => mySpawnerIndex;
+    public int PoolIndex => myPoolIndex;
+    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex;
+    public bool IsInitialized => isInitialized;
 
     public bool CanAttack => attackCooldownTimer <= 0f && !isAttacking;
     public bool IsAttacking => isAttacking;
@@ -18,14 +29,15 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyActionLock = GetComponent<EnemyActionLock>();
         enemyAnimation = GetComponent<EnemyAnimation>();
+        networkSync = GetComponent<EnemyAttackNetworkSync>();
+    }
+
+    private void OnDisable()
+    {
+        isInitialized = false;
     }
 
     private void Update()
-    {
-        UpdateCooldown();
-    }
-
-    private void UpdateCooldown()
     {
         attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - Time.deltaTime);
     }
@@ -35,12 +47,19 @@ public class EnemyAttack : MonoBehaviour
         target = targetTransform;
     }
 
+    public void SetData(EnemyData data, int sIndex, int pIndex)
+    {
+        enemyData = data;
+        mySpawnerIndex = sIndex;
+        myPoolIndex = pIndex;
+        isInitialized = true;
+    }
+
     public void SetData(EnemyData data)
     {
         enemyData = data;
     }
 
-    // 공격 상태 초기화
     public void ResetAttackState()
     {
         attackCooldownTimer = 0f;
@@ -50,8 +69,9 @@ public class EnemyAttack : MonoBehaviour
 
     public void TryAttack()
     {
-        if (!CanStartAttack())
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (!isInitialized) return;
+        if (!CanStartAttack()) return;
 
         StartAttack();
     }
@@ -68,30 +88,28 @@ public class EnemyAttack : MonoBehaviour
     {
         isAttacking = true;
         attackCooldownTimer = enemyData.attackRate;
-
         enemyActionLock?.SetAttack(true);
+
+        networkSync?.BroadcastAttack();
+    }
+
+    public void PlayAttackAnimation()
+    {
         enemyAnimation?.PlayAttack();
     }
 
     public void EndAttack()
     {
-        FinishAttack();
-    }
-
-    private void FinishAttack()
-    {
         isAttacking = false;
         enemyActionLock?.SetAttack(false);
     }
 
-    // 애니메이션 이벤트로 호출
     public void DealDamage()
     {
-        if (!CanDealDamage())
-            return;
-
-        if (!IsTargetInRange())
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (!isInitialized) return;
+        if (!CanDealDamage()) return;
+        if (!IsTargetInRange()) return;
 
         ApplyDamage();
     }
@@ -109,24 +127,26 @@ public class EnemyAttack : MonoBehaviour
 
     private void ApplyDamage()
     {
-        if (target == null)
-            return;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
-        IDamageable damageable = target.GetComponentInParent<IDamageable>();
-        if (damageable == null)
-            return;
-
-        float finalDamage = enemyData.attackDamage;
-
-        PlayerHealth playerHealth = target.GetComponentInParent<PlayerHealth>();
-        if (playerHealth != null)
+        foreach (GameObject playerObj in players)
         {
+            PlayerHealth playerHealth = playerObj.GetComponent<PlayerHealth>();
+            if (playerHealth == null) continue;
+
+            float dist = Vector3.Distance(transform.position, playerObj.transform.position);
+            if (dist > enemyData.attackRange + 0.5f) continue;
+
+            float finalDamage = enemyData.attackDamage;
             finalDamage = playerHealth.ModifyIncomingDamage(transform, finalDamage);
+
+            if (finalDamage <= 0f) continue;
+
+            playerHealth.photonView.RPC(
+                "RPC_TakeDamage",
+                playerHealth.photonView.Owner,
+                finalDamage
+            );
         }
-
-        if (finalDamage <= 0f)
-            return;
-
-        damageable.TakeDamage(finalDamage);
     }
 }

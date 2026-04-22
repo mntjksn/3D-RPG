@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -12,20 +13,29 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private EnemyPool enemyPool;
     private EnemyHealthBar enemyHealthBar;
     private HitFlash hitFlash;
+    private EnemyHealthNetworkSync networkSync;
 
     private float currentHp;
     private bool isDead;
-
     private float lastHitTime;
 
-    [Header("Auto Heal")]
-    [SerializeField] private float regen = 0.05f;
-    [SerializeField] private float healDelay = 5f;      // 몇 초 후 시작
+    private int mySpawnerIndex = -1;
+    private int myPoolIndex = -1;
+    private bool isInitialized = false;
+
+    // 마지막 타격자
+    private int lastAttackerActorNumber = -1;
 
     public EnemyData EnemyData => enemyData;
     public float CurrentHp => currentHp;
     public float MaxHp => enemyData != null ? enemyData.maxHp : 0f;
     public bool IsDead => isDead;
+    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex;
+    public bool IsInitialized => isInitialized;
+
+    [Header("Auto Heal")]
+    [SerializeField] private float regen = 0.05f;
+    [SerializeField] private float healDelay = 5f;
 
     private void Awake()
     {
@@ -34,28 +44,35 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyPool = GetComponent<EnemyPool>();
         enemyHealthBar = GetComponentInChildren<EnemyHealthBar>();
         hitFlash = GetComponent<HitFlash>();
+        networkSync = GetComponent<EnemyHealthNetworkSync>();
+    }
+
+    private void OnDisable()
+    {
+        isInitialized = false;
     }
 
     private void Update()
     {
-        if (isDead || enemyData == null)
-            return;
-
-        if (Time.time < lastHitTime + healDelay)
-            return;
-
-        if (currentHp >= MaxHp)
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (!isInitialized) return;
+        if (isDead || enemyData == null) return;
+        if (Time.time < lastHitTime + healDelay) return;
+        if (currentHp >= MaxHp) return;
 
         float healAmount = MaxHp * regen * Time.deltaTime;
         currentHp = Mathf.Min(currentHp + healAmount, MaxHp);
 
+        networkSync?.BroadcastHeal(currentHp);
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
-    public void SetData(EnemyData data)
+    public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;
+        mySpawnerIndex = sIndex;
+        myPoolIndex = pIndex;
+        isInitialized = true;
         ResetHealthState();
     }
 
@@ -64,18 +81,47 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemySpawner = ownerSpawner;
     }
 
+    // 기존 인터페이스용
     public void TakeDamage(float damage)
     {
-        if (!CanTakeDamage())
-            return;
+        TakeDamage(damage, PhotonNetwork.LocalPlayer.ActorNumber);
+    }
 
-        ApplyDamage(damage);
+    // 실제 사용용
+    public void TakeDamage(float damage, int attackerActorNumber)
+    {
+        if (!isInitialized) return;
 
-        if (IsDeadByHp())
+        if (PhotonNetwork.IsMasterClient)
         {
-            Die();
-            return;
+            if (!CanTakeDamage()) return;
+            networkSync?.BroadcastDamage(damage, attackerActorNumber);
         }
+        else
+        {
+            networkSync?.RequestDamage(damage, attackerActorNumber);
+        }
+    }
+
+    public void ApplyDamage(float damage, int attackerActorNumber)
+    {
+        lastAttackerActorNumber = attackerActorNumber;
+        currentHp -= damage;
+
+        enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
+        SoundManager.Instance.PlaySFX(SfxType.PlayerHit);
+        hitFlash?.PlayFlash();
+
+        lastHitTime = Time.time;
+
+        if (currentHp <= 0f)
+            Die();
+    }
+
+    public void ApplyHeal(float hp)
+    {
+        currentHp = hp;
+        enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
     private bool CanTakeDamage()
@@ -83,90 +129,65 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         return !isDead && enemyData != null;
     }
 
-    private void ApplyDamage(float damage)
-    {
-        currentHp -= damage;
-        enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
-        SoundManager.Instance.PlaySFX(SfxType.PlayerHit);
-        hitFlash?.PlayFlash();
-        lastHitTime = Time.time;
-        Debug.Log($"{enemyData.enemyName} 피격! 남은 체력: {currentHp}");
-    }
-
-    private bool IsDeadByHp()
-    {
-        return currentHp <= 0f;
-    }
-
     private void Die()
     {
-        if (isDead)
-            return;
+        if (isDead) return;
 
         isDead = true;
-        gameObject.GetComponent<CapsuleCollider>().enabled = false;
 
-        if (enemyData != null)
-            QuestService.NotifyKill(enemyData.enemyName); 
+        CapsuleCollider col = GetComponent<CapsuleCollider>();
+        if (col != null)
+            col.enabled = false;
 
-        HandleDrops();
-        PlayDieReaction();
-        RequestRespawn();
-        StartCoroutine(ReturnToPoolRoutine());
-    }
-
-    // 사망 처리
-    private void PlayDieReaction()
-    {
         enemyAnimation?.PlayDie();
         enemyActionLock?.OnDie();
 
         GiveExpToPlayer();
+        StartCoroutine(ReturnToPoolRoutine());
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            QuestService.NotifyKill(enemyData.enemyName);
+            HandleDrops();
+            enemySpawner?.RequestRespawn(enemyData);
+        }
     }
 
-    private void RequestRespawn()
-    {
-        enemySpawner?.RequestRespawn(enemyData);
-    }
-
-    // 체력 상태 초기화
     private void ResetHealthState()
     {
-        if (enemyData == null)
-            return;
+        if (enemyData == null) return;
 
         currentHp = enemyData.maxHp;
         isDead = false;
         lastHitTime = Time.time;
+        lastAttackerActorNumber = -1;
 
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
     private IEnumerator ReturnToPoolRoutine()
     {
-        if (enemyData == null)
-            yield break;
-
         yield return new WaitForSeconds(enemyData.deadBodyDuration);
-        enemyPool?.ReturnToPool();
+
+        if (PhotonNetwork.IsMasterClient)
+            enemyPool?.ReturnToPool();
     }
 
     private void GiveExpToPlayer()
     {
-        if (enemyData == null)
-            return;
-
+        if (PlayerManager.Instance == null) return;
         PlayerManager.Instance.AddExp(enemyData.exp);
     }
 
     private void HandleDrops()
     {
-        if (enemyData == null)
-            return;
-
-        int droppedGold = EnemyDropResolver.RollGold(enemyData);
+        int gold = EnemyDropResolver.RollGold(enemyData);
         var drops = EnemyDropResolver.RollDrops(enemyData);
 
-        DropManager.Instance?.SpawnDrops(transform.position, droppedGold, drops);
+        // 마지막 타격자 없으면 드랍 생성 안 하거나, 원하면 마스터에게 주는 fallback 가능
+        if (lastAttackerActorNumber <= 0)
+            return;
+
+        DropManager.Instance?.SpawnDrops(transform.position, gold, drops, lastAttackerActorNumber);
     }
 }
