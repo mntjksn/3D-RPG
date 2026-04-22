@@ -46,6 +46,11 @@ public class PlayerStat : MonoBehaviour
             EquipmentManager.Instance.OnEquipmentChanged -= HandleEquipmentChanged;
     }
 
+    public void ForceNotify()
+    {
+        NotifyAll();
+    }
+
     public void InitializeStat()
     {
         if (playerData == null)
@@ -56,40 +61,37 @@ public class PlayerStat : MonoBehaviour
 
         level = playerData.startLevel;
         currentExp = 0;
-        currentHp = GetMaxHp();
-        lastMaxHp = GetMaxHp();
         gold = 0;
+
+        float maxHp = GetMaxHp();
+        currentHp = maxHp;
+        lastMaxHp = maxHp;
 
         NotifyAll();
     }
 
     public void SetCurrentHp(float value)
     {
-        float newHp = Mathf.Clamp(value, 0f, GetMaxHp());
+        float maxHp = GetMaxHp();
+        float newHp = Mathf.Clamp(value, 0f, maxHp);
 
         if (Mathf.Approximately(currentHp, newHp))
             return;
 
         currentHp = newHp;
-        OnHpChanged?.Invoke(currentHp, GetMaxHp());
-
-        if (SaveManager.Instance != null)
-            SaveManager.Instance.MarkDirty();
+        OnHpChanged?.Invoke(currentHp, maxHp);
+        MarkDirty();
     }
 
     public void Heal(float amount)
     {
-        if (amount <= 0f)
-            return;
-
+        if (amount <= 0f) return;
         SetCurrentHp(currentHp + amount);
     }
 
     public void TakeDamage(float damage)
     {
-        if (damage <= 0f)
-            return;
-
+        if (damage <= 0f) return;
         SetCurrentHp(currentHp - damage);
     }
 
@@ -100,9 +102,7 @@ public class PlayerStat : MonoBehaviour
 
         gold += amount;
         OnGoldChanged?.Invoke(gold);
-
-        if (SaveManager.Instance != null)
-            SaveManager.Instance.MarkDirty();
+        MarkDirty();
     }
 
     public bool UseGold(int amount)
@@ -112,9 +112,7 @@ public class PlayerStat : MonoBehaviour
 
         gold -= amount;
         OnGoldChanged?.Invoke(gold);
-
-        if (SaveManager.Instance != null)
-            SaveManager.Instance.MarkDirty();
+        MarkDirty();
 
         return true;
     }
@@ -130,6 +128,7 @@ public class PlayerStat : MonoBehaviour
             LevelUp();
 
         OnExpChanged?.Invoke(currentExp, GetExpToNextLevel());
+        MarkDirty();
     }
 
     public int GetExpToNextLevel()
@@ -150,15 +149,14 @@ public class PlayerStat : MonoBehaviour
         if (EquipmentManager.Instance != null)
         {
             ItemData armor = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Armor);
-
             if (armor != null)
                 totalHp += armor.maxHpBonus;
         }
 
         if (UpgradeManager.Instance != null)
         {
-            int HpLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp) - 1;
-            totalHp += HpLevel * 50;
+            int hpLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp) - 1;
+            totalHp += hpLevel * 50;
         }
 
         return totalHp;
@@ -174,15 +172,14 @@ public class PlayerStat : MonoBehaviour
         if (EquipmentManager.Instance != null)
         {
             ItemData weapon = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Weapon);
-
             if (weapon != null)
                 totalAttack += weapon.attackPower;
         }
 
         if (UpgradeManager.Instance != null)
         {
-            int attackLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack) - 1;
-            totalAttack += attackLevel * 5;
+            int level = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack) - 1;
+            totalAttack += level * 5;
         }
 
         return totalAttack;
@@ -198,7 +195,6 @@ public class PlayerStat : MonoBehaviour
         if (EquipmentManager.Instance != null)
         {
             ItemData shield = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Shield);
-
             if (shield != null)
                 totalDefense += shield.shieldPower;
         }
@@ -216,7 +212,6 @@ public class PlayerStat : MonoBehaviour
         if (EquipmentManager.Instance != null)
         {
             ItemData shoes = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Shoes);
-
             if (shoes != null)
                 totalSpeed += shoes.moveSpeedBonus;
         }
@@ -229,15 +224,15 @@ public class PlayerStat : MonoBehaviour
         if (playerData == null)
             return 0f;
 
-        float totaRegen = playerData.regen;
+        float totalRegen = playerData.regen;
 
         if (UpgradeManager.Instance != null)
         {
-            float regenLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen);
-            totaRegen = regenLevel * 0.01f;
+            int level = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen) - 1;
+            totalRegen += level * 0.01f;
         }
 
-        return totaRegen;
+        return totalRegen;
     }
 
     public PlayerSaveData GetSaveData()
@@ -258,9 +253,11 @@ public class PlayerStat : MonoBehaviour
 
         level = Mathf.Max(playerData.startLevel, saveData.level);
         currentExp = Mathf.Max(0, saveData.currentExp);
-        currentHp = Mathf.Clamp(saveData.currentHp, 0f, GetMaxHp());
-        lastMaxHp = GetMaxHp();
         gold = Mathf.Max(0, saveData.gold);
+
+        float maxHp = GetMaxHp();
+        currentHp = Mathf.Clamp(saveData.currentHp, 0f, maxHp);
+        lastMaxHp = maxHp;
 
         NotifyAll();
     }
@@ -270,14 +267,11 @@ public class PlayerStat : MonoBehaviour
         float newMaxHp = GetMaxHp();
         float delta = newMaxHp - lastMaxHp;
 
-        if (!Mathf.Approximately(delta, 0f))
-            currentHp = Mathf.Clamp(currentHp + delta, 0f, newMaxHp);
-        else
-            currentHp = Mathf.Clamp(currentHp, 0f, newMaxHp);
-
+        currentHp = Mathf.Clamp(currentHp + delta, 0f, newMaxHp);
         lastMaxHp = newMaxHp;
 
         OnHpChanged?.Invoke(currentHp, newMaxHp);
+        MarkDirty();
     }
 
     private bool CanLevelUp()
@@ -289,20 +283,30 @@ public class PlayerStat : MonoBehaviour
     {
         currentExp -= GetExpToNextLevel();
         level++;
-        currentHp = GetMaxHp();
-        lastMaxHp = GetMaxHp();
+
+        float maxHp = GetMaxHp();
+        currentHp = maxHp;
+        lastMaxHp = maxHp;
 
         Debug.Log($"레벨업! 현재 레벨: {level}");
 
         OnLevelChanged?.Invoke(level);
-        OnHpChanged?.Invoke(currentHp, GetMaxHp());
+        OnHpChanged?.Invoke(currentHp, maxHp);
     }
 
     private void NotifyAll()
     {
+        float maxHp = GetMaxHp();
+
         OnLevelChanged?.Invoke(level);
         OnExpChanged?.Invoke(currentExp, GetExpToNextLevel());
-        OnHpChanged?.Invoke(currentHp, GetMaxHp());
+        OnHpChanged?.Invoke(currentHp, maxHp);
         OnGoldChanged?.Invoke(gold);
+    }
+
+    private void MarkDirty()
+    {
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.MarkDirty();
     }
 }
