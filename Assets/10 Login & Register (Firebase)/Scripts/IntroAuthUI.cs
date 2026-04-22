@@ -15,6 +15,7 @@ public class IntroAuthUI : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button loginButton;
     [SerializeField] private Button registerButton;
+    [SerializeField] private Button exitButton;
     [SerializeField] private Button startGameButton;
 
     [Header("Nickname UI")]
@@ -41,6 +42,9 @@ public class IntroAuthUI : MonoBehaviour
 
         if (registerButton != null)
             registerButton.onClick.AddListener(OnClickRegister);
+
+        if (exitButton != null)
+            exitButton.onClick.AddListener(OnClickExit);
 
         if (nicknameConfirmButton != null)
             nicknameConfirmButton.onClick.AddListener(OnClickConfirmNickname);
@@ -149,6 +153,15 @@ public class IntroAuthUI : MonoBehaviour
             SetStartButtonInteractable(false);
             ShowMessage("회원가입이 완료되었습니다. 닉네임을 설정해주세요.");
         });
+    }
+
+    private void OnClickExit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
     }
 
     private async void OnClickConfirmNickname()
