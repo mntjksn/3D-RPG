@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 
+// 플레이어 머리 위 레벨 + 이름 표시 및 위치 추적
 public class PlayerHeadUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text levelAndNameText;
@@ -22,36 +23,46 @@ public class PlayerHeadUI : MonoBehaviour
 
     private void Start()
     {
+        // 레벨 변경 이벤트 등록
         if (PlayerManager.Instance != null && PlayerManager.Instance.Stat != null)
             PlayerManager.Instance.Stat.OnLevelChanged += UpdateUI;
 
         UpdateUI(PlayerManager.Instance?.Stat?.Level ?? 1);
     }
 
+    private void OnDestroy()
+    {
+        // 이벤트 해제
+        if (PlayerManager.Instance != null && PlayerManager.Instance.Stat != null)
+            PlayerManager.Instance.Stat.OnLevelChanged -= UpdateUI;
+    }
+
     private void Update()
     {
-        // followTarget이 사라지면 (플레이어 나감) Canvas도 삭제
+        // 대상 사라지면 UI 제거
         if (followTarget == null)
-        {
             Destroy(gameObject);
-        }
     }
 
     private void LateUpdate()
     {
-        if (followTarget != null)
-            transform.position = followTarget.position + offset;
+        if (followTarget == null) return;
 
-        if (Camera.main != null)
-        {
-            transform.rotation = Quaternion.LookRotation(
-                transform.position - Camera.main.transform.position
-            );
-        }
+        // 위치 추적
+        transform.position = followTarget.position + offset;
+
+        // 카메라 바라보게
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        transform.rotation = Quaternion.LookRotation(
+            transform.position - cam.transform.position
+        );
     }
 
+    // UI 텍스트 갱신
     private void UpdateUI(int level)
     {
-        levelAndNameText.text = $"Lv. {level} {nickname}";
+        levelAndNameText?.SetText($"Lv. {level} {nickname}");
     }
 }
