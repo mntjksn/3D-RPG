@@ -2,11 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 인벤 UI 생성, 탭 전환, 슬롯 표시 담당
 public class InventoryUI : MonoBehaviour
 {
-    [Header("Main Panel")]
-    [SerializeField] private GameObject closePanel;
-
     [Header("Slot Settings")]
     [SerializeField] private InventorySlotUI slotPrefab;
     [SerializeField] private Transform slotParent;
@@ -17,7 +15,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Button itemButton;
     [SerializeField] private Button closeButton;
 
-    private readonly List<InventorySlotUI> slots = new List<InventorySlotUI>();
+    private readonly List<InventorySlotUI> slots = new();
     private InventoryTabType currentTab = InventoryTabType.Equipment;
 
     private bool isInitialized;
@@ -47,43 +45,32 @@ public class InventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
     }
 
+    // 버튼 이벤트 연결
     private void BindButtons()
     {
-        if (equipmentButton != null)
-            equipmentButton.onClick.AddListener(OnClickEquipmentTab);
-
-        if (itemButton != null)
-            itemButton.onClick.AddListener(OnClickItemTab);
-
-        if (closeButton != null)
-            closeButton.onClick.AddListener(CloseInventory);
+        equipmentButton?.onClick.AddListener(OnClickEquipmentTab);
+        itemButton?.onClick.AddListener(OnClickItemTab);
+        closeButton?.onClick.AddListener(CloseInventory);
     }
 
+    // 슬롯 생성
     private void CreateSlots()
     {
-        if (slotPrefab == null)
-        {
-            Debug.LogWarning("slotPrefab이 비어 있습니다.");
+        if (slotPrefab == null || slotParent == null)
             return;
-        }
-
-        if (slotParent == null)
-        {
-            Debug.LogWarning("slotParent가 비어 있습니다.");
-            return;
-        }
 
         ClearSlots();
 
         for (int i = 0; i < slotCount; i++)
         {
             InventorySlotUI slot = Instantiate(slotPrefab, slotParent);
-            slot.SetIndex(-1);   // 실제 인벤토리 슬롯 번호는 RefreshUI에서 넣음
+            slot.SetIndex(-1);
             slot.SetEmpty();
             slots.Add(slot);
         }
     }
 
+    // 기존 슬롯 제거
     private void ClearSlots()
     {
         slots.Clear();
@@ -95,6 +82,7 @@ public class InventoryUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
+    // 현재 탭 기준으로 슬롯 갱신
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -110,13 +98,11 @@ public class InventoryUI : MonoBehaviour
             return;
 
         var inventorySlots = InventoryManager.Instance.Slots;
-
         int displayIndex = 0;
 
         for (int realIndex = 0; realIndex < inventorySlots.Count; realIndex++)
         {
             InventorySlotData slotData = inventorySlots[realIndex];
-
             if (slotData == null || slotData.IsEmpty())
                 continue;
 
@@ -134,8 +120,7 @@ public class InventoryUI : MonoBehaviour
             if (displayIndex >= slots.Count)
                 break;
 
-            // 화면에는 앞에서부터 채우되,
-            // 이 슬롯이 실제 인벤토리 몇 번 슬롯인지 따로 저장
+            // 화면 슬롯과 실제 인벤 슬롯 번호 연결
             slots[displayIndex].SetIndex(realIndex);
             slots[displayIndex].SetItem(itemData, slotData.amount);
 
@@ -157,21 +142,23 @@ public class InventoryUI : MonoBehaviour
             || itemData.itemType == ItemType.Consumable;
     }
 
+    // 장비 탭 열기
     public void OnClickEquipmentTab()
     {
         currentTab = InventoryTabType.Equipment;
         RefreshUI();
     }
 
+    // 아이템 탭 열기
     public void OnClickItemTab()
     {
         currentTab = InventoryTabType.Item;
         RefreshUI();
     }
 
+    // 인벤 닫기
     public void CloseInventory()
     {
-        if (closePanel != null)
-            UIManager.Instance.ClosePanel(UIPanelType.Inventory);
+        UIManager.Instance?.ClosePanel(UIPanelType.Inventory);
     }
 }
