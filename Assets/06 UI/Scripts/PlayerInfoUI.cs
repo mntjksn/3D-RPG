@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 플레이어 스탯 UI 생성 및 갱신 담당
 public class PlayerInfoUI : MonoBehaviour
 {
     [Header("PlayerInfo UI")]
@@ -16,7 +17,7 @@ public class PlayerInfoUI : MonoBehaviour
     [SerializeField] private Transform detailParent;
     [SerializeField] private StatBlockUI statBlockPrefab;
 
-    private readonly List<StatBlockUI> spawnedBlocks = new List<StatBlockUI>();
+    private readonly List<StatBlockUI> spawnedBlocks = new();
 
     private const int BaseAttack = 10;
     private const int BaseShield = 20;
@@ -38,28 +39,25 @@ public class PlayerInfoUI : MonoBehaviour
 
     private IEnumerator InitAndRefresh()
     {
+        // PlayerStat 준비될 때까지 대기
         yield return new WaitUntil(() =>
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
 
         playerStat = PlayerManager.Instance.Stat;
-
         Refresh();
     }
 
+    // 버튼 연결
     private void BindButtons()
     {
-        if (closeButton != null)
-            closeButton.onClick.AddListener(ClosePlayerInfo);
+        closeButton?.onClick.AddListener(ClosePlayerInfo);
     }
 
+    // UI 전체 갱신
     public void Refresh()
     {
-        if (playerStat == null)
-        {
-            Debug.LogError("PlayerStat이 비어있음");
-            return;
-        }
+        if (playerStat == null) return;
 
         Clear();
 
@@ -116,32 +114,27 @@ public class PlayerInfoUI : MonoBehaviour
         );
     }
 
+    // 기본 스탯 UI 생성
     private void CreateBasic(string main, string sub)
     {
-        if (basicParent == null || statBlockPrefab == null)
-        {
-            Debug.LogError("basicParent 또는 statBlockPrefab 이 비어있음");
-            return;
-        }
+        if (basicParent == null || statBlockPrefab == null) return;
 
         StatBlockUI block = Instantiate(statBlockPrefab, basicParent);
         block.Set(main, sub);
         spawnedBlocks.Add(block);
     }
 
+    // 상세 스탯 UI 생성
     private void CreateDetail(string main, string sub)
     {
-        if (detailParent == null || statBlockPrefab == null)
-        {
-            Debug.LogError("detailParent 또는 statBlockPrefab 이 비어있음");
-            return;
-        }
+        if (detailParent == null || statBlockPrefab == null) return;
 
         StatBlockUI block = Instantiate(statBlockPrefab, detailParent);
         block.Set(main, sub);
         spawnedBlocks.Add(block);
     }
 
+    // 생성된 UI 제거
     private void Clear()
     {
         for (int i = 0; i < spawnedBlocks.Count; i++)
@@ -155,25 +148,25 @@ public class PlayerInfoUI : MonoBehaviour
 
     private int GetWeaponAttackBonus()
     {
-        ItemData item = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Weapon);
+        ItemData item = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Weapon);
         return item != null ? item.attackPower : 0;
     }
 
     private int GetShieldDefenseBonus()
     {
-        ItemData item = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Shield);
+        ItemData item = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Shield);
         return item != null ? item.shieldPower : 0;
     }
 
     private int GetArmorHpBonus()
     {
-        ItemData item = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Armor);
+        ItemData item = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Armor);
         return item != null ? item.maxHpBonus : 0;
     }
 
     private int GetShoesSpeedBonus()
     {
-        ItemData item = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Shoes);
+        ItemData item = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Shoes);
         return item != null ? item.moveSpeedBonus : 0;
     }
 
@@ -192,9 +185,9 @@ public class PlayerInfoUI : MonoBehaviour
         return (UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen) - 1) * 0.01;
     }
 
+    // UI 닫기
     public void ClosePlayerInfo()
     {
-        if (playerInfoUI != null)
-            UIManager.Instance.ClosePanel(UIPanelType.PlayerInfo);
+        UIManager.Instance?.ClosePanel(UIPanelType.PlayerInfo);
     }
 }
