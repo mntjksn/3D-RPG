@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 사운드 재생 및 볼륨 저장 담당
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
@@ -22,6 +23,7 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
+        // 싱글톤 설정
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -36,32 +38,31 @@ public class SoundManager : MonoBehaviour
         ApplyVolume();
     }
 
+    // 효과음 테이블 생성
     private void InitDictionary()
     {
         sfxDict = new Dictionary<SfxType, AudioClip>();
 
-        foreach (var data in sfxClips)
+        foreach (SfxClipData data in sfxClips)
         {
-            if (data != null && data.clip != null && !sfxDict.ContainsKey(data.type))
-                sfxDict.Add(data.type, data.clip);
+            if (data == null || data.clip == null) continue;
+            if (sfxDict.ContainsKey(data.type)) continue;
+
+            sfxDict.Add(data.type, data.clip);
         }
     }
 
+    // 효과음 재생
     public void PlaySFX(SfxType type)
     {
-        if (!sfxDict.TryGetValue(type, out AudioClip clip))
-        {
-            Debug.LogWarning($"SFX 없음: {type}");
-            return;
-        }
-
-        if (sfxSource == null)
-            return;
+        if (sfxSource == null) return;
+        if (!sfxDict.TryGetValue(type, out AudioClip clip)) return;
 
         sfxSource.pitch = Random.Range(0.95f, 1.05f);
         sfxSource.PlayOneShot(clip, sfxVolume);
     }
 
+    // 배경음 볼륨 변경
     public void SetBgmVolume(float value)
     {
         bgmVolume = Mathf.Clamp01(value);
@@ -72,18 +73,21 @@ public class SoundManager : MonoBehaviour
         SaveVolume();
     }
 
+    // 효과음 볼륨 변경
     public void SetSfxVolume(float value)
     {
         sfxVolume = Mathf.Clamp01(value);
         SaveVolume();
     }
 
+    // 현재 볼륨 적용
     private void ApplyVolume()
     {
         if (bgmSource != null)
             bgmSource.volume = bgmVolume;
     }
 
+    // 볼륨 저장
     private void SaveVolume()
     {
         PlayerPrefs.SetFloat("BGM_VOLUME", bgmVolume);
@@ -91,6 +95,7 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    // 저장된 볼륨 불러오기
     private void LoadVolume()
     {
         bgmVolume = PlayerPrefs.GetFloat("BGM_VOLUME", 0.5f);
