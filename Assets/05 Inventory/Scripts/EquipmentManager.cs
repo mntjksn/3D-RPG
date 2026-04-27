@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 장비 장착, 해제, 저장 데이터 관리 담당
 public class EquipmentManager : MonoBehaviour
 {
     public static EquipmentManager Instance { get; private set; }
@@ -12,6 +13,7 @@ public class EquipmentManager : MonoBehaviour
 
     private void Awake()
     {
+        // 싱글톤 설정
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -22,33 +24,32 @@ public class EquipmentManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // 장비 초기화
     public void InitializeEquipment()
     {
         equippedItems.Clear();
         OnEquipmentChanged?.Invoke();
     }
 
+    // 장착된 아이템 조회
     public ItemData GetEquippedItem(EquipmentSlotType slotType)
     {
         equippedItems.TryGetValue(slotType, out ItemData itemData);
         return itemData;
     }
 
+    // 인벤토리 슬롯에서 장착
     public bool EquipItemFromSlot(int slotIndex)
     {
-        if (slotIndex < 0 || InventoryManager.Instance == null)
-            return false;
+        if (slotIndex < 0 || InventoryManager.Instance == null) return false;
 
         ItemData newItem = InventoryManager.Instance.GetItemAtSlot(slotIndex);
-
-        if (newItem == null || !IsEquipable(newItem))
-            return false;
+        if (newItem == null || !IsEquipable(newItem)) return false;
 
         EquipmentSlotType slotType = newItem.equipSlot;
         ItemData oldItem = GetEquippedItem(slotType);
 
-        bool removed = InventoryManager.Instance.RemoveItemAtSlot(slotIndex, 1);
-        if (!removed)
+        if (!InventoryManager.Instance.RemoveItemAtSlot(slotIndex, 1))
             return false;
 
         if (oldItem != null)
@@ -56,39 +57,32 @@ public class EquipmentManager : MonoBehaviour
 
         equippedItems[slotType] = newItem;
 
-        Debug.Log($"장착 완료: {newItem.itemName} -> {slotType}");
-        SoundManager.Instance.PlaySFX(SfxType.Equip);
-
-        if (newItem != null)
-            QuestService.NotifyEquipItem(newItem.itemName);
+        SoundManager.Instance?.PlaySFX(SfxType.Equip);
+        QuestService.NotifyEquipItem(newItem.itemName);
 
         OnEquipmentChanged?.Invoke();
         MarkSaveDirty();
         return true;
     }
 
+    // 드래그로 바로 장착
     public bool EquipItemDirect(ItemData newItem)
     {
-        if (newItem == null || InventoryManager.Instance == null)
-            return false;
-
-        if (!IsEquipable(newItem))
-            return false;
+        if (newItem == null || InventoryManager.Instance == null) return false;
+        if (!IsEquipable(newItem)) return false;
 
         EquipmentSlotType slotType = newItem.equipSlot;
         ItemData oldItem = GetEquippedItem(slotType);
 
-        // 같은 아이템을 다시 같은 슬롯에 드롭한 경우
+        // 같은 아이템 다시 드롭 → 장착 해제
         if (oldItem != null && oldItem.itemId == newItem.itemId)
         {
-            bool addedBack = InventoryManager.Instance.AddItem(oldItem, 1);
-            if (!addedBack)
+            if (!InventoryManager.Instance.AddItem(oldItem, 1))
                 return false;
 
             equippedItems.Remove(slotType);
 
-            Debug.Log($"같은 장비 재드래그 -> 장착 해제: {oldItem.itemName}");
-            SoundManager.Instance.PlaySFX(SfxType.Equip);
+            SoundManager.Instance?.PlaySFX(SfxType.Equip);
 
             OnEquipmentChanged?.Invoke();
             MarkSaveDirty();
@@ -100,14 +94,14 @@ public class EquipmentManager : MonoBehaviour
 
         equippedItems[slotType] = newItem;
 
-        Debug.Log($"장착 교체 완료: {newItem.itemName} -> {slotType}");
-        SoundManager.Instance.PlaySFX(SfxType.Equip);
+        SoundManager.Instance?.PlaySFX(SfxType.Equip);
 
         OnEquipmentChanged?.Invoke();
         MarkSaveDirty();
         return true;
     }
 
+    // 장비 해제
     public bool UnequipItem(EquipmentSlotType slotType)
     {
         if (!equippedItems.TryGetValue(slotType, out ItemData itemData) || itemData == null)
@@ -116,14 +110,12 @@ public class EquipmentManager : MonoBehaviour
         if (InventoryManager.Instance == null)
             return false;
 
-        bool added = InventoryManager.Instance.AddItem(itemData, 1);
-        if (!added)
+        if (!InventoryManager.Instance.AddItem(itemData, 1))
             return false;
 
         equippedItems.Remove(slotType);
 
-        Debug.Log($"장비 해제: {itemData.itemName}");
-        SoundManager.Instance.PlaySFX(SfxType.Equip);
+        SoundManager.Instance?.PlaySFX(SfxType.Equip);
 
         OnEquipmentChanged?.Invoke();
         MarkSaveDirty();
@@ -132,23 +124,20 @@ public class EquipmentManager : MonoBehaviour
 
     public bool UnequipSpecificItem(ItemData itemData)
     {
-        if (itemData == null)
-            return false;
-
+        if (itemData == null) return false;
         return UnequipItem(itemData.equipSlot);
     }
 
+    // 슬롯에 장착 가능한지 확인
     public bool CanEquipToSlot(ItemData itemData, EquipmentSlotType slotType)
     {
-        if (itemData == null)
-            return false;
-
-        if (!IsEquipable(itemData))
-            return false;
+        if (itemData == null) return false;
+        if (!IsEquipable(itemData)) return false;
 
         return itemData.equipSlot == slotType;
     }
 
+    // 저장 데이터 생성
     public EquipmentSaveData GetSaveData()
     {
         return new EquipmentSaveData
@@ -160,6 +149,7 @@ public class EquipmentManager : MonoBehaviour
         };
     }
 
+    // 저장 데이터 로드
     public void LoadFromSaveData(EquipmentSaveData saveData)
     {
         equippedItems.Clear();
@@ -175,24 +165,16 @@ public class EquipmentManager : MonoBehaviour
         LoadEquippedItem(EquipmentSlotType.Shoes, saveData.shoesItemId);
         LoadEquippedItem(EquipmentSlotType.Shield, saveData.shieldItemId);
 
-        Debug.Log("장비 로드 완료");
         OnEquipmentChanged?.Invoke();
     }
 
     private void LoadEquippedItem(EquipmentSlotType slotType, string itemId)
     {
-        if (string.IsNullOrEmpty(itemId))
-            return;
-
-        if (InventoryManager.Instance == null)
-            return;
+        if (string.IsNullOrEmpty(itemId)) return;
+        if (InventoryManager.Instance == null) return;
 
         ItemData itemData = InventoryManager.Instance.GetItemData(itemId);
-        if (itemData == null)
-        {
-            Debug.LogWarning($"장비 로드 실패: itemId에 해당하는 ItemData를 찾을 수 없음 - {itemId}");
-            return;
-        }
+        if (itemData == null) return;
 
         equippedItems[slotType] = itemData;
     }
@@ -213,7 +195,6 @@ public class EquipmentManager : MonoBehaviour
 
     private void MarkSaveDirty()
     {
-        if (SaveManager.Instance != null)
-            SaveManager.Instance.MarkDirty();
+        SaveManager.Instance?.MarkDirty();
     }
 }
