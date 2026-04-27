@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "QuestData", menuName = "Quest/Quest Data")]
+// 퀘스트 정의 데이터
 public class QuestData : ScriptableObject
 {
     [Header("ID")]
