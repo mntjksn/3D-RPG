@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// 업그레이드 단계별 비용/확률/재료 데이터
 [Serializable]
 public class UpgradeLevelData
 {
