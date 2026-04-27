@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 업그레이드 UI 전체 갱신 및 강화 처리 담당
 public class UpgradeUI : MonoBehaviour
 {
     [Header("Rows")]
@@ -19,7 +20,6 @@ public class UpgradeUI : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button closeButton;
-    [SerializeField] private GameObject upgradePanel;
 
     [Header("Data")]
     [SerializeField] private StatUpgradeData attackData;
@@ -30,9 +30,7 @@ public class UpgradeUI : MonoBehaviour
 
     private void Start()
     {
-        if (closeButton != null)
-            closeButton.onClick.AddListener(CloseUpgrade);
-
+        closeButton?.onClick.AddListener(CloseUpgrade);
         RefreshAll();
     }
 
@@ -43,6 +41,7 @@ public class UpgradeUI : MonoBehaviour
 
     private IEnumerator InitAndRefresh()
     {
+        // PlayerStat 준비될 때까지 대기
         yield return new WaitUntil(() =>
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
@@ -53,21 +52,23 @@ public class UpgradeUI : MonoBehaviour
         RefreshAll();
     }
 
+    // 업그레이드 UI 전체 갱신
     public void RefreshAll()
     {
-        if (upgradeInventoryUI != null)
-            upgradeInventoryUI.RefreshUI();
+        upgradeInventoryUI?.RefreshUI();
 
         RefreshSelectedSlots();
         RefreshRows();
     }
 
+    // 재료 드롭 처리
     public void OnDropMaterial(UpgradeType type, ItemData itemData)
     {
         UpgradeManager.Instance?.SetSelectedMaterial(type, itemData);
         RefreshAll();
     }
 
+    // 업그레이드 버튼 클릭 처리
     public void OnClickUpgrade(UpgradeType type)
     {
         StatUpgradeData statData = GetStatData(type);
@@ -80,18 +81,12 @@ public class UpgradeUI : MonoBehaviour
         );
 
         if (success)
-        {
             UpgradeManager.Instance?.ClearSelectedMaterial(type);
-            Debug.Log($"{type} 업그레이드 성공");
-        }
-        else
-        {
-            Debug.Log($"{type} 업그레이드 실패");
-        }
 
         RefreshAll();
     }
 
+    // 선택 슬롯 갱신
     private void RefreshSelectedSlots()
     {
         RefreshSelectedSlot(UpgradeType.Attack, attackSlotUI);
@@ -105,7 +100,6 @@ public class UpgradeUI : MonoBehaviour
             return;
 
         ItemData itemData = UpgradeManager.Instance.GetSelectedMaterial(type);
-
         if (itemData == null)
         {
             slotUI.ClearSlot();
@@ -123,6 +117,7 @@ public class UpgradeUI : MonoBehaviour
         slotUI.RefreshSlot(itemData, count);
     }
 
+    // 업그레이드 행 갱신
     private void RefreshRows()
     {
         RefreshRow(UpgradeType.Attack, attackRowUI, attackData);
@@ -149,16 +144,23 @@ public class UpgradeUI : MonoBehaviour
     {
         switch (type)
         {
-            case UpgradeType.Attack: return attackData;
-            case UpgradeType.Hp: return hpData;
-            case UpgradeType.Regen: return regenData;
-            default: return null;
+            case UpgradeType.Attack:
+                return attackData;
+
+            case UpgradeType.Hp:
+                return hpData;
+
+            case UpgradeType.Regen:
+                return regenData;
+
+            default:
+                return null;
         }
     }
 
+    // 업그레이드 창 닫기
     public void CloseUpgrade()
     {
-        if (upgradePanel != null)
-            UIManager.Instance.ClosePanel(UIPanelType.Upgrade);
+        UIManager.Instance?.ClosePanel(UIPanelType.Upgrade);
     }
 }
