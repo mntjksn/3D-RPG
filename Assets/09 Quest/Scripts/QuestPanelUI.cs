@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 
+// 퀘스트 대사 표시 및 수락 / 보상 처리 담당
 public class QuestPanelUI : MonoBehaviour
 {
     [Header("Quest")]
@@ -20,7 +21,7 @@ public class QuestPanelUI : MonoBehaviour
 
     private QuestData currentDisplayQuestData;
     private QuestDialogueData currentDialogue;
-    
+
     private int currentIndex;
     private bool isPlaying;
     private bool isNoQuestMode;
@@ -32,13 +33,13 @@ public class QuestPanelUI : MonoBehaviour
 
     private void Update()
     {
-        if (!isPlaying)
-            return;
+        if (!isPlaying) return;
 
         if (Input.GetKeyDown(nextKey))
             NextLine();
     }
 
+    // 대사 시작
     private void StartDialogue()
     {
         currentDisplayQuestData = GetDisplayQuestData();
@@ -53,12 +54,11 @@ public class QuestPanelUI : MonoBehaviour
         currentIndex = 0;
         isPlaying = true;
 
-        if (guideText != null)
-            guideText.text = "SPACE";
-
+        guideText?.SetText("SPACE");
         RefreshText();
     }
 
+    // 현재 표시할 퀘스트 결정
     private QuestData GetDisplayQuestData()
     {
         if (questData == null)
@@ -68,58 +68,53 @@ public class QuestPanelUI : MonoBehaviour
 
         while (currentQuest != null)
         {
-            QuestStateData state = QuestManager.Instance != null
-                ? QuestManager.Instance.GetState(currentQuest.questId)
-                : null;
+            QuestStateData state = QuestManager.Instance?.GetState(currentQuest.questId);
 
             // 아직 안 받은 퀘스트
             if (state == null || !state.isAccepted)
                 return currentQuest;
 
-            // 진행 중이거나 완료했지만 보상 안 받음
+            // 진행 중이거나 완료 후 보상 미수령
             if (!state.isRewardClaimed)
                 return currentQuest;
 
-            // 보상까지 받았으면 다음 퀘스트 검사
+            // 다음 퀘스트 확인
             currentQuest = currentQuest.nextQuest;
         }
 
-        // 전부 끝난 상태
         return null;
     }
 
+    // 현재 상황에 맞는 대사 결정
     private QuestDialogueData GetCurrentDialogue(QuestData displayQuestData)
     {
         isNoQuestMode = false;
 
-        // 더 이상 줄 퀘스트가 없으면 공통 no quest 대사
         if (displayQuestData == null)
         {
             isNoQuestMode = true;
             return noQuestDialogue;
         }
 
-        QuestStateData state = QuestManager.Instance != null
-            ? QuestManager.Instance.GetState(displayQuestData.questId)
-            : null;
+        QuestStateData state = QuestManager.Instance?.GetState(displayQuestData.questId);
 
-        // 아직 안 받은 상태 → 시작 대사
+        // 아직 안 받은 상태
         if (state == null || !state.isAccepted)
             return displayQuestData.startDialogue;
 
-        // 진행 중 → 공통 진행중 대사
+        // 진행 중
         if (!state.isCompleted)
             return progressDialogue;
 
-        // 완료했지만 보상 안 받음 → 개별 완료 대사
+        // 완료 후 보상 미수령
         if (!state.isRewardClaimed)
             return displayQuestData.completeDialogue;
 
-        // 여기까지 오면 사실상 no quest
         isNoQuestMode = true;
         return noQuestDialogue;
     }
 
+    // 다음 대사로 이동
     private void NextLine()
     {
         currentIndex++;
@@ -133,6 +128,7 @@ public class QuestPanelUI : MonoBehaviour
         RefreshText();
     }
 
+    // 현재 대사 표시
     private void RefreshText()
     {
         if (dialogueText == null || currentDialogue == null)
@@ -141,14 +137,15 @@ public class QuestPanelUI : MonoBehaviour
         if (currentIndex < 0 || currentIndex >= currentDialogue.lines.Count)
             return;
 
-        dialogueText.text = currentDialogue.lines[currentIndex];
+        dialogueText.SetText(currentDialogue.lines[currentIndex]);
     }
 
+    // 대사 종료 처리
     private void FinishDialogue()
     {
         isPlaying = false;
 
-        // "임무 없음" 대사면 아무 처리 없이 닫기
+        // 임무 없음 대사는 바로 닫기
         if (isNoQuestMode)
         {
             ClosePanel();
@@ -174,11 +171,9 @@ public class QuestPanelUI : MonoBehaviour
         ClosePanel();
     }
 
+    // 패널 닫기
     private void ClosePanel()
     {
-        if (panelRoot != null)
-            UIManager.Instance.ClosePanel(UIPanelType.Quest);
-        else
-            gameObject.SetActive(false);
+        UIManager.Instance?.ClosePanel(UIPanelType.Quest);
     }
 }
