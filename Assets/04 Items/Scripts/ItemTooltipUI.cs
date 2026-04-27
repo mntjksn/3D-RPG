@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// ¾ÆÀÌÅÛ ÅøÆÁ Ç¥½Ã ¹× ¸¶¿ì½º À§Ä¡ ÃßÀû
 public class ItemTooltipUI : MonoBehaviour
 {
     public static ItemTooltipUI Instance { get; private set; }
@@ -18,6 +19,7 @@ public class ItemTooltipUI : MonoBehaviour
 
     private void Awake()
     {
+        // ½Ì±ÛÅæ ¼³Á¤
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -27,21 +29,21 @@ public class ItemTooltipUI : MonoBehaviour
         Instance = this;
         rectTransform = GetComponent<RectTransform>();
 
+        // ½ÃÀÛ ½Ã ¼û±è
         gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if (!gameObject.activeSelf)
-            return;
+        if (!gameObject.activeSelf) return;
 
         FollowMouse();
     }
 
+    // ÅøÆÁ Ç¥½Ã
     public void Show(ItemData itemData)
     {
-        if (itemData == null)
-            return;
+        if (itemData == null) return;
 
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
@@ -49,20 +51,19 @@ public class ItemTooltipUI : MonoBehaviour
         if (iconImage != null)
             iconImage.sprite = itemData.icon;
 
-        if (nameText != null)
-            nameText.text = itemData.itemName;
-
-        if (descText != null)
-            descText.text = itemData.description;
+        nameText?.SetText(itemData.itemName);
+        descText?.SetText(itemData.description);
 
         FollowMouse();
     }
 
+    // ÅøÆÁ ¼û±è
     public void Hide()
     {
         gameObject.SetActive(false);
     }
 
+    // ¸¶¿ì½º À§Ä¡ µû¶ó°¡±â
     private void FollowMouse()
     {
         rectTransform.position = (Vector2)Input.mousePosition + offset;
