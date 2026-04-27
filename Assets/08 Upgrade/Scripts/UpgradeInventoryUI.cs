@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
+// 강화 인벤 UI 생성 및 재료 슬롯 표시 담당
 public class UpgradeInventoryUI : MonoBehaviour
 {
     [Header("Slot Settings")]
@@ -9,7 +9,7 @@ public class UpgradeInventoryUI : MonoBehaviour
     [SerializeField] private Transform slotParent;
     [SerializeField] private int slotCount = 20;
 
-    private readonly List<UpgradeInventorySlotUI> slots = new List<UpgradeInventorySlotUI>();
+    private readonly List<UpgradeInventorySlotUI> slots = new();
     private bool isInitialized;
 
     public IReadOnlyList<UpgradeInventorySlotUI> Slots => slots;
@@ -27,22 +27,20 @@ public class UpgradeInventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged += RefreshUI;
 
         RefreshUI();
-
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
     }
 
     private void OnDisable()
     {
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
+    // 슬롯 생성
     private void CreateSlots()
     {
+        if (slotPrefab == null || slotParent == null)
+            return;
+
         ClearSlots();
 
         for (int i = 0; i < slotCount; i++)
@@ -54,6 +52,7 @@ public class UpgradeInventoryUI : MonoBehaviour
         }
     }
 
+    // 기존 슬롯 제거
     private void ClearSlots()
     {
         slots.Clear();
@@ -65,6 +64,7 @@ public class UpgradeInventoryUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
+    // 재료 아이템 기준으로 슬롯 갱신
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -85,7 +85,6 @@ public class UpgradeInventoryUI : MonoBehaviour
         for (int realIndex = 0; realIndex < inventorySlots.Count; realIndex++)
         {
             InventorySlotData slotData = inventorySlots[realIndex];
-
             if (slotData == null || slotData.IsEmpty())
                 continue;
 
