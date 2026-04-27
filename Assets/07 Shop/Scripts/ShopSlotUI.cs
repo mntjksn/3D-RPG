@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+// 상점 슬롯 UI, 클릭 및 툴팁 처리 담당
 public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image iconImage;
@@ -17,16 +18,17 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Awake()
     {
-        if (button != null)
-            button.onClick.AddListener(OnClickSlot);
+        button?.onClick.AddListener(OnClickSlot);
     }
 
+    // 슬롯 인덱스 설정
     public void SetIndex(int index)
     {
         slotIndex = index;
         gameObject.name = $"ShopSlot_{index}";
     }
 
+    // 슬롯 비우기
     public void SetEmpty()
     {
         currentItemData = null;
@@ -37,10 +39,10 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             iconImage.enabled = false;
         }
 
-        if (countText != null)
-            countText.text = string.Empty;
+        countText?.SetText(string.Empty);
     }
 
+    // 슬롯 아이템 설정
     public void SetItem(ItemData itemData)
     {
         currentItemData = itemData;
@@ -51,14 +53,13 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             iconImage.enabled = itemData != null && itemData.icon != null;
         }
 
-        if (countText != null)
-            countText.text = string.Empty;
+        countText?.SetText(string.Empty);
     }
 
+    // 마우스 오버 시 툴팁 표시
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (currentItemData == null)
-            return;
+        if (currentItemData == null) return;
 
         ItemTooltipUI.Instance?.Show(currentItemData);
     }
@@ -68,6 +69,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         ItemTooltipUI.Instance?.Hide();
     }
 
+    // 슬롯 클릭 처리
     private void OnClickSlot()
     {
         if (slotIndex < 0 || currentItemData == null)
