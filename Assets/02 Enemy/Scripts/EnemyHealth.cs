@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
+// 적 HP 관리, 피해/회복 처리, 사망 시 드랍/경험치/리스폰 요청
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
     [Header("Data")]
@@ -23,7 +24,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private int myPoolIndex = -1;
     private bool isInitialized = false;
 
-    // 마지막 타격자
+    // 드랍 아이템 귀속 처리에 사용
     private int lastAttackerActorNumber = -1;
 
     public EnemyData EnemyData => enemyData;
@@ -35,7 +36,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     [Header("Auto Heal")]
     [SerializeField] private float regen = 0.05f;
-    [SerializeField] private float healDelay = 5f;
+    [SerializeField] private float healDelay = 5f; // 피격 후 자동 회복 시작까지 대기 시간
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         isInitialized = false;
     }
 
+    // 자동 HP 재생 - 마스터 클라이언트에서만 계산 후 동기화
     private void Update()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -60,13 +62,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (Time.time < lastHitTime + healDelay) return;
         if (currentHp >= MaxHp) return;
 
-        float healAmount = MaxHp * regen * Time.deltaTime;
-        currentHp = Mathf.Min(currentHp + healAmount, MaxHp);
+        currentHp = Mathf.Min(currentHp + MaxHp * regen * Time.deltaTime, MaxHp);
 
         networkSync?.BroadcastHeal(currentHp);
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
+    // 스포너/풀 인덱스 포함 전체 초기화 (풀에서 꺼낼 때 호출)
     public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;
@@ -81,13 +83,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemySpawner = ownerSpawner;
     }
 
-    // 기존 인터페이스용
+    // IDamageable 인터페이스 구현 - 공격자 정보 없을 때 로컬 플레이어로 처리
     public void TakeDamage(float damage)
     {
         TakeDamage(damage, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
-    // 실제 사용용
+    // 마스터면 직접 브로드캐스트, 클라이언트면 마스터에게 요청
     public void TakeDamage(float damage, int attackerActorNumber)
     {
         if (!isInitialized) return;
@@ -103,13 +105,14 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
+    // 네트워크 동기화를 통해 모든 클라이언트에서 실제 피해 적용
     public void ApplyDamage(float damage, int attackerActorNumber)
     {
         lastAttackerActorNumber = attackerActorNumber;
         currentHp -= damage;
 
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
-        SoundManager.Instance.PlaySFX(SfxType.PlayerHit);
+        SoundManager.Instance?.PlaySFX(SfxType.PlayerHit);
         hitFlash?.PlayFlash();
 
         lastHitTime = Time.time;
@@ -118,6 +121,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             Die();
     }
 
+    // 네트워크 동기화를 통해 모든 클라이언트에서 회복값 적용
     public void ApplyHeal(float hp)
     {
         currentHp = hp;
@@ -129,6 +133,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         return !isDead && enemyData != null;
     }
 
+    // 사망 처리 - 콜라이더 비활성화, 애니메이션, 드랍/경험치/리스폰은 마스터만 처리
     private void Die()
     {
         if (isDead) return;
@@ -153,6 +158,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
+    // HP 및 상태를 초기값으로 리셋
     private void ResetHealthState()
     {
         if (enemyData == null) return;
@@ -165,6 +171,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
+    // 사망 후 일정 시간 뒤 풀에 반환 (마스터만 실행)
     private IEnumerator ReturnToPoolRoutine()
     {
         yield return new WaitForSeconds(enemyData.deadBodyDuration);
@@ -173,20 +180,19 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             enemyPool?.ReturnToPool();
     }
 
+    // 로컬 플레이어에게 경험치 지급
     private void GiveExpToPlayer()
     {
-        if (PlayerManager.Instance == null) return;
-        PlayerManager.Instance.AddExp(enemyData.exp);
+        PlayerManager.Instance?.AddExp(enemyData.exp);
     }
 
+    // 드랍 아이템 및 골드 생성 - 마지막 타격자에게 귀속
     private void HandleDrops()
     {
+        if (lastAttackerActorNumber <= 0) return;
+
         int gold = EnemyDropResolver.RollGold(enemyData);
         var drops = EnemyDropResolver.RollDrops(enemyData);
-
-        // 마지막 타격자 없으면 드랍 생성 안 하거나, 원하면 마스터에게 주는 fallback 가능
-        if (lastAttackerActorNumber <= 0)
-            return;
 
         DropManager.Instance?.SpawnDrops(transform.position, gold, drops, lastAttackerActorNumber);
     }
