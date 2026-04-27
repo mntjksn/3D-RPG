@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 상점 인벤 UI 생성, 탭 전환, 슬롯 표시 담당
 public class ShopInventoryUI : MonoBehaviour
 {
     [Header("Slot Settings")]
@@ -13,7 +14,7 @@ public class ShopInventoryUI : MonoBehaviour
     [SerializeField] private Button equipmentButton;
     [SerializeField] private Button itemButton;
 
-    private readonly List<ShopInventorySlotUI> slots = new List<ShopInventorySlotUI>();
+    private readonly List<ShopInventorySlotUI> slots = new();
     private InventoryTabType currentTab = InventoryTabType.Equipment;
     private bool isInitialized;
 
@@ -40,17 +41,19 @@ public class ShopInventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
     }
 
+    // 버튼 이벤트 연결
     private void BindButtons()
     {
-        if (equipmentButton != null)
-            equipmentButton.onClick.AddListener(OnClickEquipmentTab);
-
-        if (itemButton != null)
-            itemButton.onClick.AddListener(OnClickItemTab);
+        equipmentButton?.onClick.AddListener(OnClickEquipmentTab);
+        itemButton?.onClick.AddListener(OnClickItemTab);
     }
 
+    // 슬롯 생성
     private void CreateSlots()
     {
+        if (slotPrefab == null || slotParent == null)
+            return;
+
         ClearSlots();
 
         for (int i = 0; i < slotCount; i++)
@@ -62,6 +65,7 @@ public class ShopInventoryUI : MonoBehaviour
         }
     }
 
+    // 기존 슬롯 제거
     private void ClearSlots()
     {
         slots.Clear();
@@ -73,6 +77,7 @@ public class ShopInventoryUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
+    // 현재 탭 기준으로 슬롯 갱신
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -93,7 +98,6 @@ public class ShopInventoryUI : MonoBehaviour
         for (int realIndex = 0; realIndex < inventorySlots.Count; realIndex++)
         {
             InventorySlotData slotData = inventorySlots[realIndex];
-
             if (slotData == null || slotData.IsEmpty())
                 continue;
 
@@ -131,12 +135,14 @@ public class ShopInventoryUI : MonoBehaviour
             || itemData.itemType == ItemType.Consumable;
     }
 
+    // 장비 탭 열기
     public void OnClickEquipmentTab()
     {
         currentTab = InventoryTabType.Equipment;
         RefreshUI();
     }
 
+    // 아이템 탭 열기
     public void OnClickItemTab()
     {
         currentTab = InventoryTabType.Item;
