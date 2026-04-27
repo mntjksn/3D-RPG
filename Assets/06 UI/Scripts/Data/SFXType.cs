@@ -1,3 +1,4 @@
+// 효과음 종류
 public enum SfxType
 {
     None = 0,
