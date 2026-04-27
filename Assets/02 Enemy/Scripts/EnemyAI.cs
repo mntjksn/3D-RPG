@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
+// 적 AI - 마스터 클라이언트에서 순찰/추격/공격 상태를 처리하고 원격 클라이언트에 동기화
 public class EnemyAI : MonoBehaviour
 {
     [Header("Data")]
@@ -23,9 +24,11 @@ public class EnemyAI : MonoBehaviour
     private bool isChasing;
     private bool isReturning;
 
+    // 가장 가까운 플레이어를 주기적으로 재탐색하는 타이머
     private float retargetTimer = 0f;
     private const float retargetInterval = 1f;
 
+    // 원격 클라이언트에서 보간에 사용할 네트워크 동기화 값
     private Vector3 networkPosition;
     private Quaternion networkRotation;
     private float networkMoveSpeed;
@@ -36,7 +39,7 @@ public class EnemyAI : MonoBehaviour
 
     public int SpawnerIndex => mySpawnerIndex;
     public int PoolIndex => myPoolIndex;
-    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex;
+    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex; // 스포너+풀 인덱스로 고유 ID 생성
     public bool IsInitialized => isInitialized;
 
     private void Awake()
@@ -56,15 +59,12 @@ public class EnemyAI : MonoBehaviour
     private void Update()
     {
         if (PhotonNetwork.IsMasterClient)
-        {
             UpdateMasterAI();
-        }
         else
-        {
             UpdateRemoteAI();
-        }
     }
 
+    // 마스터 클라이언트 전용 - 타겟 탐색, 상태 전환, 이동/공격 처리
     private void UpdateMasterAI()
     {
         retargetTimer -= Time.deltaTime;
@@ -86,29 +86,32 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            float distanceToTarget = GetDistanceToTarget();
-            float distanceToSpawn = GetDistanceToSpawn();
+            float distToTarget = GetDistanceToTarget();
+            float distToSpawn = GetDistanceToSpawn();
 
-            UpdateStateByDistance(distanceToTarget);
+            UpdateStateByDistance(distToTarget);
 
             if (!HandlePatrolState())
             {
-                if (!HandleReturnState(distanceToTarget, distanceToSpawn))
-                    HandleChaseAndAttack(distanceToTarget);
+                if (!HandleReturnState(distToTarget, distToSpawn))
+                    HandleChaseAndAttack(distToTarget);
             }
         }
 
         UpdateMoveAnimation();
 
-        if (networkSync != null)
-            networkSync.TrySyncState(transform.position, transform.rotation, agent.isStopped ? 0f : agent.velocity.magnitude);
+        networkSync?.TrySyncState(
+            transform.position,
+            transform.rotation,
+            agent.isStopped ? 0f : agent.velocity.magnitude);
     }
 
+    // 원격 클라이언트 전용 - 네트워크 동기화 값으로 위치/애니메이션 보간
     private void UpdateRemoteAI()
     {
-        if (!isInitialized)
-            return;
+        if (!isInitialized) return;
 
+        // 원격에서는 NavMeshAgent 비활성화 (마스터가 이동 제어)
         if (agent != null && agent.enabled)
             agent.enabled = false;
 
@@ -118,6 +121,7 @@ public class EnemyAI : MonoBehaviour
 
             if (dist > 3f)
             {
+                // 오차가 너무 크면 즉시 스냅
                 transform.position = networkPosition;
                 transform.rotation = networkRotation;
             }
@@ -141,6 +145,7 @@ public class EnemyAI : MonoBehaviour
         enemyAnimation?.SetMoveSpeed(networkMoveSpeed);
     }
 
+    // 네트워크 동기화 데이터 수신 (EnemyAINetworkSync에서 호출)
     public void ApplyNetworkState(Vector3 position, Quaternion rotation, float moveSpeed)
     {
         networkPosition = position;
@@ -148,6 +153,7 @@ public class EnemyAI : MonoBehaviour
         networkMoveSpeed = moveSpeed;
     }
 
+    // 태그가 "Player"인 오브젝트 중 가장 가까운 대상을 타겟으로 설정
     private void FindNearestTarget()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -177,6 +183,7 @@ public class EnemyAI : MonoBehaviour
         enemyAttack?.SetTarget(target);
     }
 
+    // 행동 잠금 상태이면 이동 중단 후 true 반환
     private bool HandleLockedState()
     {
         if (enemyActionLock == null || enemyActionLock.CanMove)
@@ -191,15 +198,18 @@ public class EnemyAI : MonoBehaviour
     private float GetDistanceToTarget() => Vector3.Distance(transform.position, target.position);
     private float GetDistanceToSpawn() => Vector3.Distance(transform.position, spawnPosition);
 
-    private void UpdateStateByDistance(float distanceToTarget)
+    // 거리에 따라 추격/귀환 상태 전환
+    private void UpdateStateByDistance(float distToTarget)
     {
-        if (!isChasing && !isReturning && distanceToTarget <= enemyData.detectRange)
+        // 탐지 범위 진입 시 추격 시작
+        if (!isChasing && !isReturning && distToTarget <= enemyData.detectRange)
         {
             isChasing = true;
             isPatrolling = false;
         }
 
-        if (isChasing && distanceToTarget >= enemyData.loseRange)
+        // 이탈 범위 벗어나면 스폰 위치로 귀환
+        if (isChasing && distToTarget >= enemyData.loseRange)
         {
             isChasing = false;
             isReturning = true;
@@ -207,13 +217,15 @@ public class EnemyAI : MonoBehaviour
             agent.SetDestination(spawnPosition);
         }
 
-        if (isReturning && distanceToTarget <= enemyData.detectRange)
+        // 귀환 중 다시 탐지 범위 안에 들어오면 추격 재개
+        if (isReturning && distToTarget <= enemyData.detectRange)
         {
             isReturning = false;
             isChasing = true;
         }
     }
 
+    // 순찰 상태면 순찰 처리 후 true 반환
     private bool HandlePatrolState()
     {
         if (isChasing || isReturning) return false;
@@ -221,7 +233,8 @@ public class EnemyAI : MonoBehaviour
         return true;
     }
 
-    private bool HandleReturnState(float distanceToTarget, float distanceToSpawn)
+    // 귀환 상태 처리 - 스폰 위치에 도착하면 귀환 종료
+    private bool HandleReturnState(float distToTarget, float distToSpawn)
     {
         if (!isReturning) return false;
 
@@ -229,7 +242,7 @@ public class EnemyAI : MonoBehaviour
         agent.speed = enemyData.moveSpeed;
         agent.SetDestination(spawnPosition);
 
-        if (!agent.pathPending && distanceToSpawn <= 0.2f)
+        if (!agent.pathPending && distToSpawn <= 0.2f)
         {
             isReturning = false;
             StopAgent();
@@ -244,25 +257,25 @@ public class EnemyAI : MonoBehaviour
         return true;
     }
 
-    private void HandleChaseAndAttack(float distanceToTarget)
+    // 공격 범위 내면 공격, 아니면 추격
+    private void HandleChaseAndAttack(float distToTarget)
     {
-        if (distanceToTarget <= enemyData.attackRange)
-        {
-            HandleAttackRange(distanceToTarget);
-            return;
-        }
-
-        HandleChaseRange();
+        if (distToTarget <= enemyData.attackRange)
+            HandleAttackRange(distToTarget);
+        else
+            HandleChaseRange();
     }
 
-    private void HandleAttackRange(float distanceToTarget)
+    // 공격 범위 내 처리 - 타겟을 바라보고 공격 시도
+    private void HandleAttackRange(float distToTarget)
     {
         attackRecoverTimer = enemyData.attackRecoverTime;
 
+        // Y축 회전만 적용해 수평으로 타겟을 바라봄
         Vector3 lookPos = new Vector3(target.position.x, transform.position.y, target.position.z);
         transform.LookAt(lookPos);
 
-        if (distanceToTarget > agent.stoppingDistance + 0.1f)
+        if (distToTarget > agent.stoppingDistance + 0.1f)
         {
             agent.isStopped = false;
             agent.speed = enemyData.attackSpeed;
@@ -276,6 +289,7 @@ public class EnemyAI : MonoBehaviour
         enemyAttack?.TryAttack();
     }
 
+    // 추격 범위 처리 - 타겟 방향으로 이동
     private void HandleChaseRange()
     {
         agent.isStopped = false;
@@ -283,6 +297,7 @@ public class EnemyAI : MonoBehaviour
         agent.SetDestination(target.position);
     }
 
+    // 공격 후 경직 시간 동안 공격 속도로 이동, 이후 일반 이동 속도 반환
     private float GetChaseSpeed()
     {
         if (attackRecoverTimer > 0f)
@@ -313,6 +328,7 @@ public class EnemyAI : MonoBehaviour
         isReturning = false;
     }
 
+    // NavMeshAgent에 EnemyData 값 적용
     private void ApplyData()
     {
         if (enemyData == null || agent == null) return;
@@ -323,6 +339,7 @@ public class EnemyAI : MonoBehaviour
         agent.stoppingDistance = enemyData.attackRange;
     }
 
+    // 오브젝트 풀에서 꺼낼 때 AI 상태 전체 초기화
     private void ResetAIState()
     {
         if (agent != null && !agent.enabled)
@@ -355,6 +372,7 @@ public class EnemyAI : MonoBehaviour
         enemyAttack?.SetTarget(target);
     }
 
+    // 순찰 처리 - 대기 후 랜덤 위치로 이동 반복
     private void HandlePatrol()
     {
         patrolTimer -= Time.deltaTime;
@@ -364,6 +382,7 @@ public class EnemyAI : MonoBehaviour
             agent.isStopped = false;
             agent.speed = enemyData.patrolSpeed;
 
+            // 목적지 도착 시 대기 후 다시 순찰
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 isPatrolling = false;
@@ -385,6 +404,7 @@ public class EnemyAI : MonoBehaviour
         UpdateMoveAnimation();
     }
 
+    // 스폰 위치 기준 반경 내 NavMesh 위의 랜덤 순찰 지점 반환
     private Vector3 GetRandomPatrolPoint()
     {
         Vector2 randomCircle = Random.insideUnitCircle * enemyData.patrolRadius;
@@ -396,6 +416,7 @@ public class EnemyAI : MonoBehaviour
         return spawnPosition;
     }
 
+    // 외부(EnemySpawner/Pool)에서 초기화 시 호출
     public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;
