@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Search.SearchColumn;
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Game/Enemy Data")]
+// 적 기본 능력치, 드랍, 스폰 데이터
 public class EnemyData : ScriptableObject
 {
     [Header("Info")]
@@ -38,7 +38,7 @@ public class EnemyData : ScriptableObject
     public float patrolWaitTime = 2f;
 
     [Header("Drops")]
-    public List<DropEntry> normalDrops = new List<DropEntry>();
+    public List<DropEntry> normalDrops = new();
 
     [Header("Prefab")]
     public GameObject prefab;
