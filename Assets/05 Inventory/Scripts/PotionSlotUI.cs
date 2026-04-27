@@ -1,23 +1,18 @@
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// 포션 슬롯 등록 및 UI 갱신 담당
 public class PotionSlotUI : MonoBehaviour, IDropHandler
 {
     [SerializeField] private Image iconImage;
 
-    private PlayerHealth playerHealth;
-
     private void OnEnable()
     {
-        // 동적으로 찾기
-        if (playerHealth == null && PlayerManager.Instance != null)
-            playerHealth = PlayerManager.Instance.Health;
-
         RefreshUI();
     }
 
+    // 드롭한 아이템을 포션 슬롯에 등록
     public void OnDrop(PointerEventData eventData)
     {
         if (InventoryDragData.SourceSlot == null)
@@ -28,21 +23,16 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
             return;
 
         if (itemData.itemType != ItemType.Consumable)
-        {
-            Debug.Log("포션 슬롯에는 소모 아이템만 등록할 수 있습니다.");
             return;
-        }
 
         PotionSlotManager.Instance?.SetPotion(itemData.itemId);
         RefreshUI();
 
-        if (itemData != null)
-            QuestService.NotifyEquipItem(itemData.itemName);
-
-        Debug.Log($"{itemData.itemName} 포션 슬롯 등록");
-        SoundManager.Instance.PlaySFX(SfxType.Equip);
+        QuestService.NotifyEquipItem(itemData.itemName);
+        SoundManager.Instance?.PlaySFX(SfxType.Equip);
     }
 
+    // 등록된 포션 ItemData 조회
     public ItemData GetRegisteredItemData()
     {
         if (PotionSlotManager.Instance == null || InventoryManager.Instance == null)
@@ -55,6 +45,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
         return InventoryManager.Instance.GetItemData(itemId);
     }
 
+    // 포션 슬롯 UI 갱신
     public void RefreshUI()
     {
         if (iconImage == null)
@@ -73,6 +64,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
         iconImage.enabled = itemData.icon != null;
     }
 
+    // 포션 슬롯 비우기
     public void ClearSlot()
     {
         PotionSlotManager.Instance?.ClearPotion();
