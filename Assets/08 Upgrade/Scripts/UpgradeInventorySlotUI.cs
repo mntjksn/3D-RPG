@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// 강화 인벤 슬롯 UI, 드래그 및 툴팁 처리 담당
 public class UpgradeInventorySlotUI : MonoBehaviour,
     IBeginDragHandler, IDragHandler, IEndDragHandler,
     IPointerEnterHandler, IPointerExitHandler
@@ -22,8 +23,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
 
     private void Awake()
     {
-        if (canvasGroup == null)
-            canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup ??= GetComponent<CanvasGroup>();
     }
 
     public void SetIndex(int index)
@@ -32,6 +32,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         gameObject.name = $"UpgradeInventorySlot_{index}";
     }
 
+    // 슬롯 비우기
     public void SetEmpty()
     {
         currentItemData = null;
@@ -43,10 +44,10 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
             iconImage.enabled = false;
         }
 
-        if (countText != null)
-            countText.text = string.Empty;
+        countText?.SetText(string.Empty);
     }
 
+    // 슬롯 아이템 설정
     public void SetItem(ItemData itemData, int count)
     {
         currentItemData = itemData;
@@ -58,17 +59,14 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
             iconImage.enabled = itemData != null && itemData.icon != null;
         }
 
-        if (countText != null)
-            countText.text = count > 1 ? count.ToString() : string.Empty;
+        countText?.SetText(count > 1 ? count.ToString() : string.Empty);
     }
 
+    // 마우스 오버 시 툴팁 표시
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isDragging)
-            return;
-
-        if (currentItemData == null || currentCount <= 0)
-            return;
+        if (isDragging) return;
+        if (currentItemData == null || currentCount <= 0) return;
 
         ItemTooltipUI.Instance?.Show(currentItemData);
     }
@@ -78,13 +76,11 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         ItemTooltipUI.Instance?.Hide();
     }
 
+    // 드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (slotIndex < 0 || currentItemData == null)
-            return;
-
-        if (currentItemData.itemType != ItemType.Material)
-            return;
+        if (slotIndex < 0 || currentItemData == null) return;
+        if (currentItemData.itemType != ItemType.Material) return;
 
         isDragging = true;
 
@@ -103,8 +99,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isDragging)
-            return;
+        if (!isDragging) return;
 
         UpdateDragIconPosition(eventData);
     }
@@ -113,8 +108,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
     {
         bool wasSource = UpgradeDragData.SourceSlot == this;
 
-        if (!isDragging && !wasSource)
-            return;
+        if (!isDragging && !wasSource) return;
 
         isDragging = false;
 
@@ -124,11 +118,11 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         UpgradeDragData.Clear();
     }
 
+    // 드래그 아이콘 생성
     private void CreateDragIcon()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null || currentItemData == null || currentItemData.icon == null)
-            return;
+        if (canvas == null || currentItemData == null || currentItemData.icon == null) return;
 
         GameObject iconObj = new GameObject("UpgradeDragIcon");
         iconObj.transform.SetParent(canvas.transform, false);
@@ -145,10 +139,10 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         UpgradeDragData.DragIconImage = dragImage;
     }
 
+    // 드래그 아이콘 위치 갱신
     private void UpdateDragIconPosition(PointerEventData eventData)
     {
-        if (UpgradeDragData.DragIconObject == null)
-            return;
+        if (UpgradeDragData.DragIconObject == null) return;
 
         UpgradeDragData.DragIconObject.transform.position = eventData.position;
     }
