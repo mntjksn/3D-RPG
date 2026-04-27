@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+// 피격 시 머티리얼 색상 변화 연출
 public class HitFlash : MonoBehaviour
 {
     [SerializeField] private Renderer[] renderers;
@@ -10,21 +12,27 @@ public class HitFlash : MonoBehaviour
 
     private void Awake()
     {
+        // 렌더러 자동 탐색
         if (renderers == null || renderers.Length == 0)
             renderers = GetComponentsInChildren<Renderer>();
 
-        var list = new System.Collections.Generic.List<Material>();
+        List<Material> list = new();
 
         foreach (Renderer rend in renderers)
         {
+            if (rend == null) continue;
+
             foreach (Material mat in rend.materials)
                 list.Add(mat);
         }
 
         materials = list.ToArray();
+
+        // 초기 상태
         SetHitAmount(0f);
     }
 
+    // 피격 효과 실행
     public void PlayFlash()
     {
         if (flashCoroutine != null)
@@ -48,7 +56,7 @@ public class HitFlash : MonoBehaviour
 
         time = 0f;
 
-        // 천천히 돌아옴
+        // 천천히 원래대로
         while (time < 0.2f)
         {
             time += Time.deltaTime;
@@ -61,10 +69,13 @@ public class HitFlash : MonoBehaviour
         flashCoroutine = null;
     }
 
+    // 쉐이더 값 적용
     private void SetHitAmount(float value)
     {
-        foreach (Material mat in materials)
+        for (int i = 0; i < materials.Length; i++)
         {
+            Material mat = materials[i];
+
             if (mat != null && mat.HasProperty("_HitAmount"))
                 mat.SetFloat("_HitAmount", value);
         }
