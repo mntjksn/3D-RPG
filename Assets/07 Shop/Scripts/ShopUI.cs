@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 상점 슬롯 생성, 탭 전환, 아이템 표시 담당
 public class ShopUI : MonoBehaviour
 {
     [Header("Shop Data")]
@@ -16,7 +17,7 @@ public class ShopUI : MonoBehaviour
     [SerializeField] private Button equipmentButton;
     [SerializeField] private Button itemButton;
 
-    private readonly List<ShopSlotUI> slots = new List<ShopSlotUI>();
+    private readonly List<ShopSlotUI> slots = new();
     private ShopTabType currentTab = ShopTabType.Equipment;
     private bool isInitialized;
 
@@ -36,28 +37,18 @@ public class ShopUI : MonoBehaviour
         RefreshUI();
     }
 
+    // 버튼 이벤트 연결
     private void BindButtons()
     {
-        if (equipmentButton != null)
-            equipmentButton.onClick.AddListener(OnClickEquipmentTab);
-
-        if (itemButton != null)
-            itemButton.onClick.AddListener(OnClickItemTab);
+        equipmentButton?.onClick.AddListener(OnClickEquipmentTab);
+        itemButton?.onClick.AddListener(OnClickItemTab);
     }
 
+    // 슬롯 생성
     private void CreateSlots()
     {
-        if (slotPrefab == null)
-        {
-            Debug.LogWarning("ShopUI slotPrefab이 비어 있습니다.");
+        if (slotPrefab == null || slotParent == null)
             return;
-        }
-
-        if (slotParent == null)
-        {
-            Debug.LogWarning("ShopUI slotParent가 비어 있습니다.");
-            return;
-        }
 
         ClearSlots();
 
@@ -70,6 +61,7 @@ public class ShopUI : MonoBehaviour
         }
     }
 
+    // 기존 슬롯 제거
     private void ClearSlots()
     {
         slots.Clear();
@@ -81,6 +73,7 @@ public class ShopUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
+    // 현재 탭 기준으로 슬롯 갱신
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -100,7 +93,6 @@ public class ShopUI : MonoBehaviour
         for (int realIndex = 0; realIndex < shopData.items.Count; realIndex++)
         {
             ShopItemEntry entry = shopData.items[realIndex];
-
             if (entry == null || entry.itemData == null)
                 continue;
 
@@ -116,11 +108,11 @@ public class ShopUI : MonoBehaviour
 
             slots[displayIndex].SetIndex(realIndex);
             slots[displayIndex].SetItem(entry.itemData);
-
             displayIndex++;
         }
     }
 
+    // 상점 인덱스로 아이템 조회
     public ItemData GetItemDataByShopIndex(int shopIndex)
     {
         if (shopData == null || shopData.items == null)
@@ -146,12 +138,14 @@ public class ShopUI : MonoBehaviour
             || itemData.itemType == ItemType.Consumable;
     }
 
+    // 장비 탭 열기
     public void OnClickEquipmentTab()
     {
         currentTab = ShopTabType.Equipment;
         RefreshUI();
     }
 
+    // 아이템 탭 열기
     public void OnClickItemTab()
     {
         currentTab = ShopTabType.Item;
