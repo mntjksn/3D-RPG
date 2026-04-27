@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 현재 진행 중 퀘스트 UI 표시 담당
 public class QuestProgressUI : MonoBehaviour
 {
     [Header("UI")]
@@ -15,7 +16,6 @@ public class QuestProgressUI : MonoBehaviour
 
     private void Start()
     {
-        BindEvents();
         RefreshUI();
     }
 
@@ -30,59 +30,62 @@ public class QuestProgressUI : MonoBehaviour
         UnbindEvents();
     }
 
+    // 이벤트 등록
     private void BindEvents()
     {
-        if (isSubscribed)
-            return;
+        if (isSubscribed) return;
 
-        if (QuestManager.Instance == null)
-            return;
+        var manager = QuestManager.Instance;
+        if (manager == null) return;
 
-        QuestManager.Instance.OnQuestAccepted += RefreshUI;
-        QuestManager.Instance.OnQuestUpdated += RefreshUI;
-        QuestManager.Instance.OnQuestCompleted += RefreshUI;
-        QuestManager.Instance.OnQuestRewardClaimed += RefreshUI;
+        manager.OnQuestAccepted += RefreshUI;
+        manager.OnQuestUpdated += RefreshUI;
+        manager.OnQuestCompleted += RefreshUI;
+        manager.OnQuestRewardClaimed += RefreshUI;
 
         isSubscribed = true;
     }
 
+    // 이벤트 해제
     private void UnbindEvents()
     {
-        if (!isSubscribed)
-            return;
+        if (!isSubscribed) return;
 
-        if (QuestManager.Instance == null)
-            return;
+        var manager = QuestManager.Instance;
+        if (manager == null) return;
 
-        QuestManager.Instance.OnQuestAccepted -= RefreshUI;
-        QuestManager.Instance.OnQuestUpdated -= RefreshUI;
-        QuestManager.Instance.OnQuestCompleted -= RefreshUI;
-        QuestManager.Instance.OnQuestRewardClaimed -= RefreshUI;
+        manager.OnQuestAccepted -= RefreshUI;
+        manager.OnQuestUpdated -= RefreshUI;
+        manager.OnQuestCompleted -= RefreshUI;
+        manager.OnQuestRewardClaimed -= RefreshUI;
 
         isSubscribed = false;
     }
 
+    // 이벤트용 오버로드
     private void RefreshUI(QuestData _)
     {
         RefreshUI();
     }
 
+    // UI 갱신
     public void RefreshUI()
     {
-        if (QuestManager.Instance == null)
+        var manager = QuestManager.Instance;
+        if (manager == null)
         {
             SetVisible(false);
             return;
         }
 
-        QuestData questData = QuestManager.Instance.GetCurrentActiveQuest();
+        QuestData questData = manager.GetCurrentActiveQuest();
         if (questData == null)
         {
             SetVisible(false);
             return;
         }
 
-        QuestStateData state = QuestManager.Instance.GetState(questData.questId);
+        QuestStateData state = manager.GetState(questData.questId);
         if (state == null)
         {
             SetVisible(false);
@@ -91,13 +94,10 @@ public class QuestProgressUI : MonoBehaviour
 
         SetVisible(true);
 
-        if (questNameText != null)
-            questNameText.text = questData.questName;
+        questNameText?.SetText(questData.questName);
+        questDescText?.SetText(questData.description);
 
-        if (questDescText != null)
-            questDescText.text = questData.description;
-
-        float progress01 = QuestManager.Instance.GetProgress01(questData);
+        float progress01 = manager.GetProgress01(questData);
 
         if (progressSlider != null)
         {
@@ -110,13 +110,13 @@ public class QuestProgressUI : MonoBehaviour
         {
             int current = Mathf.Min(state.currentCount, questData.targetCount);
             int target = questData.targetCount;
-            progressText.text = $"{current}/{target}";
+            progressText.SetText($"{current}/{target}");
         }
     }
 
+    // 표시 여부 설정
     private void SetVisible(bool visible)
     {
-        if (panelRoot != null)
-            panelRoot.SetActive(visible);
+        panelRoot?.SetActive(visible);
     }
 }
