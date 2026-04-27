@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// 인벤 슬롯 UI, 드래그 및 툴팁 처리 담당
 public class InventorySlotUI : MonoBehaviour,
     IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler,
     IPointerEnterHandler, IPointerExitHandler
@@ -22,8 +23,7 @@ public class InventorySlotUI : MonoBehaviour,
 
     private void Awake()
     {
-        if (canvasGroup == null)
-            canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup ??= GetComponent<CanvasGroup>();
     }
 
     public void SetIndex(int index)
@@ -32,6 +32,7 @@ public class InventorySlotUI : MonoBehaviour,
         gameObject.name = $"Slot_{index}";
     }
 
+    // 슬롯 비우기
     public void SetEmpty()
     {
         currentItemData = null;
@@ -43,10 +44,10 @@ public class InventorySlotUI : MonoBehaviour,
             iconImage.enabled = false;
         }
 
-        if (countText != null)
-            countText.text = string.Empty;
+        countText?.SetText(string.Empty);
     }
 
+    // 슬롯에 아이템 설정
     public void SetItem(ItemData itemData, int count)
     {
         currentItemData = itemData;
@@ -58,17 +59,14 @@ public class InventorySlotUI : MonoBehaviour,
             iconImage.enabled = itemData != null && itemData.icon != null;
         }
 
-        if (countText != null)
-            countText.text = count > 1 ? count.ToString() : string.Empty;
+        countText?.SetText(count > 1 ? count.ToString() : string.Empty);
     }
 
+    // 마우스 오버 시 툴팁 표시
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isDragging)
-            return;
-
-        if (currentItemData == null || currentCount <= 0)
-            return;
+        if (isDragging) return;
+        if (currentItemData == null || currentCount <= 0) return;
 
         ItemTooltipUI.Instance?.Show(currentItemData);
     }
@@ -78,10 +76,10 @@ public class InventorySlotUI : MonoBehaviour,
         ItemTooltipUI.Instance?.Hide();
     }
 
+    // 드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (slotIndex < 0 || currentItemData == null)
-            return;
+        if (slotIndex < 0 || currentItemData == null) return;
 
         isDragging = true;
 
@@ -101,8 +99,7 @@ public class InventorySlotUI : MonoBehaviour,
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isDragging)
-            return;
+        if (!isDragging) return;
 
         UpdateDragIconPosition(eventData);
     }
@@ -111,8 +108,7 @@ public class InventorySlotUI : MonoBehaviour,
     {
         bool wasSource = InventoryDragData.SourceSlot == this;
 
-        if (!isDragging && !wasSource)
-            return;
+        if (!isDragging && !wasSource) return;
 
         isDragging = false;
 
@@ -122,44 +118,45 @@ public class InventorySlotUI : MonoBehaviour,
         InventoryDragData.Clear();
     }
 
+    // 드롭 처리
     public void OnDrop(PointerEventData eventData)
     {
         ItemTooltipUI.Instance?.Hide();
 
-        if (InventoryManager.Instance == null)
-            return;
+        if (InventoryManager.Instance == null) return;
 
+        // 인벤 → 인벤 이동
         if (InventoryDragData.SourceSlot != null)
         {
             int fromIndex = InventoryDragData.SourceSlot.SlotIndex;
             int toIndex = slotIndex;
 
-            if (fromIndex < 0 || toIndex < 0 || fromIndex == toIndex)
-                return;
+            if (fromIndex < 0 || toIndex < 0 || fromIndex == toIndex) return;
 
             InventoryManager.Instance.SwapSlots(fromIndex, toIndex);
             return;
         }
 
+        // 장비 → 인벤 (해제)
         if (InventoryDragData.SourceEquipmentSlot != null)
         {
             EquipmentManager.Instance?.UnequipItem(InventoryDragData.SourceEquipmentSlot.SlotType);
         }
     }
 
+    // 클릭 시 장착
     public void OnClickSlot()
     {
-        if (slotIndex < 0 || currentItemData == null)
-            return;
+        if (slotIndex < 0 || currentItemData == null) return;
 
         EquipmentManager.Instance?.EquipItemFromSlot(slotIndex);
     }
 
+    // 드래그 아이콘 생성
     private void CreateDragIcon()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null || currentItemData == null || currentItemData.icon == null)
-            return;
+        if (canvas == null || currentItemData == null || currentItemData.icon == null) return;
 
         GameObject iconObj = new GameObject("DragIcon");
         iconObj.transform.SetParent(canvas.transform, false);
@@ -176,10 +173,10 @@ public class InventorySlotUI : MonoBehaviour,
         InventoryDragData.DragIconImage = dragImage;
     }
 
+    // 드래그 아이콘 위치 갱신
     private void UpdateDragIconPosition(PointerEventData eventData)
     {
-        if (InventoryDragData.DragIconObject == null)
-            return;
+        if (InventoryDragData.DragIconObject == null) return;
 
         InventoryDragData.DragIconObject.transform.position = eventData.position;
     }
