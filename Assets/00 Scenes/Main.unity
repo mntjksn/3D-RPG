@@ -16854,8 +16854,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47303371ab40f2543b2e1a4f9585a81b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goldDropPrefab: {fileID: 7748865067686411345, guid: c89b7e3e9e8c1d2448b871dccb917633, type: 3}
-  itemDropPrefab: {fileID: -4209171194330210738, guid: 76d38735d39aab2469abb63b0e78b034, type: 3}
+  goldDropPrefabName: WorldDrop_Gold
+  itemDropPrefabName: WorldDrop_Item
   dropRadius: 2
 --- !u!114 &379960897
 MonoBehaviour:
@@ -19139,7 +19139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &426972547
 RectTransform:
   m_ObjectHideFlags: 0
@@ -93918,6 +93918,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefabName: Player
   spawnPoint: {fileID: 2086392727}
+  playerCanvasPrefab: {fileID: 0}
+  defaultSpawnPosition: {x: 9.63, y: 1.76, z: 59.84}
+  defaultSpawnEuler: {x: 0, y: 0, z: 0}
 --- !u!1 &2088819863
 GameObject:
   m_ObjectHideFlags: 0
