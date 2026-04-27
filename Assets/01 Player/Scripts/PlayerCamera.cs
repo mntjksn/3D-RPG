@@ -1,20 +1,25 @@
 using UnityEngine;
 using Photon.Pun;
 
+// 3인칭 카메라 - 마우스 회전, 상하 각도 보간, 벽 충돌 시 거리 조정
 public class PlayerCamera : MonoBehaviourPun
 {
     [Header("Target")]
     [SerializeField] private Transform player;
     [SerializeField] private Transform cameraTransform;
+
     [Header("Sensitivity")]
     [SerializeField] private float mouseSensitivity = 200f;
+
     [Header("Rotation")]
     [SerializeField] private float minXRotation = -20f;
     [SerializeField] private float maxXRotation = 60f;
     [SerializeField] private float cameraSmoothSpeed = 10f;
+
     [Header("Distance")]
     [SerializeField] private float cameraDistance = 4f;
     [SerializeField] private float minCameraDistance = 0.5f;
+
     [Header("Collision")]
     [SerializeField] private float collisionRadius = 0.2f;
     [SerializeField] private LayerMask collisionMask;
@@ -24,15 +29,15 @@ public class PlayerCamera : MonoBehaviourPun
     private float xRotation = 20f;
     private float currentXRotation = 20f;
     private float currentCameraDistance;
+
     private PlayerActionLock actionLock;
 
     private void Start()
     {
-        // 내 플레이어가 아니면 카메라 오브젝트 비활성화
+        // 내 플레이어가 아니면 카메라 비활성화
         if (!photonView.IsMine)
         {
-            if (cameraTransform != null)
-                cameraTransform.gameObject.SetActive(false);
+            cameraTransform?.gameObject.SetActive(false);
             enabled = false;
             return;
         }
@@ -47,6 +52,7 @@ public class PlayerCamera : MonoBehaviourPun
         currentCameraDistance = cameraDistance;
     }
 
+    // 마우스 입력으로 카메라 상하 회전 및 플레이어 좌우 회전
     private void Update()
     {
         if (!photonView.IsMine) return;
@@ -55,20 +61,20 @@ public class PlayerCamera : MonoBehaviourPun
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, minXRotation, maxXRotation);
-            if (player != null)
-                player.Rotate(Vector3.up * mouseX);
+
+            xRotation = Mathf.Clamp(xRotation - mouseY, minXRotation, maxXRotation);
+
+            player?.Rotate(Vector3.up * mouseX);
         }
 
         currentXRotation = Mathf.Lerp(currentXRotation, xRotation, cameraSmoothSpeed * Time.deltaTime);
         transform.localRotation = Quaternion.Euler(currentXRotation, 0f, 0f);
     }
 
+    // 카메라 위치 갱신 - SphereCast로 벽 감지 시 거리 줄임
     private void LateUpdate()
     {
-        if (!photonView.IsMine) return;
-        if (cameraTransform == null) return;
+        if (!photonView.IsMine || cameraTransform == null) return;
 
         Vector3 origin = transform.position;
         Vector3 dir = -transform.forward;
@@ -76,8 +82,7 @@ public class PlayerCamera : MonoBehaviourPun
 
         if (Physics.SphereCast(origin, collisionRadius, dir, out RaycastHit hit, cameraDistance, collisionMask))
         {
-            targetDistance = hit.distance - collisionOffset;
-            targetDistance = Mathf.Clamp(targetDistance, minCameraDistance, cameraDistance);
+            targetDistance = Mathf.Clamp(hit.distance - collisionOffset, minCameraDistance, cameraDistance);
         }
 
         currentCameraDistance = Mathf.Lerp(currentCameraDistance, targetDistance, distanceSmoothSpeed * Time.deltaTime);
