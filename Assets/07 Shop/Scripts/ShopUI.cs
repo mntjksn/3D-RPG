@@ -151,4 +151,5 @@ public class ShopUI : MonoBehaviour
         currentTab = ShopTabType.Item;
         RefreshUI();
     }
+
 }
