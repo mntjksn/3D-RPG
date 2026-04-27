@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
+// 장비 슬롯 UI, 드래그 및 장착 처리 담당
 public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private EquipmentSlotType slotType;
@@ -16,20 +17,21 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
 
     private void Awake()
     {
-        if (canvasGroup == null)
-            canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup ??= GetComponent<CanvasGroup>();
     }
 
     private void OnEnable()
     {
-        if (EquipmentManager.Instance != null)
-            EquipmentManager.Instance.OnEquipmentChanged += RefreshUI;
+        if (EquipmentManager.Instance == null) return;
+
+        EquipmentManager.Instance.OnEquipmentChanged += RefreshUI;
     }
 
     private void OnDisable()
     {
-        if (EquipmentManager.Instance != null)
-            EquipmentManager.Instance.OnEquipmentChanged -= RefreshUI;
+        if (EquipmentManager.Instance == null) return;
+
+        EquipmentManager.Instance.OnEquipmentChanged -= RefreshUI;
     }
 
     private void Start()
@@ -37,14 +39,13 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         RefreshUI();
     }
 
+    // 드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (EquipmentManager.Instance == null)
-            return;
+        if (EquipmentManager.Instance == null) return;
 
         ItemData equippedItem = EquipmentManager.Instance.GetEquippedItem(slotType);
-        if (equippedItem == null)
-            return;
+        if (equippedItem == null) return;
 
         isDragging = true;
 
@@ -62,8 +63,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isDragging)
-            return;
+        if (!isDragging) return;
 
         UpdateDragIconPosition(eventData);
     }
@@ -72,8 +72,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
     {
         bool wasSource = InventoryDragData.SourceEquipmentSlot == this;
 
-        if (!isDragging && !wasSource)
-            return;
+        if (!isDragging && !wasSource) return;
 
         isDragging = false;
 
@@ -83,32 +82,25 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         InventoryDragData.Clear();
     }
 
+    // 드롭 시 장착 처리
     public void OnDrop(PointerEventData eventData)
     {
-        if (EquipmentManager.Instance == null)
-            return;
+        if (EquipmentManager.Instance == null) return;
 
         ItemData draggedItem = InventoryDragData.DraggedItem;
         InventorySlotUI sourceSlot = InventoryDragData.SourceSlot;
 
-        if (draggedItem == null || sourceSlot == null)
-            return;
-
-        if (sourceSlot.SlotIndex < 0)
-            return;
-
-        if (!EquipmentManager.Instance.CanEquipToSlot(draggedItem, slotType))
-            return;
+        if (draggedItem == null || sourceSlot == null) return;
+        if (sourceSlot.SlotIndex < 0) return;
+        if (!EquipmentManager.Instance.CanEquipToSlot(draggedItem, slotType)) return;
 
         EquipmentManager.Instance.EquipItemFromSlot(sourceSlot.SlotIndex);
     }
 
+    // UI 갱신
     public void RefreshUI()
     {
-        ItemData equippedItem = null;
-
-        if (EquipmentManager.Instance != null)
-            equippedItem = EquipmentManager.Instance.GetEquippedItem(slotType);
+        ItemData equippedItem = EquipmentManager.Instance?.GetEquippedItem(slotType);
 
         if (iconImage != null)
         {
@@ -127,43 +119,42 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         UpdateInfoText(equippedItem);
     }
 
+    // 장비 정보 텍스트 갱신
     private void UpdateInfoText(ItemData equippedItem)
     {
-        if (infoText == null)
-            return;
+        if (infoText == null) return;
 
         switch (slotType)
         {
             case EquipmentSlotType.Weapon:
-                infoText.text = $"공격력 + {GetAttackValue(equippedItem)}";
+                infoText.SetText($"공격력 + {GetAttackValue(equippedItem)}");
                 break;
 
             case EquipmentSlotType.Armor:
-                infoText.text = $"체력 + {GetHpValue(equippedItem):N0}";
+                infoText.SetText($"체력 + {GetHpValue(equippedItem):N0}");
                 break;
 
             case EquipmentSlotType.Shield:
-                infoText.text = $"방어력 + {GetDefensePercentValue(equippedItem)}%";
+                infoText.SetText($"방어력 + {GetDefensePercentValue(equippedItem)}%");
                 break;
 
             case EquipmentSlotType.Shoes:
-                infoText.text = $"속도 + {GetSpeedValue(equippedItem)}";
+                infoText.SetText($"속도 + {GetSpeedValue(equippedItem)}");
                 break;
 
             default:
-                infoText.text = string.Empty;
+                infoText.SetText(string.Empty);
                 break;
         }
     }
 
+    // 드래그 아이콘 생성
     private void CreateDragIcon(ItemData itemData)
     {
-        if (itemData == null || itemData.icon == null)
-            return;
+        if (itemData == null || itemData.icon == null) return;
 
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
-            return;
+        if (canvas == null) return;
 
         GameObject iconObj = new GameObject("DragIcon");
         iconObj.transform.SetParent(canvas.transform, false);
@@ -180,10 +171,10 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         InventoryDragData.DragIconImage = dragImage;
     }
 
+    // 드래그 아이콘 위치 갱신
     private void UpdateDragIconPosition(PointerEventData eventData)
     {
-        if (InventoryDragData.DragIconObject == null)
-            return;
+        if (InventoryDragData.DragIconObject == null) return;
 
         InventoryDragData.DragIconObject.transform.position = eventData.position;
     }
