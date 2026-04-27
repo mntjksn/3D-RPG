@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 거래 팝업 표시, 수량 입력, 구매/판매 확정 담당
 public class TradePopupUI : MonoBehaviour
 {
     [Header("UI")]
@@ -20,20 +21,15 @@ public class TradePopupUI : MonoBehaviour
 
     private void Awake()
     {
-        if (confirmButton != null)
-            confirmButton.onClick.AddListener(OnClickConfirm);
-
-        if (cancelButton != null)
-            cancelButton.onClick.AddListener(OnClickCancel);
-
-        if (quantityInputField != null)
-            quantityInputField.onValueChanged.AddListener(OnValueChangedQuantity);
+        confirmButton?.onClick.AddListener(OnClickConfirm);
+        cancelButton?.onClick.AddListener(OnClickCancel);
+        quantityInputField?.onValueChanged.AddListener(OnValueChangedQuantity);
     }
 
+    // 구매 팝업 열기
     public void OpenBuy(ItemData itemData, int slotIndex, int maxBuyQuantity)
     {
-        if (itemData == null)
-            return;
+        if (itemData == null) return;
 
         currentTradeType = TradeType.Buy;
         currentItemData = itemData;
@@ -46,10 +42,10 @@ public class TradePopupUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    // 판매 팝업 열기
     public void OpenSell(ItemData itemData, int slotIndex, int maxSellQuantity)
     {
-        if (itemData == null)
-            return;
+        if (itemData == null) return;
 
         currentTradeType = TradeType.Sell;
         currentItemData = itemData;
@@ -62,10 +58,10 @@ public class TradePopupUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    // 고정 UI 갱신
     private void RefreshStaticUI()
     {
-        if (currentItemData == null)
-            return;
+        if (currentItemData == null) return;
 
         if (itemIcon != null)
         {
@@ -73,63 +69,59 @@ public class TradePopupUI : MonoBehaviour
             itemIcon.enabled = currentItemData.icon != null;
         }
 
-        if (titleText != null)
-        {
-            titleText.text = currentTradeType == TradeType.Buy
-                ? "구매하시겠습니까?"
-                : "판매하시겠습니까?";
-        }
+        titleText?.SetText(currentTradeType == TradeType.Buy
+            ? "구매하시겠습니까?"
+            : "판매하시겠습니까?");
 
         if (nameText != null)
         {
-            nameText.text = currentItemData.itemName;
-            nameText.enabled = nameText.text != null;
+            nameText.SetText(currentItemData.itemName);
+            nameText.enabled = !string.IsNullOrEmpty(currentItemData.itemName);
         }
 
         RefreshPriceText();
     }
 
+    // 수량 설정
     private void SetQuantity(int quantity)
     {
         quantity = Mathf.Clamp(quantity, 1, maxQuantity);
-
-        if (quantityInputField != null)
-            quantityInputField.SetTextWithoutNotify(quantity.ToString());
+        quantityInputField?.SetTextWithoutNotify(quantity.ToString());
 
         RefreshPriceText();
     }
 
+    // 수량 입력 변경 처리
     public void OnValueChangedQuantity(string value)
     {
         ClampQuantity();
         RefreshPriceText();
     }
 
+    // 현재 수량 반환
     private int GetQuantity()
     {
-        if (quantityInputField == null)
-            return 1;
+        if (quantityInputField == null) return 1;
 
-        int quantity;
-        if (!int.TryParse(quantityInputField.text, out quantity))
+        if (!int.TryParse(quantityInputField.text, out int quantity))
             quantity = 1;
 
         return Mathf.Clamp(quantity, 1, maxQuantity);
     }
 
+    // 수량 범위 보정
     private void ClampQuantity()
     {
-        if (quantityInputField == null)
-            return;
+        if (quantityInputField == null) return;
 
         int quantity = GetQuantity();
         quantityInputField.SetTextWithoutNotify(quantity.ToString());
     }
 
+    // 가격 텍스트 갱신
     private void RefreshPriceText()
     {
-        if (currentItemData == null || priceText == null)
-            return;
+        if (currentItemData == null || priceText == null) return;
 
         int quantity = GetQuantity();
         int unitPrice = currentTradeType == TradeType.Buy
@@ -138,15 +130,15 @@ public class TradePopupUI : MonoBehaviour
 
         int totalPrice = unitPrice * quantity;
 
-        priceText.text = currentTradeType == TradeType.Buy
+        priceText.SetText(currentTradeType == TradeType.Buy
             ? $"구매할 가격 : {totalPrice:N0}"
-            : $"판매할 가격 : {totalPrice:N0}";
+            : $"판매할 가격 : {totalPrice:N0}");
     }
 
+    // 거래 확정
     public void OnClickConfirm()
     {
-        if (currentItemData == null)
-            return;
+        if (currentItemData == null) return;
 
         int quantity = GetQuantity();
 
@@ -154,23 +146,24 @@ public class TradePopupUI : MonoBehaviour
             ShopPanelUI.Instance?.ConfirmBuy(currentSlotIndex, quantity);
         else
             ShopPanelUI.Instance?.ConfirmSell(currentSlotIndex, quantity);
+
         Close();
     }
 
+    // 거래 취소
     public void OnClickCancel()
     {
         Close();
     }
 
+    // 팝업 닫기
     public void Close()
     {
         currentItemData = null;
         currentSlotIndex = -1;
         maxQuantity = 1;
 
-        if (quantityInputField != null)
-            quantityInputField.SetTextWithoutNotify("1");
-
+        quantityInputField?.SetTextWithoutNotify("1");
         gameObject.SetActive(false);
     }
 }
