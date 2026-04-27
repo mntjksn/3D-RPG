@@ -1,7 +1,9 @@
 using UnityEngine;
 
+// 업그레이드 가능 여부 검사 및 강화 처리 담당
 public static class UpgradeService
 {
+    // 업그레이드 가능 여부 확인
     public static bool CanUpgrade(
         UpgradeManager manager,
         UpgradeType type,
@@ -15,7 +17,6 @@ public static class UpgradeService
             return false;
 
         int currentLevel = manager.GetCurrentLevel(type);
-
         if (statData.IsMaxLevel(currentLevel))
             return false;
 
@@ -40,6 +41,7 @@ public static class UpgradeService
         return true;
     }
 
+    // 업그레이드 시도
     public static bool TryUpgrade(
         UpgradeManager manager,
         UpgradeType type,
@@ -53,12 +55,10 @@ public static class UpgradeService
         if (selectedMaterial == null)
             return false;
 
-        bool removed = InventoryManager.Instance.RemoveItem(selectedMaterial.itemId, levelData.amount);
-        if (!removed)
+        if (!InventoryManager.Instance.RemoveItem(selectedMaterial.itemId, levelData.amount))
             return false;
 
-        bool usedGold = playerStat.UseGold(levelData.goldCost);
-        if (!usedGold)
+        if (!playerStat.UseGold(levelData.goldCost))
         {
             InventoryManager.Instance.AddItem(selectedMaterial, levelData.amount);
             return false;
@@ -71,7 +71,7 @@ public static class UpgradeService
             manager.AddLevel(type);
             manager.OnUpgradeSuccess?.Invoke(type);
 
-            SoundManager.Instance.PlaySFX(SfxType.BuySell);
+            SoundManager.Instance?.PlaySFX(SfxType.BuySell);
             QuestService.NotifyUpgrade(type.ToString());
         }
 
