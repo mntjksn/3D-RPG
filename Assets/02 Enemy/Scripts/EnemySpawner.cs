@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
 
+// 적 생성, 풀 관리, 네트워크 동기화 담당
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
@@ -23,9 +24,9 @@ public class EnemySpawner : MonoBehaviour
     [Header("Pool Settings")]
     [SerializeField] private int poolSizePerType = 10;
 
-    private readonly List<Vector3> spawnedPositions = new();
-    private readonly Dictionary<EnemyData, Queue<GameObject>> poolDictionary = new();
-    private readonly Dictionary<EnemyData, List<GameObject>> poolListDictionary = new();
+    private readonly List<Vector3> spawnedPositions = new List<Vector3>();
+    private readonly Dictionary<EnemyData, Queue<GameObject>> poolDictionary = new Dictionary<EnemyData, Queue<GameObject>>();
+    private readonly Dictionary<EnemyData, List<GameObject>> poolListDictionary = new Dictionary<EnemyData, List<GameObject>>();
 
     private EnemySpawnerNetworkSync networkSync;
 
@@ -42,22 +43,26 @@ public class EnemySpawner : MonoBehaviour
         CreatePools();
     }
 
+    // 풀 생성
     private void CreatePools()
     {
-        if (!HasEnemyData()) return;
+        if (!HasEnemyData())
+            return;
 
         foreach (EnemyData data in enemyDatas)
         {
-            if (!IsValidEnemyData(data)) continue;
+            if (!IsValidEnemyData(data))
+                continue;
 
             poolListDictionary[data] = new List<GameObject>();
             poolDictionary[data] = CreatePool(data);
         }
     }
 
+    // 타입별 풀 생성
     private Queue<GameObject> CreatePool(EnemyData data)
     {
-        Queue<GameObject> pool = new();
+        Queue<GameObject> pool = new Queue<GameObject>();
 
         for (int i = 0; i < poolSizePerType; i++)
         {
@@ -73,6 +78,7 @@ public class EnemySpawner : MonoBehaviour
                 member = obj.AddComponent<EnemyPool>();
 
             member.Initialize(this, data);
+
             pool.Enqueue(obj);
             poolListDictionary[data].Add(obj);
         }
@@ -80,19 +86,22 @@ public class EnemySpawner : MonoBehaviour
         return pool;
     }
 
+    // 초기 스폰 후 전체 클라에 브로드캐스트
     public void SpawnInitialEnemiesAndBroadcast()
     {
         if (!HasEnemyData())
-        {
-            Debug.LogWarning("EnemyData가 비어 있습니다.");
             return;
-        }
 
         spawnedPositions.Clear();
 
         for (int i = 0; i < spawnCount; i++)
         {
-            if (TrySpawnEnemy(out int dataIndex, out int poolIndex, out Vector3 spawnPos, out int viewId))
+            int dataIndex;
+            int poolIndex;
+            Vector3 spawnPos;
+            int viewId;
+
+            if (TrySpawnEnemy(out dataIndex, out poolIndex, out spawnPos, out viewId))
             {
                 if (networkSync != null)
                     networkSync.BroadcastActivate(dataIndex, poolIndex, spawnPos, viewId);
@@ -100,6 +109,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // 랜덤 타입 스폰 시도
     public bool TrySpawnEnemy(out int dataIndex, out int poolIndex, out Vector3 spawnPos, out int viewId)
     {
         dataIndex = -1;
@@ -114,6 +124,7 @@ public class EnemySpawner : MonoBehaviour
         return TrySpawnEnemy(selectedData, out dataIndex, out poolIndex, out spawnPos, out viewId);
     }
 
+    // 특정 타입 스폰 시도
     public bool TrySpawnEnemy(EnemyData selectedData, out int dataIndex, out int poolIndex, out Vector3 spawnPos, out int viewId)
     {
         dataIndex = -1;
@@ -122,23 +133,14 @@ public class EnemySpawner : MonoBehaviour
         viewId = -1;
 
         if (!IsValidEnemyData(selectedData))
-        {
-            Debug.LogWarning("EnemyData 또는 prefab이 비어 있습니다.");
             return false;
-        }
 
         if (!TryGetSpawnPosition(out spawnPos))
-        {
-            Debug.LogWarning("적절한 스폰 위치를 찾지 못했습니다.");
             return false;
-        }
 
         GameObject enemyObj = GetFromPool(selectedData);
         if (enemyObj == null)
-        {
-            Debug.LogWarning($"{selectedData.name} 풀에 사용할 오브젝트가 없습니다.");
             return false;
-        }
 
         dataIndex = GetDataIndex(selectedData);
         poolIndex = GetPoolIndex(selectedData, enemyObj);
@@ -152,10 +154,15 @@ public class EnemySpawner : MonoBehaviour
         return true;
     }
 
+    // 사망 후 리스폰 요청
     public void RequestRespawn(EnemyData deadEnemyData)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
-        if (deadEnemyData == null) return;
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        if (deadEnemyData == null)
+            return;
+
         StartCoroutine(RespawnRoutine(deadEnemyData));
     }
 
@@ -163,25 +170,25 @@ public class EnemySpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(deadEnemyData.respawnDelay);
 
-        if (TrySpawnEnemy(deadEnemyData, out int dataIndex, out int poolIndex, out Vector3 spawnPos, out int viewId))
-        {
-            EnemySpawnerNetworkSync sync = GetComponent<EnemySpawnerNetworkSync>();
-            if (sync != null)
-                sync.BroadcastActivate(dataIndex, poolIndex, spawnPos, viewId);
-        }
-    }
+        int dataIndex;
+        int poolIndex;
+        Vector3 spawnPos;
+        int viewId;
 
-    private void SpawnOneEnemy()
-    {
-        if (TrySpawnEnemy(out _, out _, out _, out _))
+        if (TrySpawnEnemy(deadEnemyData, out dataIndex, out poolIndex, out spawnPos, out viewId))
         {
+            if (networkSync != null)
+                networkSync.BroadcastActivate(dataIndex, poolIndex, spawnPos, viewId);
         }
     }
 
     public void ReturnEnemy(EnemyPool member)
     {
-        if (member == null) return;
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (member == null)
+            return;
+
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         EnemyData data = member.GetEnemyData();
         int dataIndex = GetDataIndex(data);
@@ -193,13 +200,20 @@ public class EnemySpawner : MonoBehaviour
             networkSync.BroadcastReturn(dataIndex, poolIndex);
     }
 
+    // 적 활성화
     public void ActivateEnemy(int dataIndex, int poolIndex, Vector3 spawnPos, int viewId)
     {
-        if (dataIndex < 0 || dataIndex >= enemyDatas.Length) return;
+        if (enemyDatas == null || dataIndex < 0 || dataIndex >= enemyDatas.Length)
+            return;
 
         EnemyData data = enemyDatas[dataIndex];
-        if (!poolListDictionary.TryGetValue(data, out var list)) return;
-        if (poolIndex < 0 || poolIndex >= list.Count) return;
+
+        List<GameObject> list;
+        if (!poolListDictionary.TryGetValue(data, out list))
+            return;
+
+        if (poolIndex < 0 || poolIndex >= list.Count)
+            return;
 
         GameObject enemyObj = list[poolIndex];
         enemyObj.transform.position = spawnPos;
@@ -211,7 +225,8 @@ public class EnemySpawner : MonoBehaviour
             col.enabled = true;
 
         EnemyPool poolMember = enemyObj.GetComponent<EnemyPool>();
-        poolMember?.SetLastSpawnPosition(spawnPos);
+        if (poolMember != null)
+            poolMember.SetLastSpawnPosition(spawnPos);
 
         EnemyHealth enemyHealth = enemyObj.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
@@ -221,16 +236,24 @@ public class EnemySpawner : MonoBehaviour
         }
 
         EnemyAI enemyAI = enemyObj.GetComponent<EnemyAI>();
-        enemyAI?.SetData(data, spawnerIndex, poolIndex);
+        if (enemyAI != null)
+            enemyAI.SetData(data, spawnerIndex, poolIndex);
     }
 
+    // 인덱스로 반환 처리
     public void ReturnEnemyByIndex(int dataIndex, int poolIndex)
     {
-        if (dataIndex < 0 || dataIndex >= enemyDatas.Length) return;
+        if (enemyDatas == null || dataIndex < 0 || dataIndex >= enemyDatas.Length)
+            return;
 
         EnemyData data = enemyDatas[dataIndex];
-        if (!poolListDictionary.TryGetValue(data, out var list)) return;
-        if (poolIndex < 0 || poolIndex >= list.Count) return;
+
+        List<GameObject> list;
+        if (!poolListDictionary.TryGetValue(data, out list))
+            return;
+
+        if (poolIndex < 0 || poolIndex >= list.Count)
+            return;
 
         GameObject enemyObj = list[poolIndex];
 
@@ -238,14 +261,15 @@ public class EnemySpawner : MonoBehaviour
         RemoveSpawnPosition(member);
         StopAgent(enemyObj);
         enemyObj.SetActive(false);
-        EnsurePoolExists(data);
     }
 
+    // 새 플레이어에게 현재 상태 전달
     public void SendCurrentStateToPlayer(Photon.Realtime.Player newPlayer)
     {
-        if (networkSync == null) return;
+        if (networkSync == null)
+            return;
 
-        foreach (var kvp in poolListDictionary)
+        foreach (KeyValuePair<EnemyData, List<GameObject>> kvp in poolListDictionary)
         {
             EnemyData data = kvp.Key;
             List<GameObject> list = kvp.Value;
@@ -253,7 +277,8 @@ public class EnemySpawner : MonoBehaviour
 
             for (int i = 0; i < list.Count; i++)
             {
-                if (!list[i].activeSelf) continue;
+                if (!list[i].activeSelf)
+                    continue;
 
                 PhotonView pv = list[i].GetComponent<PhotonView>();
                 int viewId = pv != null ? pv.ViewID : -1;
@@ -264,13 +289,15 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    // 스폰 위치 탐색
     private bool TryGetSpawnPosition(out Vector3 spawnPosition)
     {
         for (int i = 0; i < maxTryCount; i++)
         {
             Vector3 randomPoint = GetRandomPoint();
 
-            if (!NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, sampleDistance, NavMesh.AllAreas))
+            NavMeshHit hit;
+            if (!NavMesh.SamplePosition(randomPoint, out hit, sampleDistance, NavMesh.AllAreas))
                 continue;
 
             if (!IsInsideSpawnArea(hit.position))
@@ -287,9 +314,11 @@ public class EnemySpawner : MonoBehaviour
         return false;
     }
 
+    // 풀에서 비활성 오브젝트 찾기
     private GameObject GetFromPool(EnemyData data)
     {
-        if (!poolDictionary.TryGetValue(data, out Queue<GameObject> pool))
+        Queue<GameObject> pool;
+        if (!poolDictionary.TryGetValue(data, out pool))
             return null;
 
         int count = pool.Count;
@@ -308,6 +337,9 @@ public class EnemySpawner : MonoBehaviour
 
     public int GetDataIndex(EnemyData data)
     {
+        if (enemyDatas == null)
+            return -1;
+
         for (int i = 0; i < enemyDatas.Length; i++)
         {
             if (enemyDatas[i] == data)
@@ -319,7 +351,8 @@ public class EnemySpawner : MonoBehaviour
 
     public int GetPoolIndex(EnemyData data, GameObject obj)
     {
-        if (!poolListDictionary.TryGetValue(data, out List<GameObject> list))
+        List<GameObject> list;
+        if (!poolListDictionary.TryGetValue(data, out list))
             return -1;
 
         return list.IndexOf(obj);
@@ -327,7 +360,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void RemoveSpawnPosition(EnemyPool member)
     {
-        if (member == null) return;
+        if (member == null)
+            return;
 
         Vector3 lastSpawnPos = member.GetLastSpawnPosition();
         spawnedPositions.Remove(lastSpawnPos);
@@ -341,12 +375,6 @@ public class EnemySpawner : MonoBehaviour
             agent.ResetPath();
             agent.isStopped = true;
         }
-    }
-
-    private void EnsurePoolExists(EnemyData data)
-    {
-        if (data != null && !poolDictionary.ContainsKey(data))
-            poolDictionary[data] = new Queue<GameObject>();
     }
 
     private bool HasEnemyData()
@@ -369,17 +397,19 @@ public class EnemySpawner : MonoBehaviour
     private bool IsInsideSpawnArea(Vector3 pos)
     {
         Vector3 localPos = pos - transform.position;
+
         return Mathf.Abs(localPos.x) <= spawnArea.x * 0.5f &&
                Mathf.Abs(localPos.z) <= spawnArea.z * 0.5f;
     }
 
     private bool IsFarEnough(Vector3 pos)
     {
-        Vector2 pos2D = new(pos.x, pos.z);
+        Vector2 pos2D = new Vector2(pos.x, pos.z);
 
         for (int i = 0; i < spawnedPositions.Count; i++)
         {
-            Vector2 spawned2D = new(spawnedPositions[i].x, spawnedPositions[i].z);
+            Vector2 spawned2D = new Vector2(spawnedPositions[i].x, spawnedPositions[i].z);
+
             if (Vector2.Distance(pos2D, spawned2D) < minSpawnDistance)
                 return false;
         }
