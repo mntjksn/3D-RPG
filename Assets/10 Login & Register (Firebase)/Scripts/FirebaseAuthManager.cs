@@ -1,10 +1,13 @@
-using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
-using System;
-using System.Threading.Tasks;
+using UnityEngine;
 
+// Firebase 인증 및 온라인 상태 관리
 public class FirebaseAuthManager : MonoBehaviour
 {
     public static FirebaseAuthManager Instance { get; private set; }
@@ -13,59 +16,61 @@ public class FirebaseAuthManager : MonoBehaviour
     private FirebaseUser user;
     private DatabaseReference dbRef;
 
+    private Coroutine heartbeatCoroutine;
+    private string currentSessionId;
+
+    private const float HeartbeatInterval = 10f;
+    private const long OnlineTimeoutMs = 30000;
+
     public bool IsInitialized { get; private set; }
     public FirebaseUser CurrentUser => user;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            InitializeFirebase();
-        }
-        else
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        InitializeFirebase();
     }
 
     private void OnApplicationQuit()
     {
-        // 게임 종료 시 온라인 상태 해제
+        // 정상 종료 시 오프라인 처리 시도
         SetOnlineStatus(false);
     }
 
+    // Firebase 초기화
     private async void InitializeFirebase()
     {
         try
         {
             var status = await FirebaseApp.CheckAndFixDependenciesAsync();
 
-            if (status == DependencyStatus.Available)
-            {
-                auth = FirebaseAuth.DefaultInstance;
-                user = auth.CurrentUser;
-                dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-                IsInitialized = true;
-                Debug.Log("Firebase 초기화 완료");
-            }
-            else
-            {
-                Debug.LogError($"Firebase 초기화 실패: {status}");
-            }
+            if (status != DependencyStatus.Available)
+                return;
+
+            auth = FirebaseAuth.DefaultInstance;
+            user = auth.CurrentUser;
+            dbRef = FirebaseDatabase.DefaultInstance.RootReference;
+            IsInitialized = true;
         }
         catch (Exception e)
         {
-            Debug.LogError($"Firebase 초기화 예외: {e}");
+            Debug.LogError($"Firebase Init Error: {e}");
         }
     }
 
+    // 회원가입
     public async Task Register(string email, string password, Action<bool, string> callback)
     {
         if (!IsInitialized)
         {
-            callback?.Invoke(false, "Firebase가 아직 초기화되지 않았습니다. 잠시 후 다시 시도해주세요.");
+            callback?.Invoke(false, "잠시 후 다시 시도해주세요.");
             return;
         }
 
@@ -73,7 +78,7 @@ public class FirebaseAuthManager : MonoBehaviour
         {
             var result = await auth.CreateUserWithEmailAndPasswordAsync(email, password);
             user = result.User;
-            callback?.Invoke(true, "회원가입이 완료되었습니다.");
+            callback?.Invoke(true, "회원가입 완료");
         }
         catch (Exception e)
         {
@@ -81,11 +86,12 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
+    // 로그인
     public async Task Login(string email, string password, Action<bool, string> callback)
     {
         if (!IsInitialized)
         {
-            callback?.Invoke(false, "Firebase가 아직 초기화되지 않았습니다. 잠시 후 다시 시도해주세요.");
+            callback?.Invoke(false, "잠시 후 다시 시도해주세요.");
             return;
         }
 
@@ -100,12 +106,15 @@ public class FirebaseAuthManager : MonoBehaviour
             {
                 auth.SignOut();
                 user = null;
-                callback?.Invoke(false, "이미 다른 기기에서 로그인 중입니다.");
+                callback?.Invoke(false, "이미 로그인 중입니다.");
                 return;
             }
 
-            // 온라인 상태 저장
+            // 새 세션 발급 후 온라인 상태 저장
+            currentSessionId = Guid.NewGuid().ToString("N");
             await SetOnlineStatusAsync(true);
+
+            StartHeartbeat();
 
             string nickname = string.IsNullOrWhiteSpace(user.DisplayName)
                 ? user.Email.Split('@')[0]
@@ -119,12 +128,43 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
+    // 현재 로그인 상태 확인
     private async Task<bool> IsUserOnline(string uid)
     {
+        if (dbRef == null || string.IsNullOrEmpty(uid))
+            return false;
+
         try
         {
             var snapshot = await dbRef.Child("online_users").Child(uid).GetValueAsync();
-            return snapshot.Exists && (bool)snapshot.Value == true;
+            if (!snapshot.Exists || snapshot.Value == null)
+                return false;
+
+            object rawValue = snapshot.Value;
+
+            // 예전 bool 저장 방식도 호환
+            if (rawValue is bool boolValue)
+                return boolValue;
+
+            if (rawValue is Dictionary<string, object> dict)
+            {
+                bool isOnline = dict.TryGetValue("isOnline", out object onlineObj)
+                    && ConvertToBool(onlineObj);
+
+                if (!isOnline)
+                    return false;
+
+                long lastActiveAt = dict.TryGetValue("lastActiveAt", out object timeObj)
+                    ? ConvertToLong(timeObj)
+                    : 0;
+
+                long nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                bool isExpired = nowMs - lastActiveAt > OnlineTimeoutMs;
+
+                return !isExpired;
+            }
+
+            return false;
         }
         catch
         {
@@ -132,16 +172,26 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
+    // 온라인 상태 저장
     private async Task SetOnlineStatusAsync(bool isOnline)
     {
-        if (user == null || dbRef == null) return;
+        if (user == null || dbRef == null)
+            return;
+
         try
         {
-            await dbRef.Child("online_users").Child(user.UserId).SetValueAsync(isOnline);
+            Dictionary<string, object> data = new Dictionary<string, object>
+            {
+                { "isOnline", isOnline },
+                { "sessionId", isOnline ? currentSessionId : string.Empty },
+                { "lastActiveAt", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() }
+            };
+
+            await dbRef.Child("online_users").Child(user.UserId).SetValueAsync(data);
         }
         catch (Exception e)
         {
-            Debug.LogError($"온라인 상태 저장 실패: {e}");
+            Debug.LogError($"Online Status Error: {e}");
         }
     }
 
@@ -150,51 +200,120 @@ public class FirebaseAuthManager : MonoBehaviour
         await SetOnlineStatusAsync(isOnline);
     }
 
-    public void Logout()
+    // heartbeat 시작
+    private void StartHeartbeat()
     {
-        if (auth == null) return;
-        SetOnlineStatus(false);
-        auth.SignOut();
-        user = null;
+        StopHeartbeat();
+        heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());
     }
 
+    // heartbeat 중지
+    private void StopHeartbeat()
+    {
+        if (heartbeatCoroutine == null)
+            return;
+
+        StopCoroutine(heartbeatCoroutine);
+        heartbeatCoroutine = null;
+    }
+
+    private IEnumerator HeartbeatRoutine()
+    {
+        while (user != null)
+        {
+            _ = SetOnlineStatusAsync(true);
+            yield return new WaitForSecondsRealtime(HeartbeatInterval);
+        }
+    }
+
+    // 로그아웃
+    public void Logout()
+    {
+        if (auth == null)
+            return;
+
+        StopHeartbeat();
+        SetOnlineStatus(false);
+
+        auth.SignOut();
+        user = null;
+        currentSessionId = null;
+    }
+
+    // 닉네임 설정
     public async Task SetNickname(string nickname, Action<bool, string> callback)
     {
         if (!IsInitialized)
         {
-            callback?.Invoke(false, "Firebase가 아직 초기화되지 않았습니다.");
+            callback?.Invoke(false, "초기화 안됨");
             return;
         }
 
         if (user == null)
         {
-            callback?.Invoke(false, "로그인된 계정이 없습니다.");
+            callback?.Invoke(false, "로그인 필요");
             return;
         }
 
         try
         {
             UserProfile profile = new UserProfile { DisplayName = nickname };
+
             await user.UpdateUserProfileAsync(profile);
             await user.ReloadAsync();
+
             user = auth.CurrentUser;
-            callback?.Invoke(true, "닉네임 설정이 완료되었습니다.");
+            callback?.Invoke(true, "닉네임 설정 완료");
         }
         catch (Exception e)
         {
-            Debug.LogError($"닉네임 저장 실패: {e}");
-            callback?.Invoke(false, "닉네임 저장 중 오류가 발생했습니다.");
+            Debug.LogError($"Nickname Error: {e}");
+            callback?.Invoke(false, "닉네임 저장 실패");
         }
     }
 
     public string GetNickname()
     {
-        if (user == null) return string.Empty;
+        if (user == null)
+            return string.Empty;
+
         return string.IsNullOrWhiteSpace(user.DisplayName) ? string.Empty : user.DisplayName;
     }
 
     public bool HasNickname() => !string.IsNullOrWhiteSpace(GetNickname());
 
+    private bool ConvertToBool(object value)
+    {
+        if (value == null)
+            return false;
+
+        if (value is bool boolValue)
+            return boolValue;
+
+        if (bool.TryParse(value.ToString(), out bool parsed))
+            return parsed;
+
+        return false;
+    }
+
+    private long ConvertToLong(object value)
+    {
+        if (value == null)
+            return 0;
+
+        if (value is long longValue)
+            return longValue;
+
+        if (value is int intValue)
+            return intValue;
+
+        if (long.TryParse(value.ToString(), out long parsed))
+            return parsed;
+
+        return 0;
+    }
+
+    // Firebase 에러 메시지 변환
     private string GetFirebaseAuthErrorMessage(Exception exception)
     {
         if (exception is AggregateException aggregate && aggregate.InnerExceptions.Count > 0)
@@ -202,28 +321,23 @@ public class FirebaseAuthManager : MonoBehaviour
 
         if (exception is FirebaseException firebaseEx)
         {
-            AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
-            switch (errorCode)
+            AuthError code = (AuthError)firebaseEx.ErrorCode;
+
+            switch (code)
             {
-                case AuthError.MissingEmail: return "이메일을 입력해주세요.";
-                case AuthError.InvalidEmail: return "올바른 이메일 형식이 아닙니다.";
-                case AuthError.MissingPassword: return "비밀번호를 입력해주세요.";
-                case AuthError.WeakPassword: return "비밀번호는 6자 이상으로 입력해주세요.";
-                case AuthError.EmailAlreadyInUse: return "이미 가입된 이메일입니다.";
-                case AuthError.AccountExistsWithDifferentCredentials: return "다른 로그인 방식으로 이미 가입된 계정입니다.";
-                case AuthError.WrongPassword: return "비밀번호가 올바르지 않습니다.";
-                case AuthError.UserNotFound: return "가입되지 않은 계정입니다.";
-                case AuthError.UserDisabled: return "비활성화된 계정입니다.";
-                case AuthError.NetworkRequestFailed: return "네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.";
-                case AuthError.TooManyRequests: return "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.";
-                case AuthError.OperationNotAllowed: return "현재 이 로그인 방식은 사용할 수 없습니다.";
+                case AuthError.MissingEmail: return "이메일 입력";
+                case AuthError.InvalidEmail: return "이메일 형식 오류";
+                case AuthError.MissingPassword: return "비밀번호 입력";
+                case AuthError.WeakPassword: return "비밀번호 6자 이상";
+                case AuthError.EmailAlreadyInUse: return "이미 가입된 이메일";
+                case AuthError.WrongPassword: return "비밀번호 오류";
+                case AuthError.UserNotFound: return "계정 없음";
+                case AuthError.NetworkRequestFailed: return "네트워크 오류";
                 default:
-                    Debug.LogError($"Firebase Auth ErrorCode: {firebaseEx.ErrorCode}, Message: {firebaseEx.Message}");
-                    return "로그인 처리 중 오류가 발생했습니다.";
+                    return "로그인 오류";
             }
         }
 
-        Debug.LogError($"Unknown Auth Exception: {exception}");
-        return "알 수 없는 오류가 발생했습니다.";
+        return "알 수 없는 오류";
     }
 }
