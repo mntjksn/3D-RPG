@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 업그레이드 행 UI 갱신 및 버튼 처리 담당
 public class UpgradeRowUI : MonoBehaviour
 {
     [Header("Info")]
@@ -33,6 +34,7 @@ public class UpgradeRowUI : MonoBehaviour
         }
     }
 
+    // 업그레이드 행 UI 갱신
     public void Refresh(
         StatUpgradeData statData,
         int currentLevel,
@@ -54,11 +56,8 @@ public class UpgradeRowUI : MonoBehaviour
                 materialIconImage.enabled = false;
             }
 
-            if (materialCountText != null)
-                materialCountText.text = "MAX";
-
-            if (goldText != null)
-                goldText.text = "MAX";
+            materialCountText?.SetText("MAX");
+            goldText?.SetText("MAX");
 
             if (upgradeButton != null)
                 upgradeButton.interactable = false;
@@ -82,7 +81,7 @@ public class UpgradeRowUI : MonoBehaviour
         if (probabilityText != null)
         {
             float percent = levelData.successChance * 100f;
-            probabilityText.text = $"{currentLevel}단계 확률 {percent}%";
+            probabilityText.SetText($"{currentLevel}단계 확률 {percent}%");
         }
 
         bool hasCorrectMaterial =
@@ -91,16 +90,12 @@ public class UpgradeRowUI : MonoBehaviour
             selectedMaterial.itemId == levelData.item.itemId;
 
         int maxFillCount = levelData.amount;
-
         int clampedMaterialCount = hasCorrectMaterial
             ? Mathf.Min(selectedMaterialCount, maxFillCount)
             : 0;
 
-        if (materialCountText != null)
-            materialCountText.text = $"{clampedMaterialCount}/{levelData.amount}";
-
-        if (goldText != null)
-            goldText.text = levelData.goldCost.ToString("N0");
+        materialCountText?.SetText($"{clampedMaterialCount}/{levelData.amount}");
+        goldText?.SetText(levelData.goldCost.ToString("N0"));
 
         bool hasEnoughMaterial = hasCorrectMaterial && clampedMaterialCount >= levelData.amount;
         bool hasEnoughGold = currentGold >= levelData.goldCost;
@@ -113,7 +108,7 @@ public class UpgradeRowUI : MonoBehaviour
         if (backgroundImage != null)
         {
             Color color = backgroundImage.color;
-            color.a = isFull ? 1f : 0.3f; // 꽉 차면 진하게, 아니면 흐리게
+            color.a = isFull ? 1f : 0.3f;
             backgroundImage.color = color;
         }
 
@@ -132,6 +127,7 @@ public class UpgradeRowUI : MonoBehaviour
         }
     }
 
+    // 업그레이드 버튼 클릭 처리
     private void OnClickUpgradeButton()
     {
         if (upgradeUI == null)
@@ -140,6 +136,7 @@ public class UpgradeRowUI : MonoBehaviour
         upgradeUI.OnClickUpgrade(upgradeType);
     }
 
+    // 기본 상태로 초기화
     private void SetDefaultState()
     {
         if (materialIconImage != null)
@@ -148,11 +145,8 @@ public class UpgradeRowUI : MonoBehaviour
             materialIconImage.enabled = false;
         }
 
-        if (materialCountText != null)
-            materialCountText.text = "-";
-
-        if (goldText != null)
-            goldText.text = "-";
+        materialCountText?.SetText("-");
+        goldText?.SetText("-");
 
         if (upgradeButton != null)
             upgradeButton.interactable = false;
