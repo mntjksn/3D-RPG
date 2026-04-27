@@ -1,3 +1,4 @@
+// 업그레이드 저장 데이터
 [System.Serializable]
 public class UpgradeSaveData
 {
