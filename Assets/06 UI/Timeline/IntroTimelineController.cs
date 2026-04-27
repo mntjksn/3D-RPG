@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
+// 인트로 타임라인 재생 및 페이드 연출 담당
 public class IntroTimelineController : MonoBehaviour
 {
     [SerializeField] private PlayableDirector director;
@@ -9,6 +10,9 @@ public class IntroTimelineController : MonoBehaviour
 
     private void Awake()
     {
+        if (director == null)
+            return;
+
         director.stopped += OnTimelineStopped;
 
         // 타임라인 일시정지 상태로 시작
@@ -19,25 +23,26 @@ public class IntroTimelineController : MonoBehaviour
 
     private void Start()
     {
-        // 첫 번째 FadeIn은 오브젝트 활성화 없이
-        fadeUI.FadeIn(false, () =>
+        // 첫 페이드 인 후 타임라인 재생
+        fadeUI?.FadeIn(false, () =>
         {
-            director.Resume();
+            director?.Resume();
         });
     }
 
     private void OnDestroy()
     {
-        director.stopped -= OnTimelineStopped;
+        if (director != null)
+            director.stopped -= OnTimelineStopped;
     }
 
+    // 타임라인 종료 후 페이드 전환
     private void OnTimelineStopped(PlayableDirector obj)
     {
-        fadeUI.FadeOut(() =>
+        fadeUI?.FadeOut(() =>
         {
-            introVirtualCamera.SetActive(false);
-            // 마지막 FadeIn은 오브젝트 활성화 포함
-            fadeUI.FadeIn(true);
+            introVirtualCamera?.SetActive(false);
+            fadeUI?.FadeIn(true);
         });
     }
 }
