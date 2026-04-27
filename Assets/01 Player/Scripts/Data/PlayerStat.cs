@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
 
+// 플레이어 스탯 계산 및 상태 관리 (HP, EXP, 골드, 레벨)
 public class PlayerStat : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private PlayerData playerData;
 
+    // 스탯 변경 시 UI 등 외부에서 구독할 이벤트
     public event Action<int> OnLevelChanged;
     public event Action<int, int> OnExpChanged;
     public event Action<float, float> OnHpChanged;
@@ -16,13 +18,15 @@ public class PlayerStat : MonoBehaviour
     private float currentHp;
     private int gold;
 
-    private float lastMaxHp;
+    private float lastMaxHp; // 장비 변경 시 HP 보정을 위한 이전 최대 HP
 
+    // 읽기 전용 프로퍼티
     public int Level => level;
     public int CurrentExp => currentExp;
     public float CurrentHp => currentHp;
     public int Gold => gold;
 
+    // 장비/업그레이드 포함 계산 결과 프로퍼티
     public float MaxHp => GetMaxHp();
     public float AttackPower => GetAttackPower();
     public float ShieldPower => GetShieldPower();
@@ -46,11 +50,13 @@ public class PlayerStat : MonoBehaviour
             EquipmentManager.Instance.OnEquipmentChanged -= HandleEquipmentChanged;
     }
 
+    // 강제로 모든 이벤트를 다시 발행 (로드 후 UI 갱신 등에 사용)
     public void ForceNotify()
     {
         NotifyAll();
     }
 
+    // 스탯 초기화 - 게임 시작 또는 세이브 없을 때 호출
     public void InitializeStat()
     {
         if (playerData == null)
@@ -70,6 +76,7 @@ public class PlayerStat : MonoBehaviour
         NotifyAll();
     }
 
+    // HP를 직접 설정 (0 ~ MaxHp 사이로 클램프)
     public void SetCurrentHp(float value)
     {
         float maxHp = GetMaxHp();
@@ -97,14 +104,14 @@ public class PlayerStat : MonoBehaviour
 
     public void AddGold(int amount)
     {
-        if (playerData == null || amount <= 0)
-            return;
+        if (playerData == null || amount <= 0) return;
 
         gold += amount;
         OnGoldChanged?.Invoke(gold);
         MarkDirty();
     }
 
+    // 골드 차감 - 잔액 부족 시 false 반환
     public bool UseGold(int amount)
     {
         if (amount <= 0 || gold < amount)
@@ -113,14 +120,13 @@ public class PlayerStat : MonoBehaviour
         gold -= amount;
         OnGoldChanged?.Invoke(gold);
         MarkDirty();
-
         return true;
     }
 
+    // 경험치 추가 및 레벨업 처리
     public void AddExp(int amount)
     {
-        if (playerData == null || amount <= 0)
-            return;
+        if (playerData == null || amount <= 0) return;
 
         currentExp += amount;
 
@@ -131,110 +137,88 @@ public class PlayerStat : MonoBehaviour
         MarkDirty();
     }
 
+    // 다음 레벨까지 필요한 경험치
     public int GetExpToNextLevel()
     {
-        if (playerData == null)
-            return 0;
-
-        return playerData.expToLevelUp * level;
+        return playerData != null ? playerData.expToLevelUp * level : 0;
     }
 
+    // 기본값 + 장비 보너스 + 업그레이드 보너스를 합산한 최대 HP
     public int GetMaxHp()
     {
-        if (playerData == null)
-            return 0;
+        if (playerData == null) return 0;
 
-        int totalHp = playerData.maxHp;
+        int total = playerData.maxHp;
 
-        if (EquipmentManager.Instance != null)
-        {
-            ItemData armor = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Armor);
-            if (armor != null)
-                totalHp += armor.maxHpBonus;
-        }
+        ItemData armor = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Armor);
+        if (armor != null)
+            total += armor.maxHpBonus;
 
         if (UpgradeManager.Instance != null)
-        {
-            int hpLevel = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp) - 1;
-            totalHp += hpLevel * 50;
-        }
+            total += (UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Hp) - 1) * 50;
 
-        return totalHp;
+        return total;
     }
 
+    // 기본값 + 무기 보너스 + 업그레이드 보너스를 합산한 공격력
     public int GetAttackPower()
     {
-        if (playerData == null)
-            return 0;
+        if (playerData == null) return 0;
 
-        int totalAttack = playerData.attackPower;
+        int total = playerData.attackPower;
 
-        if (EquipmentManager.Instance != null)
-        {
-            ItemData weapon = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Weapon);
-            if (weapon != null)
-                totalAttack += weapon.attackPower;
-        }
+        ItemData weapon = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Weapon);
+        if (weapon != null)
+            total += weapon.attackPower;
 
         if (UpgradeManager.Instance != null)
-        {
-            int level = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack) - 1;
-            totalAttack += level * 5;
-        }
+            total += (UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Attack) - 1) * 5;
 
-        return totalAttack;
+        return total;
     }
 
+    // 기본값 + 방패 보너스를 합산한 방어력
     public int GetShieldPower()
     {
-        if (playerData == null)
-            return 0;
+        if (playerData == null) return 0;
 
-        int totalDefense = playerData.shieldPower;
+        int total = playerData.shieldPower;
 
-        if (EquipmentManager.Instance != null)
-        {
-            ItemData shield = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Shield);
-            if (shield != null)
-                totalDefense += shield.shieldPower;
-        }
+        ItemData shield = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Shield);
+        if (shield != null)
+            total += shield.shieldPower;
 
-        return totalDefense;
+        return total;
     }
 
+    // 기본값 + 신발 보너스를 합산한 이동 속도
     public int GetSpeed()
     {
-        if (playerData == null)
-            return 0;
+        if (playerData == null) return 0;
 
-        int totalSpeed = playerData.speed;
+        int total = playerData.speed;
 
-        if (EquipmentManager.Instance != null)
-        {
-            ItemData shoes = EquipmentManager.Instance.GetEquippedItem(EquipmentSlotType.Shoes);
-            if (shoes != null)
-                totalSpeed += shoes.moveSpeedBonus;
-        }
+        ItemData shoes = EquipmentManager.Instance?.GetEquippedItem(EquipmentSlotType.Shoes);
+        if (shoes != null)
+            total += shoes.moveSpeedBonus;
 
-        return totalSpeed;
+        return total;
     }
 
+    // 기본값 + 업그레이드 보너스를 합산한 HP 재생량
     public float GetRegen()
     {
-        if (playerData == null)
-            return 0f;
+        if (playerData == null) return 0f;
 
-        float totalRegen = playerData.regen;
+        float total = playerData.regen;
 
         if (UpgradeManager.Instance != null)
-        {
-            int level = UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen) - 1;
-            totalRegen += level * 0.01f;
-        }
+            total += (UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen) - 1) * 0.01f;
 
-        return totalRegen;
+        return total;
     }
 
+    // 현재 스탯을 세이브 데이터 구조체로 반환
     public PlayerSaveData GetSaveData()
     {
         return new PlayerSaveData
@@ -246,10 +230,10 @@ public class PlayerStat : MonoBehaviour
         };
     }
 
+    // 세이브 데이터를 스탯에 적용 (최솟값 보정 포함)
     public void LoadFromSaveData(PlayerSaveData saveData)
     {
-        if (saveData == null || playerData == null)
-            return;
+        if (saveData == null || playerData == null) return;
 
         level = Mathf.Max(playerData.startLevel, saveData.level);
         currentExp = Mathf.Max(0, saveData.currentExp);
@@ -262,6 +246,7 @@ public class PlayerStat : MonoBehaviour
         NotifyAll();
     }
 
+    // 장비 변경 시 최대 HP 증감분만큼 현재 HP도 조정
     private void HandleEquipmentChanged()
     {
         float newMaxHp = GetMaxHp();
@@ -279,6 +264,7 @@ public class PlayerStat : MonoBehaviour
         return currentExp >= GetExpToNextLevel();
     }
 
+    // 레벨업 처리 - EXP 차감, 레벨 증가, HP 전체 회복
     private void LevelUp()
     {
         currentExp -= GetExpToNextLevel();
@@ -288,12 +274,11 @@ public class PlayerStat : MonoBehaviour
         currentHp = maxHp;
         lastMaxHp = maxHp;
 
-        Debug.Log($"레벨업! 현재 레벨: {level}");
-
         OnLevelChanged?.Invoke(level);
         OnHpChanged?.Invoke(currentHp, maxHp);
     }
 
+    // 모든 스탯 이벤트를 일괄 발행
     private void NotifyAll()
     {
         float maxHp = GetMaxHp();
@@ -306,7 +291,6 @@ public class PlayerStat : MonoBehaviour
 
     private void MarkDirty()
     {
-        if (SaveManager.Instance != null)
-            SaveManager.Instance.MarkDirty();
+        SaveManager.Instance?.MarkDirty();
     }
 }
