@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using Firebase.Database;
 using Firebase.Auth;
 
+// Firebase 기반 세이브/로드 및 자동 저장 관리
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
@@ -13,14 +14,17 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private float autoSaveInterval = 15f;
 
     private float autoSaveTimer;
-    private bool isDirty;
-    private bool hasLoadedInThisScene;
-    private bool isSaving;
+    private bool isDirty;              // 저장이 필요한 변경 사항 존재 여부
+    private bool hasLoadedInThisScene; // 씬당 중복 로드 방지 플래그
+    private bool isSaving;             // 동시 저장 방지 플래그
 
     private DatabaseReference dbRef;
     private Coroutine loadCoroutine;
 
+    // 현재 로그인된 유저 UID
     private string Uid => FirebaseAuth.DefaultInstance.CurrentUser?.UserId;
+
+    // Firebase 저장 경로
     private DatabaseReference SaveDataRef => dbRef.Child("players").Child(Uid).Child("saveData");
 
     private void Awake()
@@ -75,17 +79,18 @@ public class SaveManager : MonoBehaviour
             _ = SavePlayerSafe();
     }
 
+    // 씬 전환 시 호출 - Main 씬은 PlayerSpawner가 로드를 담당하므로 제외
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         hasLoadedInThisScene = false;
 
-        // Main 씬은 PlayerSpawner가 직접 로드 관리
         if (scene.name == "Main")
             return;
 
         RestartLoadCoroutine(LoadWhenReady());
     }
 
+    // 실행 중인 로드 코루틴을 중단하고 새 코루틴으로 교체
     private void RestartLoadCoroutine(IEnumerator routine)
     {
         if (loadCoroutine != null)
@@ -94,6 +99,7 @@ public class SaveManager : MonoBehaviour
         loadCoroutine = StartCoroutine(routine);
     }
 
+    // 필요한 매니저가 모두 준비될 때까지 대기 후 로드 (최대 5초)
     private IEnumerator LoadWhenReady()
     {
         float timer = 0f;
@@ -112,6 +118,7 @@ public class SaveManager : MonoBehaviour
         hasLoadedInThisScene = true;
     }
 
+    // 로드에 필요한 모든 매니저 인스턴스가 준비되었는지 확인
     private bool AreManagersReady()
     {
         return PlayerManager.Instance != null
@@ -122,15 +129,16 @@ public class SaveManager : MonoBehaviour
             && QuestManager.Instance != null;
     }
 
+    // 변경 사항 발생 시 외부에서 호출 - 다음 자동 저장 주기에 저장됨
     public void MarkDirty()
     {
         isDirty = true;
     }
 
+    // 동시 저장을 방지하는 안전한 저장 래퍼
     public async Task SavePlayerSafe()
     {
-        if (isSaving)
-            return;
+        if (isSaving) return;
 
         isSaving = true;
 
@@ -144,6 +152,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    // Firebase에 세이브 데이터를 JSON으로 직렬화하여 저장
     public async Task SavePlayer()
     {
         if (string.IsNullOrEmpty(Uid))
@@ -168,19 +177,20 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    // 각 매니저에서 세이브 데이터를 수집해 하나의 구조체로 조립
     private PlayerSaveData BuildSaveData()
     {
         PlayerSaveData saveData = new PlayerSaveData();
 
         if (PlayerManager.Instance != null)
         {
-            PlayerSaveData playerData = PlayerManager.Instance.GetSaveData();
-            if (playerData != null)
+            PlayerSaveData pd = PlayerManager.Instance.GetSaveData();
+            if (pd != null)
             {
-                saveData.level = playerData.level;
-                saveData.currentExp = playerData.currentExp;
-                saveData.currentHp = playerData.currentHp;
-                saveData.gold = playerData.gold;
+                saveData.level = pd.level;
+                saveData.currentExp = pd.currentExp;
+                saveData.currentHp = pd.currentHp;
+                saveData.gold = pd.gold;
             }
         }
 
@@ -202,6 +212,7 @@ public class SaveManager : MonoBehaviour
         return saveData;
     }
 
+    // Firebase에서 데이터를 읽어 각 매니저에 적용, 실패 시 기본값으로 초기화
     private IEnumerator LoadPlayerCoroutine()
     {
         if (string.IsNullOrEmpty(Uid))
@@ -245,41 +256,35 @@ public class SaveManager : MonoBehaviour
 
         ApplySaveData(saveData);
 
+        // 한 프레임 대기 후 UI 갱신 이벤트 강제 발행
         yield return null;
 
-        if (PlayerManager.Instance?.Stat != null)
-            PlayerManager.Instance.Stat.ForceNotify();
+        PlayerManager.Instance?.Stat?.ForceNotify();
 
         isDirty = false;
         Debug.Log("Firebase 불러오기 완료");
     }
 
+    // 세이브 데이터를 각 매니저에 순서대로 적용
     private void ApplySaveData(PlayerSaveData saveData)
     {
-        if (InventoryManager.Instance != null)
-            InventoryManager.Instance.LoadFromSaveData(saveData.inventoryItems);
+        InventoryManager.Instance?.LoadFromSaveData(saveData.inventoryItems);
+        EquipmentManager.Instance?.LoadFromSaveData(saveData.equipmentData);
+        PotionSlotManager.Instance?.LoadFromSaveData(saveData.potionSlot);
+        UpgradeManager.Instance?.LoadFromSaveData(saveData.upgradeData);
+        QuestManager.Instance?.LoadFromSaveData(saveData.questData);
 
-        if (EquipmentManager.Instance != null)
-            EquipmentManager.Instance.LoadFromSaveData(saveData.equipmentData);
-
-        if (PotionSlotManager.Instance != null)
-            PotionSlotManager.Instance.LoadFromSaveData(saveData.potionSlot);
-
-        if (UpgradeManager.Instance != null)
-            UpgradeManager.Instance.LoadFromSaveData(saveData.upgradeData);
-
-        if (QuestManager.Instance != null)
-            QuestManager.Instance.LoadFromSaveData(saveData.questData);
-
-        if (PlayerManager.Instance != null)
-            PlayerManager.Instance.LoadFromSaveData(saveData);
+        // 플레이어 스탯은 장비/업그레이드 적용 후 마지막에 로드
+        PlayerManager.Instance?.LoadFromSaveData(saveData);
     }
 
+    // 외부에서 수동으로 로드 시작 (예: 씬 전환 후 PlayerSpawner 호출)
     public void LoadPlayer()
     {
         RestartLoadCoroutine(LoadPlayerCoroutine());
     }
 
+    // Firebase 저장 데이터 삭제 후 전체 초기화
     public async Task DeleteSave()
     {
         if (!string.IsNullOrEmpty(Uid))
@@ -299,24 +304,14 @@ public class SaveManager : MonoBehaviour
         isDirty = false;
     }
 
+    // 모든 매니저를 기본값으로 초기화
     private void InitializeAll()
     {
-        if (PlayerManager.Instance != null)
-            PlayerManager.Instance.InitializePlayer();
-
-        if (InventoryManager.Instance != null)
-            InventoryManager.Instance.InitializeInventory();
-
-        if (EquipmentManager.Instance != null)
-            EquipmentManager.Instance.InitializeEquipment();
-
-        if (PotionSlotManager.Instance != null)
-            PotionSlotManager.Instance.InitializePotion();
-
-        if (UpgradeManager.Instance != null)
-            UpgradeManager.Instance.InitializeUpgrade();
-
-        if (QuestManager.Instance != null)
-            QuestManager.Instance.InitializeQuest();
+        PlayerManager.Instance?.InitializePlayer();
+        InventoryManager.Instance?.InitializeInventory();
+        EquipmentManager.Instance?.InitializeEquipment();
+        PotionSlotManager.Instance?.InitializePotion();
+        UpgradeManager.Instance?.InitializeUpgrade();
+        QuestManager.Instance?.InitializeQuest();
     }
 }
