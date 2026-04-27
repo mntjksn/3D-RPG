@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 상점 인벤 슬롯 UI 및 클릭 처리 담당
 public class ShopInventorySlotUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
@@ -18,16 +19,17 @@ public class ShopInventorySlotUI : MonoBehaviour
 
     private void Awake()
     {
-        if (button != null)
-            button.onClick.AddListener(OnClickSlot);
+        button?.onClick.AddListener(OnClickSlot);
     }
 
+    // 슬롯 인덱스 설정
     public void SetIndex(int index)
     {
         slotIndex = index;
         gameObject.name = $"ShopInventorySlot_{index}";
     }
 
+    // 슬롯 비우기
     public void SetEmpty()
     {
         slotIndex = -1;
@@ -40,10 +42,10 @@ public class ShopInventorySlotUI : MonoBehaviour
             iconImage.enabled = false;
         }
 
-        if (countText != null)
-            countText.text = string.Empty;
+        countText?.SetText(string.Empty);
     }
 
+    // 슬롯 아이템 설정
     public void SetItem(ItemData itemData, int count)
     {
         currentItemData = itemData;
@@ -55,10 +57,10 @@ public class ShopInventorySlotUI : MonoBehaviour
             iconImage.enabled = itemData != null && itemData.icon != null;
         }
 
-        if (countText != null)
-            countText.text = count > 1 ? count.ToString() : string.Empty;
+        countText?.SetText(count > 1 ? count.ToString() : string.Empty);
     }
 
+    // 슬롯 클릭 처리
     private void OnClickSlot()
     {
         if (slotIndex < 0 || currentItemData == null)
