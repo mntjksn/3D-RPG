@@ -4,13 +4,14 @@ using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyAI))]
+// 적 위치, 회전, 이동 속도 네트워크 동기화 담당
 public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
 {
-    private const byte POSITION_SYNC_EVENT = 70;
-    private const float syncInterval = 0.05f;
+    private const byte PositionSyncEvent = 70;
+    private const float SyncInterval = 0.05f;
 
     private EnemyAI enemyAI;
-    private float syncTimer = 0f;
+    private float syncTimer;
 
     private void Awake()
     {
@@ -27,14 +28,16 @@ public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
+    // 네트워크 이벤트 수신
     public void OnEvent(EventData photonEvent)
     {
         if (!enemyAI.IsInitialized) return;
-        if (photonEvent.Code != POSITION_SYNC_EVENT) return;
+        if (photonEvent.Code != PositionSyncEvent) return;
 
-        object[] data = (object[])photonEvent.CustomData;
+        object[] data = photonEvent.CustomData as object[];
+        if (data == null || data.Length < 4) return;
+
         int uniqueId = (int)data[0];
-
         if (uniqueId != enemyAI.UniqueId) return;
 
         Vector3 networkPosition = (Vector3)data[1];
@@ -44,6 +47,7 @@ public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
         enemyAI.ApplyNetworkState(networkPosition, networkRotation, networkMoveSpeed);
     }
 
+    // 현재 상태 전송
     public void TrySyncState(Vector3 position, Quaternion rotation, float moveSpeed)
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -52,9 +56,9 @@ public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
         syncTimer -= Time.deltaTime;
         if (syncTimer > 0f) return;
 
-        syncTimer = syncInterval;
+        syncTimer = SyncInterval;
 
-        object[] data = new object[]
+        object[] data =
         {
             enemyAI.UniqueId,
             position,
@@ -67,6 +71,6 @@ public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
             Receivers = ReceiverGroup.Others
         };
 
-        PhotonNetwork.RaiseEvent(POSITION_SYNC_EVENT, data, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent(PositionSyncEvent, data, options, SendOptions.SendUnreliable);
     }
 }
