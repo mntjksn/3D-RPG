@@ -1,6 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
+// 월드 드랍 설정, 회전 처리, 획득 처리 담당
 public class WorldDrop : MonoBehaviourPun
 {
     [Header("Visual")]
@@ -32,23 +33,19 @@ public class WorldDrop : MonoBehaviourPun
         iconRenderer.transform.rotation = mainCamera.transform.rotation;
     }
 
-    // 마스터가 생성 직후 호출
+    // 골드 드랍 정보 설정
     public void SetupGold(int gold, int ownerActorNumber)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
 
         photonView.RPC(nameof(RPC_SetupGold), RpcTarget.AllBuffered, gold, ownerActorNumber);
     }
 
-    // 마스터가 생성 직후 호출
+    // 아이템 드랍 정보 설정
     public void SetupItem(ItemData item, int itemAmount, int ownerActorNumber)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        if (item == null || itemAmount <= 0)
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (item == null || itemAmount <= 0) return;
 
         photonView.RPC(nameof(RPC_SetupItem), RpcTarget.AllBuffered, item.itemId, itemAmount, ownerActorNumber);
     }
@@ -71,8 +68,6 @@ public class WorldDrop : MonoBehaviourPun
         goldAmount = 0;
         allowedActorNumber = ownerActorNumber;
 
-        // 여기 함수명은 네 프로젝트에 맞게 맞춰줘
-        // 예: InventoryManager.Instance.GetItemData(itemId)
         itemData = InventoryManager.Instance != null
             ? InventoryManager.Instance.GetItemData(itemId)
             : null;
@@ -83,34 +78,26 @@ public class WorldDrop : MonoBehaviourPun
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
-        if (isPicked)
-            return;
-
-        if (!other.CompareTag("Player"))
-            return;
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (isPicked) return;
+        if (!other.CompareTag("Player")) return;
 
         PhotonView playerView = other.GetComponent<PhotonView>();
-        if (playerView == null)
-            return;
+        if (playerView == null) return;
 
         int actorNumber = playerView.OwnerActorNr;
 
-        // 잡은 사람만 획득 가능
-        if (actorNumber != allowedActorNumber)
-            return;
+        // 지정된 플레이어만 획득 가능
+        if (actorNumber != allowedActorNumber) return;
 
         isPicked = true;
-
         photonView.RPC(nameof(RPC_Pickup), RpcTarget.All, actorNumber);
     }
 
     [PunRPC]
     private void RPC_Pickup(int actorNumber)
     {
-        // 먹을 수 있는 플레이어 본인 클라에서만 지급
+        // 대상 플레이어 본인 클라에서만 보상 지급
         if (PhotonNetwork.LocalPlayer.ActorNumber == actorNumber)
         {
             if (goldAmount > 0)
@@ -125,7 +112,6 @@ public class WorldDrop : MonoBehaviourPun
 
                 if (itemData != null)
                 {
-                    Debug.Log($"아이템 획득: {itemData.itemName} x{amount}");
                     InventoryManager.Instance?.AddItem(itemData, amount);
                     QuestService.NotifyCollectItem(itemData.itemName, amount);
                     SoundManager.Instance?.PlaySFX(SfxType.ItemPickup);
