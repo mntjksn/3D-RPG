@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// NPC 상호작용 - 범위 진입 시 UI 표시, F 키로 패널 오픈
 public class NPCInteraction : MonoBehaviour
 {
     [Header("Open Panel")]
@@ -12,50 +13,42 @@ public class NPCInteraction : MonoBehaviour
 
     private void Start()
     {
-        if (interactUI != null)
-            interactUI.SetActive(false);
+        // 시작 시 UI 숨김
+        interactUI?.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player"))
-            return;
+        if (!other.CompareTag("Player")) return;
 
         playerInRange = true;
-
-        if (interactUI != null)
-            interactUI.SetActive(true);
+        interactUI?.SetActive(true);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player"))
-            return;
+        if (!other.CompareTag("Player")) return;
 
         playerInRange = false;
-
-        if (interactUI != null)
-            interactUI.SetActive(false);
+        interactUI?.SetActive(false);
     }
 
     private void Update()
     {
-        if (!playerInRange)
-            return;
+        if (!playerInRange) return;
 
+        // F 키로 상호작용
         if (Input.GetKeyDown(KeyCode.F))
             Interact();
     }
 
+    // UI 패널 열기 시도
     private void Interact()
     {
-        if (UIManager.Instance == null)
-            return;
+        if (UIManager.Instance == null) return;
 
-        SoundManager.Instance.PlaySFX(SfxType.Interaction);
-        bool opened = UIManager.Instance.TryOpenPanel(panelType);
+        SoundManager.Instance?.PlaySFX(SfxType.Interaction);
 
-        if (!opened)
-            Debug.Log("이미 다른 창이 열려 있음");
+        UIManager.Instance.TryOpenPanel(panelType);
     }
 }
