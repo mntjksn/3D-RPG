@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 상점 패널 열기, 거래 팝업, UI 갱신 담당
 public class ShopPanelUI : MonoBehaviour
 {
     public static ShopPanelUI Instance { get; private set; }
@@ -17,6 +18,7 @@ public class ShopPanelUI : MonoBehaviour
 
     private void Awake()
     {
+        // 싱글톤 설정
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -38,6 +40,7 @@ public class ShopPanelUI : MonoBehaviour
 
     private IEnumerator InitAndOpen()
     {
+        // PlayerStat 준비될 때까지 대기
         yield return new WaitUntil(() =>
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
@@ -45,7 +48,10 @@ public class ShopPanelUI : MonoBehaviour
         playerStat = PlayerManager.Instance.Stat;
 
         if (ShopManager.Instance != null)
+        {
+            ShopManager.Instance.OnTradeSuccess -= RefreshAllUI;
             ShopManager.Instance.OnTradeSuccess += RefreshAllUI;
+        }
 
         RefreshAllUI();
     }
@@ -56,46 +62,37 @@ public class ShopPanelUI : MonoBehaviour
             ShopManager.Instance.OnTradeSuccess -= RefreshAllUI;
     }
 
+    // 버튼 이벤트 연결
     private void BindButtons()
     {
-        if (closeButton != null)
-            closeButton.onClick.AddListener(CloseShop);
+        closeButton?.onClick.AddListener(CloseShop);
     }
 
+    // 상점 슬롯 클릭 처리
     public void OnClickShopSlot(ShopSlotUI slotUI)
     {
-        if (slotUI == null)
-            return;
+        if (slotUI == null) return;
 
         ItemData itemData = slotUI.CurrentItemData;
-        if (itemData == null)
-            return;
+        if (itemData == null) return;
 
         int maxBuyCount = ShopService.GetMaxBuyCount(itemData, playerStat);
-
-        Debug.Log($"상점 슬롯 클릭: {itemData.itemName} / 최대 구매 가능 수량: {maxBuyCount}");
-
-        if (tradePopupUI != null)
-            tradePopupUI.OpenBuy(itemData, slotUI.SlotIndex, maxBuyCount);
+        tradePopupUI?.OpenBuy(itemData, slotUI.SlotIndex, maxBuyCount);
     }
 
+    // 인벤 슬롯 클릭 처리
     public void OnClickShopInventorySlot(ShopInventorySlotUI slotUI)
     {
-        if (slotUI == null)
-            return;
+        if (slotUI == null) return;
 
         ItemData itemData = slotUI.CurrentItemData;
-        if (itemData == null)
-            return;
+        if (itemData == null) return;
 
         int ownedCount = slotUI.CurrentCount;
-
-        Debug.Log($"인벤토리 슬롯 클릭: {itemData.itemName} / 보유 수량: {ownedCount}");
-
-        if (tradePopupUI != null)
-            tradePopupUI.OpenSell(itemData, slotUI.SlotIndex, ownedCount);
+        tradePopupUI?.OpenSell(itemData, slotUI.SlotIndex, ownedCount);
     }
 
+    // 구매 확정
     public void ConfirmBuy(int shopSlotIndex, int quantity)
     {
         bool success = ShopService.TryBuy(shopSlotIndex, quantity, shopUI, playerStat);
@@ -104,6 +101,7 @@ public class ShopPanelUI : MonoBehaviour
             RefreshAllUI();
     }
 
+    // 판매 확정
     public void ConfirmSell(int inventorySlotIndex, int quantity)
     {
         bool success = ShopService.TrySell(inventorySlotIndex, quantity, playerStat);
@@ -112,18 +110,16 @@ public class ShopPanelUI : MonoBehaviour
             RefreshAllUI();
     }
 
+    // 상점 UI 전체 갱신
     public void RefreshAllUI()
     {
-        if (shopUI != null)
-            shopUI.RefreshUI();
-
-        if (shopInventoryUI != null)
-            shopInventoryUI.RefreshUI();
+        shopUI?.RefreshUI();
+        shopInventoryUI?.RefreshUI();
     }
 
+    // 상점 닫기
     public void CloseShop()
     {
-        if (shopPanel != null)
-            UIManager.Instance.ClosePanel(UIPanelType.Shop);
+        UIManager.Instance?.ClosePanel(UIPanelType.Shop);
     }
 }
