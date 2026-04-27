@@ -4,11 +4,12 @@ using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyHealth))]
+// 적 체력 관련 데미지, 회복 네트워크 동기화 담당
 public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
 {
-    private const byte DAMAGE_REQUEST_EVENT = 60;
-    private const byte DAMAGE_APPLY_EVENT = 61;
-    private const byte HEAL_SYNC_EVENT = 62;
+    private const byte DamageRequestEvent = 60;
+    private const byte DamageApplyEvent = 61;
+    private const byte HealSyncEvent = 62;
 
     private EnemyHealth health;
 
@@ -27,9 +28,10 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
+    // 마스터에게 데미지 요청
     public void RequestDamage(float damage, int attackerActorNumber)
     {
-        object[] data = new object[]
+        object[] data =
         {
             health.UniqueId,
             damage,
@@ -37,16 +39,17 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         };
 
         PhotonNetwork.RaiseEvent(
-            DAMAGE_REQUEST_EVENT,
+            DamageRequestEvent,
             data,
             new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
             SendOptions.SendReliable
         );
     }
 
+    // 전체 클라에 데미지 적용 브로드캐스트
     public void BroadcastDamage(float damage, int attackerActorNumber)
     {
-        object[] data = new object[]
+        object[] data =
         {
             health.UniqueId,
             damage,
@@ -54,38 +57,42 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         };
 
         PhotonNetwork.RaiseEvent(
-            DAMAGE_APPLY_EVENT,
+            DamageApplyEvent,
             data,
             new RaiseEventOptions { Receivers = ReceiverGroup.All },
             SendOptions.SendReliable
         );
     }
 
+    // 다른 클라에 회복 동기화
     public void BroadcastHeal(float hp)
     {
-        object[] data = new object[]
+        object[] data =
         {
             health.UniqueId,
             hp
         };
 
         PhotonNetwork.RaiseEvent(
-            HEAL_SYNC_EVENT,
+            HealSyncEvent,
             data,
             new RaiseEventOptions { Receivers = ReceiverGroup.Others },
             SendOptions.SendUnreliable
         );
     }
 
+    // 네트워크 이벤트 수신
     public void OnEvent(EventData photonEvent)
     {
         if (!health.IsInitialized) return;
 
-        if (photonEvent.Code == DAMAGE_REQUEST_EVENT)
+        if (photonEvent.Code == DamageRequestEvent)
         {
             if (!PhotonNetwork.IsMasterClient) return;
 
-            object[] data = (object[])photonEvent.CustomData;
+            object[] data = photonEvent.CustomData as object[];
+            if (data == null || data.Length < 3) return;
+
             int id = (int)data[0];
             float damage = (float)data[1];
             int attackerActorNumber = (int)data[2];
@@ -93,10 +100,14 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
             if (id != health.UniqueId) return;
 
             health.TakeDamage(damage, attackerActorNumber);
+            return;
         }
-        else if (photonEvent.Code == DAMAGE_APPLY_EVENT)
+
+        if (photonEvent.Code == DamageApplyEvent)
         {
-            object[] data = (object[])photonEvent.CustomData;
+            object[] data = photonEvent.CustomData as object[];
+            if (data == null || data.Length < 3) return;
+
             int id = (int)data[0];
             float damage = (float)data[1];
             int attackerActorNumber = (int)data[2];
@@ -104,10 +115,14 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
             if (id != health.UniqueId) return;
 
             health.ApplyDamage(damage, attackerActorNumber);
+            return;
         }
-        else if (photonEvent.Code == HEAL_SYNC_EVENT)
+
+        if (photonEvent.Code == HealSyncEvent)
         {
-            object[] data = (object[])photonEvent.CustomData;
+            object[] data = photonEvent.CustomData as object[];
+            if (data == null || data.Length < 2) return;
+
             int id = (int)data[0];
             float hp = (float)data[1];
 
