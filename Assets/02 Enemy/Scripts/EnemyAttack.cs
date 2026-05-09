@@ -14,6 +14,9 @@ public class EnemyAttack : MonoBehaviour
     private float attackCooldownTimer;
     private bool isAttacking;
 
+    // 캐싱된 플레이어 목록 (RefreshCachedPlayers 호출 시 갱신)
+    private PlayerHealth[] cachedPlayers;
+
     private int mySpawnerIndex = -1;
     private int myPoolIndex = -1;
     private bool isInitialized = false;
@@ -44,9 +47,16 @@ public class EnemyAttack : MonoBehaviour
         attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - Time.deltaTime);
     }
 
+    // 타겟만 변경 (캐싱은 별도로 처리)
     public void SetTarget(Transform targetTransform)
     {
         target = targetTransform;
+    }
+
+    // 씬 내 PlayerHealth를 캐싱 - 초기화 시 및 플레이어 입장/퇴장 시 호출
+    public void RefreshCachedPlayers()
+    {
+        cachedPlayers = FindObjectsOfType<PlayerHealth>();
     }
 
     // 스포너/풀 인덱스 포함 전체 초기화용 오버로드
@@ -136,17 +146,16 @@ public class EnemyAttack : MonoBehaviour
         return distance <= enemyData.attackRange + 0.5f;
     }
 
-    // 공격 범위 내 모든 플레이어에게 RPC로 피해 전달 (방어력 감소 적용)
+    // 캐싱된 플레이어 목록 기반으로 피해 적용 (방어력 감소 포함)
     private void ApplyDamage()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if (cachedPlayers == null) return;
 
-        foreach (GameObject playerObj in players)
+        foreach (PlayerHealth playerHealth in cachedPlayers)
         {
-            PlayerHealth playerHealth = playerObj.GetComponent<PlayerHealth>();
             if (playerHealth == null) continue;
 
-            float dist = Vector3.Distance(transform.position, playerObj.transform.position);
+            float dist = Vector3.Distance(transform.position, playerHealth.transform.position);
             if (dist > enemyData.attackRange + 0.5f) continue;
 
             float finalDamage = playerHealth.ModifyIncomingDamage(transform, enemyData.attackDamage);

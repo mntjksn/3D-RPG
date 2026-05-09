@@ -85,17 +85,18 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         Debug.LogError($"방 입장 실패: {message}");
     }
 
-    // 새 플레이어 입장 시 해당 플레이어에게 캔버스 부착
+    // 새 플레이어 입장 시 캔버스 부착 및 EnemyAttack 캐시 갱신
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         StartCoroutine(AttachCanvasToNewPlayerRoutine(newPlayer));
+        RefreshEnemyAttackCache();
     }
 
     public override void OnLeftRoom() => spawned = false;
 
     public override void OnDisconnected(DisconnectCause cause) => spawned = false;
 
-    // 플레이어 퇴장 시 해당 캔버스 제거
+    // 플레이어 퇴장 시 캔버스 제거 및 EnemyAttack 캐시 갱신
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         int actorNumber = otherPlayer.ActorNumber;
@@ -107,6 +108,8 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
             canvasByActorNumber.Remove(actorNumber);
         }
+
+        RefreshEnemyAttackCache();
     }
 
     private void OnDestroy()
@@ -240,5 +243,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
         if (healthBar != null && playerHealth != null)
             playerHealth.SetHealthBar(healthBar);
+    }
+
+    // 플레이어 입장/퇴장 시 모든 EnemyAttack의 캐시 갱신
+    private void RefreshEnemyAttackCache()
+    {
+        foreach (EnemyAttack enemyAttack in FindObjectsOfType<EnemyAttack>())
+            enemyAttack.RefreshCachedPlayers();
     }
 }

@@ -370,6 +370,7 @@ public class EnemyAI : MonoBehaviour
         enemyAnimation?.SetMoveSpeed(0f);
         enemyAttack?.SetData(enemyData, mySpawnerIndex, myPoolIndex);
         enemyAttack?.SetTarget(target);
+        enemyAttack?.RefreshCachedPlayers(); // 초기화 시 한 번 캐싱
     }
 
     // 순찰 처리 - 대기 후 랜덤 위치로 이동 반복
