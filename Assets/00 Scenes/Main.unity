@@ -19139,7 +19139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &426972547
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20985,7 +20985,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2818462253c08b41ad4ebc677f66e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closePanel: {fileID: 1105217897}
   slotPrefab: {fileID: 1588096563561756189, guid: 1957e93c43fa6d04cb1eebfeda0dee73, type: 3}
   slotParent: {fileID: 467149763}
   slotCount: 20
@@ -36705,7 +36704,6 @@ MonoBehaviour:
   regenSlotUI: {fileID: 1354625335}
   upgradeInventoryUI: {fileID: 933299727}
   closeButton: {fileID: 937657779}
-  upgradePanel: {fileID: 790956656}
   attackData: {fileID: 11400000, guid: dc883be3643f147489332905c8750a0e, type: 2}
   hpData: {fileID: 11400000, guid: f9b50eb05cb67c545abc267c020b1020, type: 2}
   regenData: {fileID: 11400000, guid: b3231ff0e2d58ef4897596412eb43a1a, type: 2}
@@ -84028,7 +84026,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingRoot: {fileID: 1855849638}
-  explanationRoot: {fileID: 0}
   bgmSlider: {fileID: 1688812346}
   sfxSlider: {fileID: 662279305}
 --- !u!1 &1857292220
