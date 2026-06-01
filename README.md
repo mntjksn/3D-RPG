@@ -36,7 +36,7 @@ YouTube Link : -
 - 데이터와 로직을 분리하여 새로운 아이템이나 퀘스트를 추가할 때 코드 수정 부담을 줄였습니다.
 ### 3. 3D 환경 성능 최적화
 - 3D 오브젝트와 이펙트가 늘어나면서 발생할 수 있는 렌더링 부하를 줄이기 위해 최적화를 진행했습니다.
-- `Static 설정, Occlusion Culling, LOD, Sprite Atlas`를 적용하여 불필요한 렌더링 비용을 줄였습니다.
+- `Object Pool, Static 설정, Occlusion Culling, LOD, Sprite Atlas`등을 적용하여 불필요한 렌더링 비용을 줄였습니다.
 - `Profiler`를 활용해 성능 병목 구간을 확인하며 3D 환경에서 더 안정적인 플레이가 가능하도록 개선했습니다.
 
 ## 회고
@@ -44,6 +44,6 @@ YouTube Link : -
 `Photon`을 활용해 `Master Client` 기준으로 주요 상태를 관리하고, `Late Join` 상황까지 고려하면서 멀티플레이 동기화 구조의 중요성을 경험했습니다.
 
 또한 캐릭터, 아이템, 퀘스트 데이터를 `ScriptableObject`와 `JSON`으로 분리하며 기능 확장에 유리한 데이터 구조를 고민할 수 있었습니다.  
-3D 환경에서는 `Profiler`를 통해 렌더링 비용을 확인하고, `Static 설정, Occlusion Culling, LOD, Sprite Atlas` 등을 적용하며 성능 최적화 흐름을 익혔습니다.
+3D 환경에서는 `Profiler`를 통해 렌더링 비용을 확인하고, `Object Pool, Static 설정, Occlusion Culling, LOD, Sprite Atlas` 등을 적용하며 성능 최적화 흐름을 익혔습니다.
 
 마지막으로 `Jenkins` 자동 빌드 환경을 구성하면서 반복적인 수동 빌드 과정을 줄이고, 프로젝트 수정 사항을 더 안정적으로 빌드에 반영하는 경험을 했습니다.
