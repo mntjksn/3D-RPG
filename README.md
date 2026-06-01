@@ -1,9 +1,9 @@
 # 3D-RPG
-Unity 기반 3D RPG 멀티플레이 게임입니다.
-Photon을 활용해 멀티플레이 환경을 구현했으며, ScriptableObject와 JSON으로 게임 데이터를 분리 관리했습니다.
-Firebase로 유저 인증 및 데이터 저장을 처리하고, Jenkins 자동 빌드 환경을 구성해 빌드 과정을 안정적으로 관리했습니다.
+Unity 기반 3D RPG 멀티플레이 게임입니다.  
+Photon을 활용해 멀티플레이 환경을 구현했으며, ScriptableObject와 JSON으로 게임 데이터를 분리 관리했습니다.  
+Firebase로 유저 인증 및 데이터 저장을 처리하고, Jenkins 자동 빌드 환경을 구성해 빌드 과정을 안정적으로 관리했습니다.  
 
-YouTube Link : -
+YouTube Link : -  
 Notion Link : -
 
 ## 프로젝트 개요
