@@ -9,7 +9,7 @@ Notion Link : -
 ## 프로젝트 개요
 - 개발 환경 : Unity 3D
 - 사용 언어 : C#
-- 개발 기간 : 2026년 02월 ~ 2026년 04월
+- 개발 기간 : 2026.02 ~ 2026.04
 - 개발 인원 : 1인 (개인 프로젝트)
 - 플랫폼 : PC (Window)
 - 기술 스택 : Photon PUN2 · Firebase · Jenkins · ScriptableObject · JSON
