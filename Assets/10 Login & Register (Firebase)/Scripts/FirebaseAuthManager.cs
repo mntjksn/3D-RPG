@@ -40,7 +40,6 @@ public class FirebaseAuthManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        // 정상 종료 시 오프라인 처리 시도
         SetOnlineStatus(false);
     }
 
@@ -100,7 +99,6 @@ public class FirebaseAuthManager : MonoBehaviour
             var result = await auth.SignInWithEmailAndPasswordAsync(email, password);
             user = result.User;
 
-            // 중복 로그인 체크
             bool isAlreadyOnline = await IsUserOnline(user.UserId);
             if (isAlreadyOnline)
             {
@@ -110,7 +108,6 @@ public class FirebaseAuthManager : MonoBehaviour
                 return;
             }
 
-            // 새 세션 발급 후 온라인 상태 저장
             currentSessionId = Guid.NewGuid().ToString("N");
             await SetOnlineStatusAsync(true);
 
@@ -142,7 +139,6 @@ public class FirebaseAuthManager : MonoBehaviour
 
             object rawValue = snapshot.Value;
 
-            // 예전 bool 저장 방식도 호환
             if (rawValue is bool boolValue)
                 return boolValue;
 
@@ -159,9 +155,7 @@ public class FirebaseAuthManager : MonoBehaviour
                     : 0;
 
                 long nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                bool isExpired = nowMs - lastActiveAt > OnlineTimeoutMs;
-
-                return !isExpired;
+                return nowMs - lastActiveAt <= OnlineTimeoutMs;
             }
 
             return false;
@@ -180,6 +174,8 @@ public class FirebaseAuthManager : MonoBehaviour
 
         try
         {
+            var userRef = dbRef.Child("online_users").Child(user.UserId);
+
             Dictionary<string, object> data = new Dictionary<string, object>
             {
                 { "isOnline", isOnline },
@@ -187,7 +183,24 @@ public class FirebaseAuthManager : MonoBehaviour
                 { "lastActiveAt", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() }
             };
 
-            await dbRef.Child("online_users").Child(user.UserId).SetValueAsync(data);
+            await userRef.SetValueAsync(data);
+
+            if (isOnline)
+            {
+                // OnDisconnect는 SetValue 사용 (Unity Firebase SDK)
+                Dictionary<string, object> offlineData = new Dictionary<string, object>
+                {
+                    { "isOnline", false },
+                    { "sessionId", string.Empty },
+                    { "lastActiveAt", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() }
+                };
+
+                await userRef.OnDisconnect().SetValue(offlineData);
+            }
+            else
+            {
+                await userRef.OnDisconnect().Cancel();
+            }
         }
         catch (Exception e)
         {
@@ -251,7 +264,6 @@ public class FirebaseAuthManager : MonoBehaviour
 
         try
         {
-            // 닉네임 중복 확인
             var snapshot = await dbRef.Child("nicknames").Child(nickname).GetValueAsync();
             if (snapshot.Exists)
             {
@@ -287,32 +299,18 @@ public class FirebaseAuthManager : MonoBehaviour
 
     private bool ConvertToBool(object value)
     {
-        if (value == null)
-            return false;
-
-        if (value is bool boolValue)
-            return boolValue;
-
-        if (bool.TryParse(value.ToString(), out bool parsed))
-            return parsed;
-
+        if (value == null) return false;
+        if (value is bool b) return b;
+        if (bool.TryParse(value.ToString(), out bool parsed)) return parsed;
         return false;
     }
 
     private long ConvertToLong(object value)
     {
-        if (value == null)
-            return 0;
-
-        if (value is long longValue)
-            return longValue;
-
-        if (value is int intValue)
-            return intValue;
-
-        if (long.TryParse(value.ToString(), out long parsed))
-            return parsed;
-
+        if (value == null) return 0;
+        if (value is long l) return l;
+        if (value is int i) return i;
+        if (long.TryParse(value.ToString(), out long parsed)) return parsed;
         return 0;
     }
 
@@ -336,8 +334,7 @@ public class FirebaseAuthManager : MonoBehaviour
                 case AuthError.WrongPassword: return "비밀번호 오류";
                 case AuthError.UserNotFound: return "계정 없음";
                 case AuthError.NetworkRequestFailed: return "네트워크 오류";
-                default:
-                    return "로그인 오류";
+                default: return "로그인 오류";
             }
         }
 
