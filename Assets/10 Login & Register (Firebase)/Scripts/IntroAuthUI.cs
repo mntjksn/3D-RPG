@@ -169,6 +169,14 @@ public class IntroAuthUI : MonoBehaviour
 
             nicknamePanel?.SetActive(false);
 
+            // 이미 Photon 연결됐으면 재연결 하지 않음
+            if (PhotonNetwork.IsConnected)
+            {
+                ShowMessage("연결 완료");
+                SetStartButtonInteractable(true);
+                return;
+            }
+
             ShowMessage("서버 연결 중...");
             SetStartButtonInteractable(false);
 

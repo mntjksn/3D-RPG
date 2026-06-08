@@ -243,23 +243,36 @@ public class FirebaseAuthManager : MonoBehaviour
     // 닉네임 설정
     public async Task SetNickname(string nickname, Action<bool, string> callback)
     {
-        // 닉네임 중복 확인
-        var snapshot = await dbRef.Child("nicknames").Child(nickname).GetValueAsync();
-        if (snapshot.Exists)
+        if (user == null || dbRef == null)
         {
-            callback?.Invoke(false, "이미 사용 중인 닉네임입니다.");
+            callback?.Invoke(false, "초기화 오류");
             return;
         }
 
-        UserProfile profile = new UserProfile { DisplayName = nickname };
-        await user.UpdateUserProfileAsync(profile);
-        await user.ReloadAsync();
+        try
+        {
+            // 닉네임 중복 확인
+            var snapshot = await dbRef.Child("nicknames").Child(nickname).GetValueAsync();
+            if (snapshot.Exists)
+            {
+                callback?.Invoke(false, "이미 사용 중인 닉네임입니다.");
+                return;
+            }
 
-        // DB에 닉네임 등록
-        await dbRef.Child("nicknames").Child(nickname).SetValueAsync(user.UserId);
+            UserProfile profile = new UserProfile { DisplayName = nickname };
+            await user.UpdateUserProfileAsync(profile);
+            await user.ReloadAsync();
 
-        user = auth.CurrentUser;
-        callback?.Invoke(true, "닉네임 설정 완료");
+            await dbRef.Child("nicknames").Child(nickname).SetValueAsync(user.UserId);
+
+            user = auth.CurrentUser;
+            callback?.Invoke(true, "닉네임 설정 완료");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"SetNickname Error: {e}");
+            callback?.Invoke(false, "닉네임 저장 실패: " + e.Message);
+        }
     }
 
     public string GetNickname()
