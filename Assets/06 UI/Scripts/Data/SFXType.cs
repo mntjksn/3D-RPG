@@ -1,4 +1,4 @@
-// È¿°úÀ½ Á¾·ù
+// íš¨ê³¼ìŒ ì¢…ë¥˜
 public enum SfxType
 {
     None = 0,

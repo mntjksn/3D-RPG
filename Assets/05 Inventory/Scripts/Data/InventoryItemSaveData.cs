@@ -1,10 +1,10 @@
 using System;
 
-// ÀÎº¥Åä¸® ½½·Ô ÀúÀå µ¥ÀÌÅÍ
+// ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ì €ì¥ ë°ì´í„°
 [Serializable]
 public class InventoryItemSaveData
 {
-    public int slotIndex;   // ½½·Ô À§Ä¡
-    public string itemId;   // ¾ÆÀÌÅÛ ID
-    public int amount;      // ¼ö·®
+    public int slotIndex;   // ìŠ¬ë¡¯ ìœ„ì¹˜
+    public string itemId;   // ì•„ì´í…œ ID
+    public int amount;      // ìˆ˜ëŸ‰
 }

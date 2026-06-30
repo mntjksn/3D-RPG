@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-// Àû °ø°İ Ã³¸® - ¸¶½ºÅÍ Å¬¶óÀÌ¾ğÆ®¿¡¼­ °ø°İ ÆÇÁ¤ ¹× ÇÇÇØ Àû¿ë
+// ì  ê³µê²© ì²˜ë¦¬ - ë§ˆìŠ¤í„° í´ë¼ì´ì–¸íŠ¸ì—ì„œ ê³µê²© íŒì • ë° í”¼í•´ ì ìš©
 public class EnemyAttack : MonoBehaviour
 {
     [SerializeField] private EnemyData enemyData;
@@ -14,7 +14,7 @@ public class EnemyAttack : MonoBehaviour
     private float attackCooldownTimer;
     private bool isAttacking;
 
-    // Ä³½ÌµÈ ÇÃ·¹ÀÌ¾î ¸ñ·Ï (RefreshCachedPlayers È£Ãâ ½Ã °»½Å)
+    // ìºì‹±ëœ í”Œë ˆì´ì–´ ëª©ë¡ (RefreshCachedPlayers í˜¸ì¶œ ì‹œ ê°±ì‹ )
     private PlayerHealth[] cachedPlayers;
 
     private int mySpawnerIndex = -1;
@@ -26,7 +26,7 @@ public class EnemyAttack : MonoBehaviour
     public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex;
     public bool IsInitialized => isInitialized;
 
-    // Äğ´Ù¿îÀÌ ³¡³ª°í °ø°İ ÁßÀÌ ¾Æ´Ò ¶§¸¸ true
+    // ì¿¨ë‹¤ìš´ì´ ëë‚˜ê³  ê³µê²© ì¤‘ì´ ì•„ë‹ ë•Œë§Œ true
     public bool CanAttack => attackCooldownTimer <= 0f && !isAttacking;
     public bool IsAttacking => isAttacking;
 
@@ -47,19 +47,19 @@ public class EnemyAttack : MonoBehaviour
         attackCooldownTimer = Mathf.Max(0f, attackCooldownTimer - Time.deltaTime);
     }
 
-    // Å¸°Ù¸¸ º¯°æ (Ä³½ÌÀº º°µµ·Î Ã³¸®)
+    // íƒ€ê²Ÿë§Œ ë³€ê²½ (ìºì‹±ì€ ë³„ë„ë¡œ ì²˜ë¦¬)
     public void SetTarget(Transform targetTransform)
     {
         target = targetTransform;
     }
 
-    // ¾À ³» PlayerHealth¸¦ Ä³½Ì - ÃÊ±âÈ­ ½Ã ¹× ÇÃ·¹ÀÌ¾î ÀÔÀå/ÅğÀå ½Ã È£Ãâ
+    // ì”¬ ë‚´ PlayerHealthë¥¼ ìºì‹± - ì´ˆê¸°í™” ì‹œ ë° í”Œë ˆì´ì–´ ì…ì¥/í‡´ì¥ ì‹œ í˜¸ì¶œ
     public void RefreshCachedPlayers()
     {
         cachedPlayers = FindObjectsOfType<PlayerHealth>();
     }
 
-    // ½ºÆ÷³Ê/Ç® ÀÎµ¦½º Æ÷ÇÔ ÀüÃ¼ ÃÊ±âÈ­¿ë ¿À¹ö·Îµå
+    // ìŠ¤í¬ë„ˆ/í’€ ì¸ë±ìŠ¤ í¬í•¨ ì „ì²´ ì´ˆê¸°í™”ìš© ì˜¤ë²„ë¡œë“œ
     public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;
@@ -68,13 +68,13 @@ public class EnemyAttack : MonoBehaviour
         isInitialized = true;
     }
 
-    // µ¥ÀÌÅÍ¸¸ °»½ÅÇÏ´Â °£´ÜÇÑ ¿À¹ö·Îµå
+    // ë°ì´í„°ë§Œ ê°±ì‹ í•˜ëŠ” ê°„ë‹¨í•œ ì˜¤ë²„ë¡œë“œ
     public void SetData(EnemyData data)
     {
         enemyData = data;
     }
 
-    // °ø°İ »óÅÂ ÃÊ±âÈ­ (ºÎÈ°/Ç® ¹İÈ¯ ½Ã È£Ãâ)
+    // ê³µê²© ìƒíƒœ ì´ˆê¸°í™” (ë¶€í™œ/í’€ ë°˜í™˜ ì‹œ í˜¸ì¶œ)
     public void ResetAttackState()
     {
         attackCooldownTimer = 0f;
@@ -82,7 +82,7 @@ public class EnemyAttack : MonoBehaviour
         enemyActionLock?.SetAttack(false);
     }
 
-    // ¸¶½ºÅÍ Å¬¶óÀÌ¾ğÆ®¿¡¼­ °ø°İ ½Ãµµ (EnemyAI¿¡¼­ È£Ãâ)
+    // ë§ˆìŠ¤í„° í´ë¼ì´ì–¸íŠ¸ì—ì„œ ê³µê²© ì‹œë„ (EnemyAIì—ì„œ í˜¸ì¶œ)
     public void TryAttack()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -92,7 +92,7 @@ public class EnemyAttack : MonoBehaviour
         StartAttack();
     }
 
-    // Çàµ¿ Àá±İ ¿©ºÎ, Äğ´Ù¿î, Å¸°Ù À¯È¿¼º ¸ğµÎ È®ÀÎ
+    // í–‰ë™ ì ê¸ˆ ì—¬ë¶€, ì¿¨ë‹¤ìš´, íƒ€ê²Ÿ ìœ íš¨ì„± ëª¨ë‘ í™•ì¸
     private bool CanStartAttack()
     {
         if (enemyActionLock != null && !enemyActionLock.CanAttack)
@@ -101,7 +101,7 @@ public class EnemyAttack : MonoBehaviour
         return CanAttack && target != null && enemyData != null;
     }
 
-    // °ø°İ ½ÃÀÛ - Äğ´Ù¿î ¼³Á¤ ¹× ÀüÃ¼ Å¬¶ó¿¡ ¾Ö´Ï¸ŞÀÌ¼Ç µ¿±âÈ­
+    // ê³µê²© ì‹œì‘ - ì¿¨ë‹¤ìš´ ì„¤ì • ë° ì „ì²´ í´ë¼ì— ì• ë‹ˆë©”ì´ì…˜ ë™ê¸°í™”
     private void StartAttack()
     {
         isAttacking = true;
@@ -110,20 +110,20 @@ public class EnemyAttack : MonoBehaviour
         networkSync?.BroadcastAttack();
     }
 
-    // ³×Æ®¿öÅ© µ¿±âÈ­¸¦ ÅëÇØ ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡¼­ È£ÃâµÊ
+    // ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™”ë¥¼ í†µí•´ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ì„œ í˜¸ì¶œë¨
     public void PlayAttackAnimation()
     {
         enemyAnimation?.PlayAttack();
     }
 
-    // Animation Event·Î È£Ãâ - °ø°İ Á¾·á
+    // Animation Eventë¡œ í˜¸ì¶œ - ê³µê²© ì¢…ë£Œ
     public void EndAttack()
     {
         isAttacking = false;
         enemyActionLock?.SetAttack(false);
     }
 
-    // Animation Event·Î È£Ãâ - °ø°İ ¹üÀ§ ³» ÇÃ·¹ÀÌ¾î¿¡°Ô ÇÇÇØ Àû¿ë
+    // Animation Eventë¡œ í˜¸ì¶œ - ê³µê²© ë²”ìœ„ ë‚´ í”Œë ˆì´ì–´ì—ê²Œ í”¼í•´ ì ìš©
     public void DealDamage()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -139,14 +139,14 @@ public class EnemyAttack : MonoBehaviour
         return target != null && enemyData != null;
     }
 
-    // Å¸°ÙÀÌ °ø°İ ¹üÀ§ + ¿©À¯°ª ÀÌ³»¿¡ ÀÖ´ÂÁö È®ÀÎ
+    // íƒ€ê²Ÿì´ ê³µê²© ë²”ìœ„ + ì—¬ìœ ê°’ ì´ë‚´ì— ìˆëŠ”ì§€ í™•ì¸
     private bool IsTargetInRange()
     {
         float distance = Vector3.Distance(transform.position, target.position);
         return distance <= enemyData.attackRange + 0.5f;
     }
 
-    // Ä³½ÌµÈ ÇÃ·¹ÀÌ¾î ¸ñ·Ï ±â¹İÀ¸·Î ÇÇÇØ Àû¿ë (¹æ¾î·Â °¨¼Ò Æ÷ÇÔ)
+    // ìºì‹±ëœ í”Œë ˆì´ì–´ ëª©ë¡ ê¸°ë°˜ìœ¼ë¡œ í”¼í•´ ì ìš© (ë°©ì–´ë ¥ ê°ì†Œ í¬í•¨)
     private void ApplyDamage()
     {
         if (cachedPlayers == null) return;

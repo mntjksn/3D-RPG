@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-// ¸¶¿ì½º ¿ìÅ¬¸¯À¸·Î ¹æ¾î »óÅÂ ÀüÈ¯, ¹üÀ§ ³» °ø°İÀÚ¸¸ ¸·À» ¼ö ÀÖÀ½
+// ë§ˆìš°ìŠ¤ ìš°í´ë¦­ìœ¼ë¡œ ë°©ì–´ ìƒíƒœ ì „í™˜, ë²”ìœ„ ë‚´ ê³µê²©ìë§Œ ë§‰ì„ ìˆ˜ ìˆìŒ
 public class PlayerShield : MonoBehaviourPun
 {
     private PlayerAnimation playerAnimation;
@@ -10,7 +10,7 @@ public class PlayerShield : MonoBehaviourPun
 
     private bool isShielding;
 
-    // ¹æ¾î ¹üÀ§ ³» Àû ·çÆ® Transform ¸ñ·Ï
+    // ë°©ì–´ ë²”ìœ„ ë‚´ ì  ë£¨íŠ¸ Transform ëª©ë¡
     private readonly HashSet<Transform> blockersInRange = new();
 
     public bool IsShielding => isShielding;
@@ -46,28 +46,28 @@ public class PlayerShield : MonoBehaviourPun
         }
     }
 
-    // ShieldTrigger¿¡¼­ È£Ãâ - ¹æ¾î °¡´É ´ë»ó µî·Ï
+    // ShieldTriggerì—ì„œ í˜¸ì¶œ - ë°©ì–´ ê°€ëŠ¥ ëŒ€ìƒ ë“±ë¡
     public void AddBlockTarget(Transform target)
     {
         if (!photonView.IsMine || target == null) return;
         blockersInRange.Add(target.root);
     }
 
-    // ShieldTrigger¿¡¼­ È£Ãâ - ¹æ¾î °¡´É ´ë»ó ÇØÁ¦
+    // ShieldTriggerì—ì„œ í˜¸ì¶œ - ë°©ì–´ ê°€ëŠ¥ ëŒ€ìƒ í•´ì œ
     public void RemoveBlockTarget(Transform target)
     {
         if (!photonView.IsMine || target == null) return;
         blockersInRange.Remove(target.root);
     }
 
-    // ¹æ¾î ÁßÀÌ°í °ø°İÀÚ°¡ ¹üÀ§ ³»¿¡ ÀÖÀ» ¶§¸¸ true ¹İÈ¯
+    // ë°©ì–´ ì¤‘ì´ê³  ê³µê²©ìê°€ ë²”ìœ„ ë‚´ì— ìˆì„ ë•Œë§Œ true ë°˜í™˜
     public bool CanBlock(Transform attacker)
     {
         if (!isShielding || attacker == null) return false;
         return blockersInRange.Contains(attacker.root);
     }
 
-    // »ç¸Á ¶Ç´Â ºÎÈ° ½Ã ¹æ¾î »óÅÂ ¿ÏÀü ÃÊ±âÈ­
+    // ì‚¬ë§ ë˜ëŠ” ë¶€í™œ ì‹œ ë°©ì–´ ìƒíƒœ ì™„ì „ ì´ˆê¸°í™”
     public void ResetShieldState()
     {
         if (!photonView.IsMine) return;

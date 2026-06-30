@@ -1,12 +1,12 @@
 using TMPro;
 using UnityEngine;
 
-// Äù½ºÆ® »óÅÂ¿¡ µû¶ó NPC ¸Ó¸® À§ ¸¶Å© Ç¥½Ã
+// í€˜ìŠ¤íŠ¸ ìƒíƒœì— ë”°ë¼ NPC ë¨¸ë¦¬ ìœ„ ë§ˆí¬ í‘œì‹œ
 public class QuestMarkView : MonoBehaviour
 {
     [SerializeField] private TMP_Text markText;
 
-    // »óÅÂ¿¡ µû¶ó ¸¶Å© º¯°æ
+    // ìƒíƒœì— ë”°ë¼ ë§ˆí¬ ë³€ê²½
     public void SetState(QuestMarkState state)
     {
         if (markText == null) return;
@@ -31,7 +31,7 @@ public class QuestMarkView : MonoBehaviour
         }
     }
 
-    // °øÅë ¸¶Å© Ã³¸®
+    // ê³µí†µ ë§ˆí¬ ì²˜ë¦¬
     private void SetMark(string text)
     {
         markText.gameObject.SetActive(true);

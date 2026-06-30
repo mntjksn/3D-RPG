@@ -1,6 +1,6 @@
 using UnityEditor;
 
-// jenkins ºôµå
+// jenkins ë¹Œë“œ
 public class BuildScript
 {
     public static void PerformBuild()

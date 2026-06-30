@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// »óÁ¡ ±¸¸Å, ÆÇ¸Å Ã³¸® ´ã´ç
+// ìƒì  êµ¬ë§¤, íŒë§¤ ì²˜ë¦¬ ë‹´ë‹¹
 public static class ShopService
 {
-    // ÃÖ´ë ±¸¸Å °¡´É ¼ö·® °è»ê
+    // ìµœëŒ€ êµ¬ë§¤ ê°€ëŠ¥ ìˆ˜ëŸ‰ ê³„ì‚°
     public static int GetMaxBuyCount(ItemData itemData, PlayerStat playerStat)
     {
         if (itemData == null || playerStat == null)
@@ -16,7 +16,7 @@ public static class ShopService
         return Mathf.Max(1, maxByGold);
     }
 
-    // ¾ÆÀÌÅÛ ±¸¸Å Ã³¸®
+    // ì•„ì´í…œ êµ¬ë§¤ ì²˜ë¦¬
     public static bool TryBuy(
         int shopSlotIndex,
         int quantity,
@@ -49,7 +49,7 @@ public static class ShopService
         return true;
     }
 
-    // ¾ÆÀÌÅÛ ÆÇ¸Å Ã³¸®
+    // ì•„ì´í…œ íŒë§¤ ì²˜ë¦¬
     public static bool TrySell(
         int inventorySlotIndex,
         int quantity,

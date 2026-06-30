@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ¾÷±×·¹ÀÌµå Çà UI °»½Å ¹× ¹öÆ° Ã³¸® ´ã´ç
+// ì—…ê·¸ë ˆì´ë“œ í–‰ UI ê°±ì‹  ë° ë²„íŠ¼ ì²˜ë¦¬ ë‹´ë‹¹
 public class UpgradeRowUI : MonoBehaviour
 {
     [Header("Info")]
@@ -34,7 +34,7 @@ public class UpgradeRowUI : MonoBehaviour
         }
     }
 
-    // ¾÷±×·¹ÀÌµå Çà UI °»½Å
+    // ì—…ê·¸ë ˆì´ë“œ í–‰ UI ê°±ì‹ 
     public void Refresh(
         StatUpgradeData statData,
         int currentLevel,
@@ -81,7 +81,7 @@ public class UpgradeRowUI : MonoBehaviour
         if (probabilityText != null)
         {
             float percent = levelData.successChance * 100f;
-            probabilityText.SetText($"{currentLevel}´Ü°è È®·ü {percent}%");
+            probabilityText.SetText($"{currentLevel}ë‹¨ê³„ í™•ë¥  {percent}%");
         }
 
         bool hasCorrectMaterial =
@@ -127,7 +127,7 @@ public class UpgradeRowUI : MonoBehaviour
         }
     }
 
-    // ¾÷±×·¹ÀÌµå ¹öÆ° Å¬¸¯ Ã³¸®
+    // ì—…ê·¸ë ˆì´ë“œ ë²„íŠ¼ í´ë¦­ ì²˜ë¦¬
     private void OnClickUpgradeButton()
     {
         if (upgradeUI == null)
@@ -136,7 +136,7 @@ public class UpgradeRowUI : MonoBehaviour
         upgradeUI.OnClickUpgrade(upgradeType);
     }
 
-    // ±âº» »óÅÂ·Î ÃÊ±âÈ­
+    // ê¸°ë³¸ ìƒíƒœë¡œ ì´ˆê¸°í™”
     private void SetDefaultState()
     {
         if (materialIconImage != null)

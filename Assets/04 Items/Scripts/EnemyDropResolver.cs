@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Àû Ã³Ä¡ ½Ã °ñµå ¹× ¾ÆÀÌÅÛ µå¶ø °è»ê ´ã´ç
+// ì  ì²˜ì¹˜ ì‹œ ê³¨ë“œ ë° ì•„ì´í…œ ë“œë ê³„ì‚° ë‹´ë‹¹
 public static class EnemyDropResolver
 {
-    // °ñµå µå¶ø °è»ê
+    // ê³¨ë“œ ë“œë ê³„ì‚°
     public static int RollGold(EnemyData enemyData)
     {
         if (enemyData == null) return 0;
@@ -12,7 +12,7 @@ public static class EnemyDropResolver
         return Random.Range(enemyData.minGold, enemyData.maxGold + 1);
     }
 
-    // ¾ÆÀÌÅÛ µå¶ø °è»ê
+    // ì•„ì´í…œ ë“œë ê³„ì‚°
     public static List<(ItemData itemData, int amount)> RollDrops(EnemyData enemyData)
     {
         List<(ItemData itemData, int amount)> results = new();

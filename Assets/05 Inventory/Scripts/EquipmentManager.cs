@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Àåºñ ÀåÂø, ÇØÁ¦, ÀúÀå µ¥ÀÌÅÍ °ü¸® ´ã´ç
+// ì¥ë¹„ ì¥ì°©, í•´ì œ, ì €ì¥ ë°ì´í„° ê´€ë¦¬ ë‹´ë‹¹
 public class EquipmentManager : MonoBehaviour
 {
     public static EquipmentManager Instance { get; private set; }
@@ -13,7 +13,7 @@ public class EquipmentManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -24,21 +24,21 @@ public class EquipmentManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Àåºñ ÃÊ±âÈ­
+    // ì¥ë¹„ ì´ˆê¸°í™”
     public void InitializeEquipment()
     {
         equippedItems.Clear();
         OnEquipmentChanged?.Invoke();
     }
 
-    // ÀåÂøµÈ ¾ÆÀÌÅÛ Á¶È¸
+    // ì¥ì°©ëœ ì•„ì´í…œ ì¡°íšŒ
     public ItemData GetEquippedItem(EquipmentSlotType slotType)
     {
         equippedItems.TryGetValue(slotType, out ItemData itemData);
         return itemData;
     }
 
-    // ÀÎº¥Åä¸® ½½·Ô¿¡¼­ ÀåÂø
+    // ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ì—ì„œ ì¥ì°©
     public bool EquipItemFromSlot(int slotIndex)
     {
         if (slotIndex < 0 || InventoryManager.Instance == null) return false;
@@ -65,7 +65,7 @@ public class EquipmentManager : MonoBehaviour
         return true;
     }
 
-    // µå·¡±×·Î ¹Ù·Î ÀåÂø
+    // ë“œë˜ê·¸ë¡œ ë°”ë¡œ ì¥ì°©
     public bool EquipItemDirect(ItemData newItem)
     {
         if (newItem == null || InventoryManager.Instance == null) return false;
@@ -74,7 +74,7 @@ public class EquipmentManager : MonoBehaviour
         EquipmentSlotType slotType = newItem.equipSlot;
         ItemData oldItem = GetEquippedItem(slotType);
 
-        // °°Àº ¾ÆÀÌÅÛ ´Ù½Ã µå·Ó ¡æ ÀåÂø ÇØÁ¦
+        // ê°™ì€ ì•„ì´í…œ ë‹¤ì‹œ ë“œë¡­ â†’ ì¥ì°© í•´ì œ
         if (oldItem != null && oldItem.itemId == newItem.itemId)
         {
             if (!InventoryManager.Instance.AddItem(oldItem, 1))
@@ -101,7 +101,7 @@ public class EquipmentManager : MonoBehaviour
         return true;
     }
 
-    // Àåºñ ÇØÁ¦
+    // ì¥ë¹„ í•´ì œ
     public bool UnequipItem(EquipmentSlotType slotType)
     {
         if (!equippedItems.TryGetValue(slotType, out ItemData itemData) || itemData == null)
@@ -128,7 +128,7 @@ public class EquipmentManager : MonoBehaviour
         return UnequipItem(itemData.equipSlot);
     }
 
-    // ½½·Ô¿¡ ÀåÂø °¡´ÉÇÑÁö È®ÀÎ
+    // ìŠ¬ë¡¯ì— ì¥ì°© ê°€ëŠ¥í•œì§€ í™•ì¸
     public bool CanEquipToSlot(ItemData itemData, EquipmentSlotType slotType)
     {
         if (itemData == null) return false;
@@ -137,7 +137,7 @@ public class EquipmentManager : MonoBehaviour
         return itemData.equipSlot == slotType;
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    // ì €ì¥ ë°ì´í„° ìƒì„±
     public EquipmentSaveData GetSaveData()
     {
         return new EquipmentSaveData
@@ -149,7 +149,7 @@ public class EquipmentManager : MonoBehaviour
         };
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ ·Îµå
+    // ì €ì¥ ë°ì´í„° ë¡œë“œ
     public void LoadFromSaveData(EquipmentSaveData saveData)
     {
         equippedItems.Clear();

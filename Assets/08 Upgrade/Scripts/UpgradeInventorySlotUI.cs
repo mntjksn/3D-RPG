@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// °­È­ ÀÎº¥ ½½·Ô UI, µå·¡±× ¹× ÅøÆÁ Ã³¸® ´ã´ç
+// ê°•í™” ì¸ë²¤ ìŠ¬ë¡¯ UI, ë“œë˜ê·¸ ë° íˆ´íŒ ì²˜ë¦¬ ë‹´ë‹¹
 public class UpgradeInventorySlotUI : MonoBehaviour,
     IBeginDragHandler, IDragHandler, IEndDragHandler,
     IPointerEnterHandler, IPointerExitHandler
@@ -32,7 +32,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         gameObject.name = $"UpgradeInventorySlot_{index}";
     }
 
-    // ½½·Ô ºñ¿ì±â
+    // ìŠ¬ë¡¯ ë¹„ìš°ê¸°
     public void SetEmpty()
     {
         currentItemData = null;
@@ -47,7 +47,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         countText?.SetText(string.Empty);
     }
 
-    // ½½·Ô ¾ÆÀÌÅÛ ¼³Á¤
+    // ìŠ¬ë¡¯ ì•„ì´í…œ ì„¤ì •
     public void SetItem(ItemData itemData, int count)
     {
         currentItemData = itemData;
@@ -62,7 +62,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         countText?.SetText(count > 1 ? count.ToString() : string.Empty);
     }
 
-    // ¸¶¿ì½º ¿À¹ö ½Ã ÅøÆÁ Ç¥½Ã
+    // ë§ˆìš°ìŠ¤ ì˜¤ë²„ ì‹œ íˆ´íŒ í‘œì‹œ
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isDragging) return;
@@ -76,7 +76,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         ItemTooltipUI.Instance?.Hide();
     }
 
-    // µå·¡±× ½ÃÀÛ
+    // ë“œë˜ê·¸ ì‹œì‘
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (slotIndex < 0 || currentItemData == null) return;
@@ -118,7 +118,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         UpgradeDragData.Clear();
     }
 
-    // µå·¡±× ¾ÆÀÌÄÜ »ı¼º
+    // ë“œë˜ê·¸ ì•„ì´ì½˜ ìƒì„±
     private void CreateDragIcon()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
@@ -139,7 +139,7 @@ public class UpgradeInventorySlotUI : MonoBehaviour,
         UpgradeDragData.DragIconImage = dragImage;
     }
 
-    // µå·¡±× ¾ÆÀÌÄÜ À§Ä¡ °»½Å
+    // ë“œë˜ê·¸ ì•„ì´ì½˜ ìœ„ì¹˜ ê°±ì‹ 
     private void UpdateDragIconPosition(PointerEventData eventData)
     {
         if (UpgradeDragData.DragIconObject == null) return;

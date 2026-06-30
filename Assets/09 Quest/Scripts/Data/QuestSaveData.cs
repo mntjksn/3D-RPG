@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-// Äù½ºÆ® ÀúÀå µ¥ÀÌÅÍ
+// í€˜ìŠ¤íŠ¸ ì €ì¥ ë°ì´í„°
 [Serializable]
 public class QuestSaveData
 {

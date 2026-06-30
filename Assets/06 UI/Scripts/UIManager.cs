@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// UI ÆĞ³Î ¿­±â, ´İ±â, ÀÔ·Â Àá±İ °ü¸® ´ã´ç
+// UI íŒ¨ë„ ì—´ê¸°, ë‹«ê¸°, ì…ë ¥ ì ê¸ˆ ê´€ë¦¬ ë‹´ë‹¹
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -43,13 +43,13 @@ public class UIManager : MonoBehaviour
         playerActionLock = null;
     }
 
-    // ÇÃ·¹ÀÌ¾î Á¶ÀÛ Àá±İ ´ë»ó µî·Ï
+    // í”Œë ˆì´ì–´ ì¡°ì‘ ì ê¸ˆ ëŒ€ìƒ ë“±ë¡
     public void RegisterPlayer(PlayerActionLock actionLock)
     {
         playerActionLock = actionLock;
     }
 
-    // ÆĞ³Î ¸ñ·Ï ÃÊ±âÈ­
+    // íŒ¨ë„ ëª©ë¡ ì´ˆê¸°í™”
     private void InitializePanels()
     {
         panelDict.Clear();
@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour
         currentOpenPanelType = UIPanelType.None;
     }
 
-    // ÆĞ³Î ¿­±â ½Ãµµ
+    // íŒ¨ë„ ì—´ê¸° ì‹œë„
     public bool TryOpenPanel(UIPanelType panelType)
     {
         if (panelType == UIPanelType.None) return false;
@@ -86,7 +86,7 @@ public class UIManager : MonoBehaviour
         return true;
     }
 
-    // ÆĞ³Î ´İ±â
+    // íŒ¨ë„ ë‹«ê¸°
     public void ClosePanel(UIPanelType panelType)
     {
         if (panelType == UIPanelType.None) return;

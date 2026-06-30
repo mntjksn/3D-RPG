@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ShopData", menuName = "Game/Shop Data")]
-// »óÁ¡¿¡ ÆÇ¸ÅµÇ´Â ¾ÆÀÌÅÛ ¸ñ·Ï
+// ìƒì ì— íŒë§¤ë˜ëŠ” ì•„ì´í…œ ëª©ë¡
 public class ShopData : ScriptableObject
 {
     public List<ShopItemEntry> items = new();
 }
 
 [Serializable]
-// »óÁ¡ ¾ÆÀÌÅÛ Á¤º¸
+// ìƒì  ì•„ì´í…œ ì •ë³´
 public class ShopItemEntry
 {
     public ItemData itemData;

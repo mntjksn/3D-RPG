@@ -1,17 +1,17 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "Game/Player Data")]
-// ÇÃ·¹ÀÌ¾î ±âº» ½ºÅÈ ¹× ·¹º§ µ¥ÀÌÅÍ
+// í”Œë ˆì´ì–´ ê¸°ë³¸ ìŠ¤íƒ¯ ë° ë ˆë²¨ ë°ì´í„°
 public class PlayerData : ScriptableObject
 {
     [Header("Base Stats")]
-    public int maxHp = 100;        // ÃÖ´ë Ã¼·Â
-    public int attackPower = 10;   // °ø°İ·Â
-    public int shieldPower = 20;   // ¹æ¾î·Â
-    public int speed = 8;          // ÀÌµ¿ ¼Óµµ
-    public float regen = 0.01f;    // Ã¼·Â È¸º¹ ºñÀ² (ÃÊ´ç)
+    public int maxHp = 100;        // ìµœëŒ€ ì²´ë ¥
+    public int attackPower = 10;   // ê³µê²©ë ¥
+    public int shieldPower = 20;   // ë°©ì–´ë ¥
+    public int speed = 8;          // ì´ë™ ì†ë„
+    public float regen = 0.01f;    // ì²´ë ¥ íšŒë³µ ë¹„ìœ¨ (ì´ˆë‹¹)
 
     [Header("Level")]
-    public int startLevel = 1;     // ½ÃÀÛ ·¹º§
-    public int expToLevelUp = 10;  // ·¹º§¾÷ ÇÊ¿ä °æÇèÄ¡
+    public int startLevel = 1;     // ì‹œì‘ ë ˆë²¨
+    public int expToLevelUp = 10;  // ë ˆë²¨ì—… í•„ìš” ê²½í—˜ì¹˜
 }

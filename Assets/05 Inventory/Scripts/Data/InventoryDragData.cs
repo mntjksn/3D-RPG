@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// ÀÎº¥Åä¸® µå·¡±× »óÅÂ °øÀ¯ µ¥ÀÌÅÍ
+// ì¸ë²¤í† ë¦¬ ë“œë˜ê·¸ ìƒíƒœ ê³µìœ  ë°ì´í„°
 public static class InventoryDragData
 {
     public static ItemData DraggedItem;
@@ -11,14 +11,14 @@ public static class InventoryDragData
     public static GameObject DragIconObject;
     public static Image DragIconImage;
 
-    // µå·¡±× »óÅÂ ÃÊ±âÈ­
+    // ë“œë˜ê·¸ ìƒíƒœ ì´ˆê¸°í™”
     public static void Clear()
     {
         DraggedItem = null;
         SourceSlot = null;
         SourceEquipmentSlot = null;
 
-        // µå·¡±× ¾ÆÀÌÄÜ Á¦°Å
+        // ë“œë˜ê·¸ ì•„ì´ì½˜ ì œê±°
         if (DragIconObject != null)
             Object.Destroy(DragIconObject);
 

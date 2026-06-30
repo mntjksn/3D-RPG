@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// È­¸é ÆäÀÌµå ¹× ·Îµù ÅØ½ºÆ® Ã³¸® ´ã´ç
+// í™”ë©´ íŽ˜ì´ë“œ ë° ë¡œë”© í…ìŠ¤íŠ¸ ì²˜ë¦¬ ë‹´ë‹¹
 public class FadeUI : MonoBehaviour
 {
     [Header("Fade In After Activate")]
@@ -19,7 +19,7 @@ public class FadeUI : MonoBehaviour
 
     private void Awake()
     {
-        // ½ÃÀÛ ½Ã ÆäÀÌµå ¿ÀºêÁ§Æ® È°¼ºÈ­
+        // ì‹œìž‘ ì‹œ íŽ˜ì´ë“œ ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
         fadeRoot?.SetActive(true);
         gameObject.SetActive(true);
 
@@ -31,13 +31,13 @@ public class FadeUI : MonoBehaviour
         }
     }
 
-    // È­¸éÀ» ¾îµÓ°Ô ÀüÈ¯
+    // í™”ë©´ì„ ì–´ë‘¡ê²Œ ì „í™˜
     public void FadeOut(Action onComplete = null)
     {
         StartFade(0f, 1f, onComplete);
     }
 
-    // È­¸éÀ» ¹à°Ô ÀüÈ¯
+    // í™”ë©´ì„ ë°ê²Œ ì „í™˜
     public void FadeIn(bool activateObjects = false, Action onComplete = null)
     {
         StartFade(1f, 0f, () =>
@@ -57,7 +57,7 @@ public class FadeUI : MonoBehaviour
         });
     }
 
-    // ÆäÀÌµå ½ÃÀÛ
+    // íŽ˜ì´ë“œ ì‹œìž‘
     private void StartFade(float start, float end, Action onComplete)
     {
         if (fadeCoroutine != null)
@@ -83,11 +83,11 @@ public class FadeUI : MonoBehaviour
             time += Time.deltaTime;
             float t = Mathf.Clamp01(time / fadeDuration);
 
-            // È­¸é ÆäÀÌµå
+            // í™”ë©´ íŽ˜ì´ë“œ
             fadeColor.a = Mathf.Lerp(start, end, t);
             fadeImage.color = fadeColor;
 
-            // FadeInÀÏ ¶§¸¸ ÅØ½ºÆ® ÆäÀÌµå
+            // FadeInì¼ ë•Œë§Œ í…ìŠ¤íŠ¸ íŽ˜ì´ë“œ
             if (loadingText != null && end == 0f && time >= textFadeDelay)
             {
                 float textT = Mathf.InverseLerp(textFadeDelay, fadeDuration, time);
@@ -98,7 +98,7 @@ public class FadeUI : MonoBehaviour
             yield return null;
         }
 
-        // ÃÖÁ¾ °ª º¸Á¤
+        // ìµœì¢… ê°’ ë³´ì •
         fadeColor.a = end;
         fadeImage.color = fadeColor;
 

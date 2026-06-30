@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ·Î±×ÀÎ / È¸¿ø°¡ÀÔ / ´Ğ³×ÀÓ / ¼­¹ö ¿¬°á UI
+// ë¡œê·¸ì¸ / íšŒì›ê°€ì… / ë‹‰ë„¤ì„ / ì„œë²„ ì—°ê²° UI
 public class IntroAuthUI : MonoBehaviour
 {
     [Header("Login UI")]
@@ -34,7 +34,7 @@ public class IntroAuthUI : MonoBehaviour
 
         isLoggedIn = false;
         SetStartButtonInteractable(false);
-        ShowMessage("ÀÌ¸ŞÀÏ°ú ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+        ShowMessage("ì´ë©”ì¼ê³¼ ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”.");
 
         loginButton?.onClick.AddListener(OnClickLogin);
         registerButton?.onClick.AddListener(OnClickRegister);
@@ -56,7 +56,7 @@ public class IntroAuthUI : MonoBehaviour
         }
     }
 
-    // ·Î±×ÀÎ
+    // ë¡œê·¸ì¸
     private async void OnClickLogin()
     {
         string email = GetEmail();
@@ -67,11 +67,11 @@ public class IntroAuthUI : MonoBehaviour
 
         if (FirebaseAuthManager.Instance == null)
         {
-            ShowMessage("Firebase ¿À·ù");
+            ShowMessage("Firebase ì˜¤ë¥˜");
             return;
         }
 
-        ShowMessage("·Î±×ÀÎ Áß...");
+        ShowMessage("ë¡œê·¸ì¸ ì¤‘...");
 
         await FirebaseAuthManager.Instance.Login(email, password, (success, msg) =>
         {
@@ -86,23 +86,23 @@ public class IntroAuthUI : MonoBehaviour
 
             isLoggedIn = true;
 
-            // ´Ğ³×ÀÓ ¾øÀ¸¸é ÀÔ·Â °­Á¦
+            // ë‹‰ë„¤ì„ ì—†ìœ¼ë©´ ì…ë ¥ ê°•ì œ
             if (!FirebaseAuthManager.Instance.HasNickname())
             {
                 nicknamePanel?.SetActive(true);
                 SetStartButtonInteractable(false);
-                ShowMessage("´Ğ³×ÀÓÀ» ¼³Á¤ÇØÁÖ¼¼¿ä.");
+                ShowMessage("ë‹‰ë„¤ì„ì„ ì„¤ì •í•´ì£¼ì„¸ìš”.");
                 return;
             }
 
             nicknamePanel?.SetActive(false);
 
-            // Photon ¿¬°á ¿©ºÎ ÆÇ´Ü
-            SetStartButtonInteractable(msg.Contains("¿¬°á ¿Ï·á"));
+            // Photon ì—°ê²° ì—¬ë¶€ íŒë‹¨
+            SetStartButtonInteractable(msg.Contains("ì—°ê²° ì™„ë£Œ"));
         });
     }
 
-    // È¸¿ø°¡ÀÔ
+    // íšŒì›ê°€ì…
     private async void OnClickRegister()
     {
         string email = GetEmail();
@@ -113,11 +113,11 @@ public class IntroAuthUI : MonoBehaviour
 
         if (FirebaseAuthManager.Instance == null)
         {
-            ShowMessage("Firebase ¿À·ù");
+            ShowMessage("Firebase ì˜¤ë¥˜");
             return;
         }
 
-        ShowMessage("È¸¿ø°¡ÀÔ Áß...");
+        ShowMessage("íšŒì›ê°€ì… ì¤‘...");
 
         await FirebaseAuthManager.Instance.Register(email, password, (success, msg) =>
         {
@@ -131,7 +131,7 @@ public class IntroAuthUI : MonoBehaviour
             nicknamePanel?.SetActive(true);
 
             SetStartButtonInteractable(false);
-            ShowMessage("´Ğ³×ÀÓÀ» ¼³Á¤ÇØÁÖ¼¼¿ä.");
+            ShowMessage("ë‹‰ë„¤ì„ì„ ì„¤ì •í•´ì£¼ì„¸ìš”.");
         });
     }
 
@@ -144,12 +144,12 @@ public class IntroAuthUI : MonoBehaviour
 #endif
     }
 
-    // ´Ğ³×ÀÓ ¼³Á¤
+    // ë‹‰ë„¤ì„ ì„¤ì •
     private async void OnClickConfirmNickname()
     {
         if (!isLoggedIn)
         {
-            ShowMessage("·Î±×ÀÎ ÇÊ¿ä");
+            ShowMessage("ë¡œê·¸ì¸ í•„ìš”");
             return;
         }
 
@@ -157,7 +157,7 @@ public class IntroAuthUI : MonoBehaviour
         if (!ValidateNickname(nickname))
             return;
 
-        ShowMessage("´Ğ³×ÀÓ ÀúÀå Áß...");
+        ShowMessage("ë‹‰ë„¤ì„ ì €ì¥ ì¤‘...");
 
         await FirebaseAuthManager.Instance.SetNickname(nickname, (success, msg) =>
         {
@@ -169,15 +169,15 @@ public class IntroAuthUI : MonoBehaviour
 
             nicknamePanel?.SetActive(false);
 
-            // ÀÌ¹Ì Photon ¿¬°áµÆÀ¸¸é Àç¿¬°á ÇÏÁö ¾ÊÀ½
+            // ì´ë¯¸ Photon ì—°ê²°ëìœ¼ë©´ ì¬ì—°ê²° í•˜ì§€ ì•ŠìŒ
             if (PhotonNetwork.IsConnected)
             {
-                ShowMessage("¿¬°á ¿Ï·á");
+                ShowMessage("ì—°ê²° ì™„ë£Œ");
                 SetStartButtonInteractable(true);
                 return;
             }
 
-            ShowMessage("¼­¹ö ¿¬°á Áß...");
+            ShowMessage("ì„œë²„ ì—°ê²° ì¤‘...");
             SetStartButtonInteractable(false);
 
             string finalNickname = FirebaseAuthManager.Instance.GetNickname();
@@ -190,24 +190,24 @@ public class IntroAuthUI : MonoBehaviour
         });
     }
 
-    // °ÔÀÓ ½ÃÀÛ
+    // ê²Œì„ ì‹œì‘
     private void OnClickStartGame()
     {
         if (!isLoggedIn)
         {
-            ShowMessage("·Î±×ÀÎ ÇÊ¿ä");
+            ShowMessage("ë¡œê·¸ì¸ í•„ìš”");
             return;
         }
 
         if (!FirebaseAuthManager.Instance.HasNickname())
         {
-            ShowMessage("´Ğ³×ÀÓ ÇÊ¿ä");
+            ShowMessage("ë‹‰ë„¤ì„ í•„ìš”");
             return;
         }
 
         if (!PhotonNetwork.IsConnected)
         {
-            ShowMessage("¼­¹ö ¿¬°á Áß");
+            ShowMessage("ì„œë²„ ì—°ê²° ì¤‘");
             return;
         }
 
@@ -222,25 +222,25 @@ public class IntroAuthUI : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            ShowMessage("ÀÌ¸ŞÀÏ ÀÔ·Â");
+            ShowMessage("ì´ë©”ì¼ ì…ë ¥");
             return false;
         }
 
         if (!IsValidEmail(email))
         {
-            ShowMessage("ÀÌ¸ŞÀÏ Çü½Ä ¿À·ù");
+            ShowMessage("ì´ë©”ì¼ í˜•ì‹ ì˜¤ë¥˜");
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(password))
         {
-            ShowMessage("ºñ¹Ğ¹øÈ£ ÀÔ·Â");
+            ShowMessage("ë¹„ë°€ë²ˆí˜¸ ì…ë ¥");
             return false;
         }
 
         if (password.Length < 6)
         {
-            ShowMessage("ºñ¹Ğ¹øÈ£ 6ÀÚ ÀÌ»ó");
+            ShowMessage("ë¹„ë°€ë²ˆí˜¸ 6ì ì´ìƒ");
             return false;
         }
 
@@ -251,13 +251,13 @@ public class IntroAuthUI : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(nickname))
         {
-            ShowMessage("´Ğ³×ÀÓ ÀÔ·Â");
+            ShowMessage("ë‹‰ë„¤ì„ ì…ë ¥");
             return false;
         }
 
         if (nickname.Length < 2 || nickname.Length > 10)
         {
-            ShowMessage("´Ğ³×ÀÓ 2~10ÀÚ");
+            ShowMessage("ë‹‰ë„¤ì„ 2~10ì");
             return false;
         }
 

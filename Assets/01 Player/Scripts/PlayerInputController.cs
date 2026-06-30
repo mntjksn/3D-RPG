@@ -1,7 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 
-// Å°º¸µå ´ÜÃàÅ° ÀÔ·Â Ã³¸® - UI ÆĞ³Î ¿­±â ¹× Æ÷¼Ç »ç¿ë
+// í‚¤ë³´ë“œ ë‹¨ì¶•í‚¤ ì…ë ¥ ì²˜ë¦¬ - UI íŒ¨ë„ ì—´ê¸° ë° í¬ì…˜ ì‚¬ìš©
 public class PlayerInputController : MonoBehaviourPun
 {
     private PotionSlotUI potionSlotUI;
@@ -16,7 +16,7 @@ public class PlayerInputController : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        // ¾À ³» Canvas¿¡¼­ PotionSlotUI Å½»ö
+        // ì”¬ ë‚´ Canvasì—ì„œ PotionSlotUI íƒìƒ‰
         potionSlotUI = FindObjectOfType<PotionSlotUI>();
     }
 
@@ -24,7 +24,7 @@ public class PlayerInputController : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
 
-        // Ã¤ÆÃ ÀÔ·ÂÀº UI Àá±İ°ú ¹«°üÇÏ°Ô Ç×»ó Ã³¸®
+        // ì±„íŒ… ì…ë ¥ì€ UI ì ê¸ˆê³¼ ë¬´ê´€í•˜ê²Œ í•­ìƒ ì²˜ë¦¬
         if (Input.GetKeyDown(KeyCode.Return))
         {
             ChatManager.Instance?.OnPressEnter();
@@ -37,12 +37,12 @@ public class PlayerInputController : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.O)) UIManager.Instance.TryOpenPanel(UIPanelType.PlayerInfo);
         if (Input.GetKeyDown(KeyCode.Escape)) UIManager.Instance.TryOpenPanel(UIPanelType.Setting);
 
-        // QÅ°: ÆĞ³ÎÀÌ ´İÇô ÀÖÀ» ¶§¸¸ Æ÷¼Ç »ç¿ë
+        // Qí‚¤: íŒ¨ë„ì´ ë‹«í˜€ ìˆì„ ë•Œë§Œ í¬ì…˜ ì‚¬ìš©
         if (Input.GetKeyDown(KeyCode.Q) && !UIManager.Instance.IsAnyPanelOpen)
             TryUsePotion();
     }
 
-    // Æ÷¼Ç ½½·Ô¿¡ µî·ÏµÈ ¾ÆÀÌÅÛÀ» PlayerHealth¿¡ Àü´ŞÇØ »ç¿ë ½Ãµµ
+    // í¬ì…˜ ìŠ¬ë¡¯ì— ë“±ë¡ëœ ì•„ì´í…œì„ PlayerHealthì— ì „ë‹¬í•´ ì‚¬ìš© ì‹œë„
     private void TryUsePotion()
     {
         if (PotionSlotManager.Instance == null || InventoryManager.Instance == null) return;

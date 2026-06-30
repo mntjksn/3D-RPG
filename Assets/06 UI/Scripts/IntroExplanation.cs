@@ -1,17 +1,17 @@
 using UnityEngine;
 
-// ÀÎÆ®·Î ¼³¸íÃ¢ ¿­±â / ´İ±â ´ã´ç
+// ì¸íŠ¸ë¡œ ì„¤ëª…ì°½ ì—´ê¸° / ë‹«ê¸° ë‹´ë‹¹
 public class IntroExplanation : MonoBehaviour
 {
     [SerializeField] private GameObject explanationPanel;
 
-    // ¼³¸íÃ¢ ¿­±â
+    // ì„¤ëª…ì°½ ì—´ê¸°
     public void Open()
     {
         explanationPanel?.SetActive(true);
     }
 
-    // ¼³¸íÃ¢ ´İ±â
+    // ì„¤ëª…ì°½ ë‹«ê¸°
     public void Close()
     {
         explanationPanel?.SetActive(false);

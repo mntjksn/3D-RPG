@@ -1,8 +1,8 @@
-// Äù½ºÆ® ¸¶Å© »óÅÂ
+// í€˜ìŠ¤íŠ¸ ë§ˆí¬ ìƒíƒœ
 public enum QuestMarkState
 {
-    None = 0,     // Ç¥½Ã ¾øÀ½
-    Available,    // ¼ö¶ô °¡´É (!)
-    Progress,     // ÁøÇà Áß (...)
-    Complete      // ¿Ï·á (?)
+    None = 0,     // í‘œì‹œ ì—†ìŒ
+    Available,    // ìˆ˜ë½ ê°€ëŠ¥ (!)
+    Progress,     // ì§„í–‰ ì¤‘ (...)
+    Complete      // ì™„ë£Œ (?)
 }

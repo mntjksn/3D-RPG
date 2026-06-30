@@ -1,12 +1,12 @@
-// UI ÆĞ³Î Á¾·ù
+// UI íŒ¨ë„ ì¢…ë¥˜
 public enum UIPanelType
 {
-    None = 0,      // ¿­·ÁÀÖ´Â ÆĞ³Î ¾øÀ½
+    None = 0,      // ì—´ë ¤ìˆëŠ” íŒ¨ë„ ì—†ìŒ
 
-    Inventory,     // ÀÎº¥Åä¸®
-    PlayerInfo,    // ÇÃ·¹ÀÌ¾î Á¤º¸
-    Shop,          // »óÁ¡
-    Quest,         // Äù½ºÆ®
-    Upgrade,       // ¾÷±×·¹ÀÌµå
-    Setting        // ¼³Á¤
+    Inventory,     // ì¸ë²¤í† ë¦¬
+    PlayerInfo,    // í”Œë ˆì´ì–´ ì •ë³´
+    Shop,          // ìƒì 
+    Quest,         // í€˜ìŠ¤íŠ¸
+    Upgrade,       // ì—…ê·¸ë ˆì´ë“œ
+    Setting        // ì„¤ì •
 }

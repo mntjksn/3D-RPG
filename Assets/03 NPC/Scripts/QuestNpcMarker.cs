@@ -1,13 +1,13 @@
 using UnityEngine;
 
-// Äù½ºÆ® »óÅÂ º¯È­¿¡ µû¶ó NPC ¸¶Å© °»½Å
+// í€˜ìŠ¤íŠ¸ ìƒíƒœ ë³€í™”ì— ë”°ë¼ NPC ë§ˆí¬ ê°±ì‹ 
 public class QuestNpcMarker : MonoBehaviour
 {
     [SerializeField] private QuestMarkView questMarkView;
 
     private void Start()
     {
-        // ÃÊ±â »óÅÂ °»½Å
+        // ì´ˆê¸° ìƒíƒœ ê°±ì‹ 
         RefreshMark();
 
         if (QuestManager.Instance == null) return;
@@ -28,13 +28,13 @@ public class QuestNpcMarker : MonoBehaviour
         QuestManager.Instance.OnQuestRewardClaimed -= HandleQuestChanged;
     }
 
-    // Äù½ºÆ® »óÅÂ º¯°æ ½Ã ¸¶Å© °»½Å
+    // í€˜ìŠ¤íŠ¸ ìƒíƒœ ë³€ê²½ ì‹œ ë§ˆí¬ ê°±ì‹ 
     private void HandleQuestChanged(QuestData questData)
     {
         RefreshMark();
     }
 
-    // ÇöÀç Äù½ºÆ® »óÅÂ¿¡ ¸Â°Ô ¸¶Å© ¾÷µ¥ÀÌÆ®
+    // í˜„ì¬ í€˜ìŠ¤íŠ¸ ìƒíƒœì— ë§ê²Œ ë§ˆí¬ ì—…ë°ì´íŠ¸
     public void RefreshMark()
     {
         if (questMarkView == null) return;

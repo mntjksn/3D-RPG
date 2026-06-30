@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î Çàµ¿ °¡´É ¿©ºÎ¸¦ Áß¾Ó¿¡¼­ °ü¸® (ÀÌµ¿/°ø°İ/¹æ¾î/UI Àá±İ)
+// í”Œë ˆì´ì–´ í–‰ë™ ê°€ëŠ¥ ì—¬ë¶€ë¥¼ ì¤‘ì•™ì—ì„œ ê´€ë¦¬ (ì´ë™/ê³µê²©/ë°©ì–´/UI ì ê¸ˆ)
 public class PlayerActionLock : MonoBehaviour
 {
     public bool CanMove { get; private set; }
@@ -14,17 +14,17 @@ public class PlayerActionLock : MonoBehaviour
 
     private void Start()
     {
-        // ·Îµå ¿Ï·á Àü±îÁö ¸ğµç Á¶ÀÛ Àá±İ
+        // ë¡œë“œ ì™„ë£Œ ì „ê¹Œì§€ ëª¨ë“  ì¡°ì‘ ì ê¸ˆ
         LockRecoverControls();
     }
 
-    // ¸ğµç Á¶ÀÛ Àá±İ (·Îµù Áß, »ç¸Á ½Ã µî)
+    // ëª¨ë“  ì¡°ì‘ ì ê¸ˆ (ë¡œë”© ì¤‘, ì‚¬ë§ ì‹œ ë“±)
     public void LockRecoverControls()
     {
         CanMove = CanAttack = CanLook = CanShield = CanUI = false;
     }
 
-    // ¸ğµç Á¶ÀÛ ÇØÁ¦
+    // ëª¨ë“  ì¡°ì‘ í•´ì œ
     public void UnlockRecoverControls()
     {
         CanMove = CanAttack = CanLook = CanShield = CanUI = true;
@@ -33,7 +33,7 @@ public class PlayerActionLock : MonoBehaviour
     public void SetAttack(bool value) => IsAttacking = value;
     public void SetShield(bool value) => IsShielding = value;
 
-    // »ç¸Á ½Ã È£Ãâ - Á¶ÀÛ Àá±İ ¹× ÀüÅõ »óÅÂ ÃÊ±âÈ­
+    // ì‚¬ë§ ì‹œ í˜¸ì¶œ - ì¡°ì‘ ì ê¸ˆ ë° ì „íˆ¬ ìƒíƒœ ì´ˆê¸°í™”
     public void OnDie()
     {
         LockRecoverControls();
@@ -41,7 +41,7 @@ public class PlayerActionLock : MonoBehaviour
         IsAttacking = false;
     }
 
-    // ºÎÈ° ½Ã È£Ãâ - ÀüÅõ »óÅÂ ÃÊ±âÈ­ ÈÄ Á¶ÀÛ ÇØÁ¦
+    // ë¶€í™œ ì‹œ í˜¸ì¶œ - ì „íˆ¬ ìƒíƒœ ì´ˆê¸°í™” í›„ ì¡°ì‘ í•´ì œ
     public void ResetState()
     {
         IsAttacking = false;
@@ -49,7 +49,7 @@ public class PlayerActionLock : MonoBehaviour
         UnlockRecoverControls();
     }
 
-    // DieRecover ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ½Ã Animation Event·Î È£Ãâ
+    // DieRecover ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ ì‹œ Animation Eventë¡œ í˜¸ì¶œ
     public void OnRecoverFinished()
     {
         UnlockRecoverControls();

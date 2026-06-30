@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// UI ImageÀÇ fillAmount·Î HP ºñÀ² Ç¥½Ã
+// UI Imageì˜ fillAmountë¡œ HP ë¹„ìœ¨ í‘œì‹œ
 public class PlayerHealthBar : MonoBehaviour
 {
     [SerializeField] private Image fillImage;

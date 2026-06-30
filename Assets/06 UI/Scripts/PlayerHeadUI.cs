@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ¸Ó¸® À§ ·¹º§ + ÀÌ¸§ Ç¥½Ã ¹× À§Ä¡ ÃßÀû
+// í”Œë ˆì´ì–´ ë¨¸ë¦¬ ìœ„ ë ˆë²¨ + ì´ë¦„ í‘œì‹œ ë° ìœ„ì¹˜ ì¶”ì 
 public class PlayerHeadUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text levelAndNameText;
@@ -23,7 +23,7 @@ public class PlayerHeadUI : MonoBehaviour
 
     private void Start()
     {
-        // ·¹º§ º¯°æ ÀÌº¥Æ® µî·Ï
+        // ë ˆë²¨ ë³€ê²½ ì´ë²¤íŠ¸ ë“±ë¡
         if (PlayerManager.Instance != null && PlayerManager.Instance.Stat != null)
             PlayerManager.Instance.Stat.OnLevelChanged += UpdateUI;
 
@@ -32,14 +32,14 @@ public class PlayerHeadUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        // ÀÌº¥Æ® ÇØÁ¦
+        // ì´ë²¤íŠ¸ í•´ì œ
         if (PlayerManager.Instance != null && PlayerManager.Instance.Stat != null)
             PlayerManager.Instance.Stat.OnLevelChanged -= UpdateUI;
     }
 
     private void Update()
     {
-        // ´ë»ó »ç¶óÁö¸é UI Á¦°Å
+        // ëŒ€ìƒ ì‚¬ë¼ì§€ë©´ UI ì œê±°
         if (followTarget == null)
             Destroy(gameObject);
     }
@@ -48,10 +48,10 @@ public class PlayerHeadUI : MonoBehaviour
     {
         if (followTarget == null) return;
 
-        // À§Ä¡ ÃßÀû
+        // ìœ„ì¹˜ ì¶”ì 
         transform.position = followTarget.position + offset;
 
-        // Ä«¸Ş¶ó ¹Ù¶óº¸°Ô
+        // ì¹´ë©”ë¼ ë°”ë¼ë³´ê²Œ
         Camera cam = Camera.main;
         if (cam == null) return;
 
@@ -60,7 +60,7 @@ public class PlayerHeadUI : MonoBehaviour
         );
     }
 
-    // UI ÅØ½ºÆ® °»½Å
+    // UI í…ìŠ¤íŠ¸ ê°±ì‹ 
     private void UpdateUI(int level)
     {
         levelAndNameText?.SetText($"Lv. {level} {nickname}");

@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// ¾÷±×·¹ÀÌµå °¡´É ¿©ºÎ °Ë»ç ¹× °­È­ Ã³¸® ´ã´ç
+// ì—…ê·¸ë ˆì´ë“œ ê°€ëŠ¥ ì—¬ë¶€ ê²€ì‚¬ ë° ê°•í™” ì²˜ë¦¬ ë‹´ë‹¹
 public static class UpgradeService
 {
-    // ¾÷±×·¹ÀÌµå °¡´É ¿©ºÎ È®ÀÎ
+    // ì—…ê·¸ë ˆì´ë“œ ê°€ëŠ¥ ì—¬ë¶€ í™•ì¸
     public static bool CanUpgrade(
         UpgradeManager manager,
         UpgradeType type,
@@ -41,7 +41,7 @@ public static class UpgradeService
         return true;
     }
 
-    // ¾÷±×·¹ÀÌµå ½Ãµµ
+    // ì—…ê·¸ë ˆì´ë“œ ì‹œë„
     public static bool TryUpgrade(
         UpgradeManager manager,
         UpgradeType type,

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// ¾÷±×·¹ÀÌµå UI µå·¡±× »óÅÂ °øÀ¯ µ¥ÀÌÅÍ
+// ì—…ê·¸ë ˆì´ë“œ UI ë“œë˜ê·¸ ìƒíƒœ ê³µìœ  ë°ì´í„°
 public static class UpgradeDragData
 {
     public static ItemData DraggedItem;
@@ -10,13 +10,13 @@ public static class UpgradeDragData
     public static GameObject DragIconObject;
     public static Image DragIconImage;
 
-    // µå·¡±× »óÅÂ ÃÊ±âÈ­
+    // ë“œë˜ê·¸ ìƒíƒœ ì´ˆê¸°í™”
     public static void Clear()
     {
         DraggedItem = null;
         SourceSlot = null;
 
-        // µå·¡±× ¾ÆÀÌÄÜ Á¦°Å
+        // ë“œë˜ê·¸ ì•„ì´ì½˜ ì œê±°
         if (DragIconObject != null)
         {
             Object.Destroy(DragIconObject);

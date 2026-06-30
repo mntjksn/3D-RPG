@@ -5,7 +5,7 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Photon ¹æ ÀÔÀå ¹× ÇÃ·¹ÀÌ¾î ½ºÆù, ÀÌ¸§Ç¥/HP¹Ù Äµ¹ö½º °ü¸®
+// Photon ë°© ì…ì¥ ë° í”Œë ˆì´ì–´ ìŠ¤í°, ì´ë¦„í‘œ/HPë°” ìº”ë²„ìŠ¤ ê´€ë¦¬
 public class PlayerSpawner : MonoBehaviourPunCallbacks
 {
     private const string RoomName = "MainRoom";
@@ -20,10 +20,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     [SerializeField] private Vector3 defaultSpawnPosition = new Vector3(9.63f, 1.76f, 59.84f);
     [SerializeField] private Vector3 defaultSpawnEuler = Vector3.zero;
 
-    // ¾À ÀüÈ¯ ÈÄ¿¡µµ Áßº¹ ½ºÆù ¹æÁö
+    // ì”¬ ì „í™˜ í›„ì—ë„ ì¤‘ë³µ ìŠ¤í° ë°©ì§€
     private static bool spawned = false;
 
-    // ActorNumber -> Äµ¹ö½º ¿ÀºêÁ§Æ® ¸ÅÇÎ (ÅğÀå ½Ã Á¦°Å¿ë)
+    // ActorNumber -> ìº”ë²„ìŠ¤ ì˜¤ë¸Œì íŠ¸ ë§¤í•‘ (í‡´ì¥ ì‹œ ì œê±°ìš©)
     private readonly Dictionary<int, GameObject> canvasByActorNumber = new();
 
     private void Start()
@@ -31,7 +31,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         TryEnterRoomOrConnect();
     }
 
-    // ¿¬°á »óÅÂ¿¡ µû¶ó ÀÔÀå ¶Ç´Â Á¢¼Ó ½Ãµµ
+    // ì—°ê²° ìƒíƒœì— ë”°ë¼ ì…ì¥ ë˜ëŠ” ì ‘ì† ì‹œë„
     private void TryEnterRoomOrConnect()
     {
         if (PhotonNetwork.InRoom)
@@ -65,16 +65,16 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     {
         if (spawned) return;
 
-        // °°Àº ´Ğ³×ÀÓ Áßº¹ Á¢¼Ó °¨Áö ½Ã °­Á¦ ÅğÀå
+        // ê°™ì€ ë‹‰ë„¤ì„ ì¤‘ë³µ ì ‘ì† ê°ì§€ ì‹œ ê°•ì œ í‡´ì¥
         if (HasDuplicateNickname())
         {
-            Debug.LogWarning("Áßº¹ ·Î±×ÀÎ °¨Áö! Á¢¼Ó Á¾·á");
+            Debug.LogWarning("ì¤‘ë³µ ë¡œê·¸ì¸ ê°ì§€! ì ‘ì† ì¢…ë£Œ");
             PhotonNetwork.LeaveRoom();
             SceneManager.LoadScene("Intro");
             return;
         }
 
-        Debug.Log($"¹æ ÀÔÀå ¿Ï·á - ¹æ: {PhotonNetwork.CurrentRoom.Name}, ÀÎ¿ø: {PhotonNetwork.CurrentRoom.PlayerCount}");
+        Debug.Log($"ë°© ì…ì¥ ì™„ë£Œ - ë°©: {PhotonNetwork.CurrentRoom.Name}, ì¸ì›: {PhotonNetwork.CurrentRoom.PlayerCount}");
 
         SpawnPlayer();
         StartCoroutine(AttachCanvasToExistingPlayersRoutine());
@@ -82,10 +82,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        Debug.LogError($"¹æ ÀÔÀå ½ÇÆĞ: {message}");
+        Debug.LogError($"ë°© ì…ì¥ ì‹¤íŒ¨: {message}");
     }
 
-    // »õ ÇÃ·¹ÀÌ¾î ÀÔÀå ½Ã Äµ¹ö½º ºÎÂø ¹× EnemyAttack Ä³½Ã °»½Å
+    // ìƒˆ í”Œë ˆì´ì–´ ì…ì¥ ì‹œ ìº”ë²„ìŠ¤ ë¶€ì°© ë° EnemyAttack ìºì‹œ ê°±ì‹ 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         StartCoroutine(AttachCanvasToNewPlayerRoutine(newPlayer));
@@ -96,7 +96,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause) => spawned = false;
 
-    // ÇÃ·¹ÀÌ¾î ÅğÀå ½Ã Äµ¹ö½º Á¦°Å ¹× EnemyAttack Ä³½Ã °»½Å
+    // í”Œë ˆì´ì–´ í‡´ì¥ ì‹œ ìº”ë²„ìŠ¤ ì œê±° ë° EnemyAttack ìºì‹œ ê°±ì‹ 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         int actorNumber = otherPlayer.ActorNumber;
@@ -123,7 +123,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         canvasByActorNumber.Clear();
     }
 
-    // ÇöÀç ¹æÀÇ ´Ù¸¥ ÇÃ·¹ÀÌ¾î Áß µ¿ÀÏ ´Ğ³×ÀÓ Á¸Àç ¿©ºÎ È®ÀÎ
+    // í˜„ì¬ ë°©ì˜ ë‹¤ë¥¸ í”Œë ˆì´ì–´ ì¤‘ ë™ì¼ ë‹‰ë„¤ì„ ì¡´ì¬ ì—¬ë¶€ í™•ì¸
     private bool HasDuplicateNickname()
     {
         string myNickname = PhotonNetwork.NickName;
@@ -137,7 +137,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         return false;
     }
 
-    // ÇÃ·¹ÀÌ¾î ÇÁ¸®ÆÕÀ» ³×Æ®¿öÅ© ÀÎ½ºÅÏ½º·Î »ı¼ºÇÏ°í ÃÊ±â ¼³Á¤
+    // í”Œë ˆì´ì–´ í”„ë¦¬íŒ¹ì„ ë„¤íŠ¸ì›Œí¬ ì¸ìŠ¤í„´ìŠ¤ë¡œ ìƒì„±í•˜ê³  ì´ˆê¸° ì„¤ì •
     private void SpawnPlayer()
     {
         if (spawned) return;
@@ -159,10 +159,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         AttachCanvas(player, PhotonNetwork.NickName);
         StartCoroutine(RequestLoadAfterSpawnRoutine(player));
 
-        Debug.Log($"ÇÃ·¹ÀÌ¾î ½ºÆù ¿Ï·á: {PhotonNetwork.NickName}");
+        Debug.Log($"í”Œë ˆì´ì–´ ìŠ¤í° ì™„ë£Œ: {PhotonNetwork.NickName}");
     }
 
-    // PlayerManager¿Í StatÀÌ ÁØºñµÈ µÚ ¼¼ÀÌºê µ¥ÀÌÅÍ ·Îµå
+    // PlayerManagerì™€ Statì´ ì¤€ë¹„ëœ ë’¤ ì„¸ì´ë¸Œ ë°ì´í„° ë¡œë“œ
     private IEnumerator RequestLoadAfterSpawnRoutine(GameObject player)
     {
         PhotonView pv = player.GetComponent<PhotonView>();
@@ -173,14 +173,14 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
 
-        // µÎ ÇÁ·¹ÀÓ ´ë±âÇØ ÄÄÆ÷³ÍÆ® ÃÊ±âÈ­ ¿Ï·á º¸Àå
+        // ë‘ í”„ë ˆì„ ëŒ€ê¸°í•´ ì»´í¬ë„ŒíŠ¸ ì´ˆê¸°í™” ì™„ë£Œ ë³´ì¥
         yield return null;
         yield return null;
 
         SaveManager.Instance?.LoadPlayer();
     }
 
-    // 1ÃÊ ´ë±â ÈÄ ½Å±Ô ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®¸¦ Ã£¾Æ Äµ¹ö½º ºÎÂø
+    // 1ì´ˆ ëŒ€ê¸° í›„ ì‹ ê·œ í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì•„ ìº”ë²„ìŠ¤ ë¶€ì°©
     private IEnumerator AttachCanvasToNewPlayerRoutine(Player newPlayer)
     {
         yield return new WaitForSeconds(1f);
@@ -195,7 +195,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         }
     }
 
-    // ÀÌ¹Ì ¹æ¿¡ ÀÖ´Â ´Ù¸¥ ÇÃ·¹ÀÌ¾îµé¿¡°Ô Äµ¹ö½º ºÎÂø (³» Ä³¸¯ÅÍ Á¦¿Ü)
+    // ì´ë¯¸ ë°©ì— ìˆëŠ” ë‹¤ë¥¸ í”Œë ˆì´ì–´ë“¤ì—ê²Œ ìº”ë²„ìŠ¤ ë¶€ì°© (ë‚´ ìºë¦­í„° ì œì™¸)
     private IEnumerator AttachCanvasToExistingPlayersRoutine()
     {
         yield return new WaitForSeconds(1f);
@@ -209,7 +209,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         }
     }
 
-    // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®¿¡ Äµ¹ö½º(ÀÌ¸§Ç¥ + HP¹Ù)¸¦ »ı¼ºÇÏ°í ¿¬°á
+    // í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ì— ìº”ë²„ìŠ¤(ì´ë¦„í‘œ + HPë°”)ë¥¼ ìƒì„±í•˜ê³  ì—°ê²°
     private void AttachCanvas(GameObject player, string nickName)
     {
         PhotonView pv = player.GetComponent<PhotonView>();
@@ -224,7 +224,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
         if (canvasPrefab == null)
         {
-            Debug.LogWarning("PlayerCanvas ÇÁ¸®ÆÕÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogWarning("PlayerCanvas í”„ë¦¬íŒ¹ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -245,7 +245,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             playerHealth.SetHealthBar(healthBar);
     }
 
-    // ÇÃ·¹ÀÌ¾î ÀÔÀå/ÅğÀå ½Ã ¸ğµç EnemyAttackÀÇ Ä³½Ã °»½Å
+    // í”Œë ˆì´ì–´ ì…ì¥/í‡´ì¥ ì‹œ ëª¨ë“  EnemyAttackì˜ ìºì‹œ ê°±ì‹ 
     private void RefreshEnemyAttackCache()
     {
         foreach (EnemyAttack enemyAttack in FindObjectsOfType<EnemyAttack>())

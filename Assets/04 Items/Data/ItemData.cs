@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// ¾ÆÀÌÅÛ Á¾·ù
+// ì•„ì´í…œ ì¢…ë¥˜
 public enum ItemType
 {
     Material = 0,
@@ -11,7 +11,7 @@ public enum ItemType
     Shield
 }
 
-// ÀåÂø ½½·Ô Á¾·ù
+// ì¥ì°© ìŠ¬ë¡¯ ì¢…ë¥˜
 public enum EquipmentSlotType
 {
     None = 0,
@@ -22,12 +22,12 @@ public enum EquipmentSlotType
 }
 
 [CreateAssetMenu(fileName = "NewItem", menuName = "Game/Item Data")]
-// ¾ÆÀÌÅÛ ±âº» µ¥ÀÌÅÍ
+// ì•„ì´í…œ ê¸°ë³¸ ë°ì´í„°
 public class ItemData : ScriptableObject
 {
     [Header("Common")]
-    public string itemId;              // °íÀ¯ ID
-    public string itemName;            // ÀÌ¸§
+    public string itemId;              // ê³ ìœ  ID
+    public string itemName;            // ì´ë¦„
     [TextArea] public string description;
     public Sprite icon;
     public ItemType itemType;
@@ -35,7 +35,7 @@ public class ItemData : ScriptableObject
     public int sellPrice = 1;
 
     [Header("Inventory")]
-    public bool isStackable = true;    // ÁßÃ¸ °¡´É ¿©ºÎ
+    public bool isStackable = true;    // ì¤‘ì²© ê°€ëŠ¥ ì—¬ë¶€
     public int maxStack = 99;
 
     [Header("Equip")]

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Æ÷¼Ç ½½·Ô µî·Ï ¹× ÀúÀå µ¥ÀÌÅÍ °ü¸®
+// í¬ì…˜ ìŠ¬ë¡¯ ë“±ë¡ ë° ì €ì¥ ë°ì´í„° ê´€ë¦¬
 public class PotionSlotManager : MonoBehaviour
 {
     public static PotionSlotManager Instance { get; private set; }
@@ -12,7 +12,7 @@ public class PotionSlotManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -23,13 +23,13 @@ public class PotionSlotManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Æ÷¼Ç ½½·Ô ÃÊ±âÈ­
+    // í¬ì…˜ ìŠ¬ë¡¯ ì´ˆê¸°í™”
     public void InitializePotion()
     {
         registeredItemId = string.Empty;
     }
 
-    // Æ÷¼Ç µî·Ï
+    // í¬ì…˜ ë“±ë¡
     public void SetPotion(string itemId)
     {
         if (string.IsNullOrEmpty(itemId))
@@ -39,14 +39,14 @@ public class PotionSlotManager : MonoBehaviour
         SaveManager.Instance?.MarkDirty();
     }
 
-    // Æ÷¼Ç Á¦°Å
+    // í¬ì…˜ ì œê±°
     public void ClearPotion()
     {
         registeredItemId = string.Empty;
         SaveManager.Instance?.MarkDirty();
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    // ì €ì¥ ë°ì´í„° ìƒì„±
     public PotionSlotSaveData GetSaveData()
     {
         return new PotionSlotSaveData
@@ -55,7 +55,7 @@ public class PotionSlotManager : MonoBehaviour
         };
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ ·Îµå
+    // ì €ì¥ ë°ì´í„° ë¡œë“œ
     public void LoadFromSaveData(PotionSlotSaveData saveData)
     {
         if (saveData == null)

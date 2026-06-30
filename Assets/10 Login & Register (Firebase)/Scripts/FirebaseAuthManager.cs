@@ -7,7 +7,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using UnityEngine;
 
-// Firebase ÀÎÁõ ¹× ¿Â¶óÀÎ »óÅÂ °ü¸®
+// Firebase ì¸ì¦ ë° ì˜¨ë¼ì¸ ìƒíƒœ ê´€ë¦¬
 public class FirebaseAuthManager : MonoBehaviour
 {
     public static FirebaseAuthManager Instance { get; private set; }
@@ -43,7 +43,7 @@ public class FirebaseAuthManager : MonoBehaviour
         SetOnlineStatus(false);
     }
 
-    // Firebase ÃÊ±âÈ­
+    // Firebase ì´ˆê¸°í™”
     private async void InitializeFirebase()
     {
         try
@@ -64,12 +64,12 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
-    // È¸¿ø°¡ÀÔ
+    // íšŒì›ê°€ì…
     public async Task Register(string email, string password, Action<bool, string> callback)
     {
         if (!IsInitialized)
         {
-            callback?.Invoke(false, "Àá½Ã ÈÄ ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
+            callback?.Invoke(false, "ì ì‹œ í›„ ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -77,7 +77,7 @@ public class FirebaseAuthManager : MonoBehaviour
         {
             var result = await auth.CreateUserWithEmailAndPasswordAsync(email, password);
             user = result.User;
-            callback?.Invoke(true, "È¸¿ø°¡ÀÔ ¿Ï·á");
+            callback?.Invoke(true, "íšŒì›ê°€ì… ì™„ë£Œ");
         }
         catch (Exception e)
         {
@@ -85,12 +85,12 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
-    // ·Î±×ÀÎ
+    // ë¡œê·¸ì¸
     public async Task Login(string email, string password, Action<bool, string> callback)
     {
         if (!IsInitialized)
         {
-            callback?.Invoke(false, "Àá½Ã ÈÄ ´Ù½Ã ½ÃµµÇØÁÖ¼¼¿ä.");
+            callback?.Invoke(false, "ì ì‹œ í›„ ë‹¤ì‹œ ì‹œë„í•´ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -104,7 +104,7 @@ public class FirebaseAuthManager : MonoBehaviour
             {
                 auth.SignOut();
                 user = null;
-                callback?.Invoke(false, "ÀÌ¹Ì ·Î±×ÀÎ ÁßÀÔ´Ï´Ù.");
+                callback?.Invoke(false, "ì´ë¯¸ ë¡œê·¸ì¸ ì¤‘ì…ë‹ˆë‹¤.");
                 return;
             }
 
@@ -125,7 +125,7 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
-    // ÇöÀç ·Î±×ÀÎ »óÅÂ È®ÀÎ
+    // í˜„ì¬ ë¡œê·¸ì¸ ìƒíƒœ í™•ì¸
     private async Task<bool> IsUserOnline(string uid)
     {
         if (dbRef == null || string.IsNullOrEmpty(uid))
@@ -166,7 +166,7 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
-    // ¿Â¶óÀÎ »óÅÂ ÀúÀå
+    // ì˜¨ë¼ì¸ ìƒíƒœ ì €ì¥
     private async Task SetOnlineStatusAsync(bool isOnline)
     {
         if (user == null || dbRef == null)
@@ -187,7 +187,7 @@ public class FirebaseAuthManager : MonoBehaviour
 
             if (isOnline)
             {
-                // OnDisconnect´Â SetValue »ç¿ë (Unity Firebase SDK)
+                // OnDisconnectëŠ” SetValue ì‚¬ìš© (Unity Firebase SDK)
                 Dictionary<string, object> offlineData = new Dictionary<string, object>
                 {
                     { "isOnline", false },
@@ -213,14 +213,14 @@ public class FirebaseAuthManager : MonoBehaviour
         await SetOnlineStatusAsync(isOnline);
     }
 
-    // heartbeat ½ÃÀÛ
+    // heartbeat ì‹œì‘
     private void StartHeartbeat()
     {
         StopHeartbeat();
         heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());
     }
 
-    // heartbeat ÁßÁö
+    // heartbeat ì¤‘ì§€
     private void StopHeartbeat()
     {
         if (heartbeatCoroutine == null)
@@ -239,7 +239,7 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
 
-    // ·Î±×¾Æ¿ô
+    // ë¡œê·¸ì•„ì›ƒ
     public void Logout()
     {
         if (auth == null)
@@ -253,12 +253,12 @@ public class FirebaseAuthManager : MonoBehaviour
         currentSessionId = null;
     }
 
-    // ´Ğ³×ÀÓ ¼³Á¤
+    // ë‹‰ë„¤ì„ ì„¤ì •
     public async Task SetNickname(string nickname, Action<bool, string> callback)
     {
         if (user == null || dbRef == null)
         {
-            callback?.Invoke(false, "ÃÊ±âÈ­ ¿À·ù");
+            callback?.Invoke(false, "ì´ˆê¸°í™” ì˜¤ë¥˜");
             return;
         }
 
@@ -267,7 +267,7 @@ public class FirebaseAuthManager : MonoBehaviour
             var snapshot = await dbRef.Child("nicknames").Child(nickname).GetValueAsync();
             if (snapshot.Exists)
             {
-                callback?.Invoke(false, "ÀÌ¹Ì »ç¿ë ÁßÀÎ ´Ğ³×ÀÓÀÔ´Ï´Ù.");
+                callback?.Invoke(false, "ì´ë¯¸ ì‚¬ìš© ì¤‘ì¸ ë‹‰ë„¤ì„ì…ë‹ˆë‹¤.");
                 return;
             }
 
@@ -278,12 +278,12 @@ public class FirebaseAuthManager : MonoBehaviour
             await dbRef.Child("nicknames").Child(nickname).SetValueAsync(user.UserId);
 
             user = auth.CurrentUser;
-            callback?.Invoke(true, "´Ğ³×ÀÓ ¼³Á¤ ¿Ï·á");
+            callback?.Invoke(true, "ë‹‰ë„¤ì„ ì„¤ì • ì™„ë£Œ");
         }
         catch (Exception e)
         {
             Debug.LogError($"SetNickname Error: {e}");
-            callback?.Invoke(false, "´Ğ³×ÀÓ ÀúÀå ½ÇÆĞ: " + e.Message);
+            callback?.Invoke(false, "ë‹‰ë„¤ì„ ì €ì¥ ì‹¤íŒ¨: " + e.Message);
         }
     }
 
@@ -314,7 +314,7 @@ public class FirebaseAuthManager : MonoBehaviour
         return 0;
     }
 
-    // Firebase ¿¡·¯ ¸Ş½ÃÁö º¯È¯
+    // Firebase ì—ëŸ¬ ë©”ì‹œì§€ ë³€í™˜
     private string GetFirebaseAuthErrorMessage(Exception exception)
     {
         if (exception is AggregateException aggregate && aggregate.InnerExceptions.Count > 0)
@@ -326,18 +326,18 @@ public class FirebaseAuthManager : MonoBehaviour
 
             switch (code)
             {
-                case AuthError.MissingEmail: return "ÀÌ¸ŞÀÏ ÀÔ·Â";
-                case AuthError.InvalidEmail: return "ÀÌ¸ŞÀÏ Çü½Ä ¿À·ù";
-                case AuthError.MissingPassword: return "ºñ¹Ğ¹øÈ£ ÀÔ·Â";
-                case AuthError.WeakPassword: return "ºñ¹Ğ¹øÈ£ 6ÀÚ ÀÌ»ó";
-                case AuthError.EmailAlreadyInUse: return "ÀÌ¹Ì °¡ÀÔµÈ ÀÌ¸ŞÀÏ";
-                case AuthError.WrongPassword: return "ºñ¹Ğ¹øÈ£ ¿À·ù";
-                case AuthError.UserNotFound: return "°èÁ¤ ¾øÀ½";
-                case AuthError.NetworkRequestFailed: return "³×Æ®¿öÅ© ¿À·ù";
-                default: return "·Î±×ÀÎ ¿À·ù";
+                case AuthError.MissingEmail: return "ì´ë©”ì¼ ì…ë ¥";
+                case AuthError.InvalidEmail: return "ì´ë©”ì¼ í˜•ì‹ ì˜¤ë¥˜";
+                case AuthError.MissingPassword: return "ë¹„ë°€ë²ˆí˜¸ ì…ë ¥";
+                case AuthError.WeakPassword: return "ë¹„ë°€ë²ˆí˜¸ 6ì ì´ìƒ";
+                case AuthError.EmailAlreadyInUse: return "ì´ë¯¸ ê°€ì…ëœ ì´ë©”ì¼";
+                case AuthError.WrongPassword: return "ë¹„ë°€ë²ˆí˜¸ ì˜¤ë¥˜";
+                case AuthError.UserNotFound: return "ê³„ì • ì—†ìŒ";
+                case AuthError.NetworkRequestFailed: return "ë„¤íŠ¸ì›Œí¬ ì˜¤ë¥˜";
+                default: return "ë¡œê·¸ì¸ ì˜¤ë¥˜";
             }
         }
 
-        return "¾Ë ¼ö ¾ø´Â ¿À·ù";
+        return "ì•Œ ìˆ˜ ì—†ëŠ” ì˜¤ë¥˜";
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ÇÃ·¹ÀÌ¾î ½ºÅÈ UI »ı¼º ¹× °»½Å ´ã´ç
+// í”Œë ˆì´ì–´ ìŠ¤íƒ¯ UI ìƒì„± ë° ê°±ì‹  ë‹´ë‹¹
 public class PlayerInfoUI : MonoBehaviour
 {
     [Header("PlayerInfo UI")]
@@ -39,7 +39,7 @@ public class PlayerInfoUI : MonoBehaviour
 
     private IEnumerator InitAndRefresh()
     {
-        // PlayerStat ÁØºñµÉ ¶§±îÁö ´ë±â
+        // PlayerStat ì¤€ë¹„ë  ë•Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitUntil(() =>
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
@@ -48,13 +48,13 @@ public class PlayerInfoUI : MonoBehaviour
         Refresh();
     }
 
-    // ¹öÆ° ¿¬°á
+    // ë²„íŠ¼ ì—°ê²°
     private void BindButtons()
     {
         closeButton?.onClick.AddListener(ClosePlayerInfo);
     }
 
-    // UI ÀüÃ¼ °»½Å
+    // UI ì „ì²´ ê°±ì‹ 
     public void Refresh()
     {
         if (playerStat == null) return;
@@ -82,39 +82,39 @@ public class PlayerInfoUI : MonoBehaviour
         double totalRegenBonus = currentRegen - BaseRegen;
         int totalSpeedBonus = currentSpeed - BaseSpeed;
 
-        CreateBasic($"°ø°İ·Â : {currentAttack}", $"(±âº» °ø°İ·Â : {BaseAttack})");
-        CreateBasic($"¹æ¾î·Â : {currentShield}%", $"(±âº» ¹æ¾î·Â : {BaseShield}%)");
-        CreateBasic($"ÃÖ´ë Ã¼·Â : {currentMaxHp:N0}", $"(±âº» ÃÖ´ë Ã¼·Â : {BaseMaxHp:N0})");
-        CreateBasic($"Ã¼·Â È¸º¹·® : {currentRegen:F2} / s", $"(±âº» Ã¼·Â È¸º¹·® : {BaseRegen:F2} / s)");
-        CreateBasic($"ÀÌµ¿ ¼Óµµ : {currentSpeed}", $"(±âº» ÀÌµ¿ ¼Óµµ : {BaseSpeed})");
+        CreateBasic($"ê³µê²©ë ¥ : {currentAttack}", $"(ê¸°ë³¸ ê³µê²©ë ¥ : {BaseAttack})");
+        CreateBasic($"ë°©ì–´ë ¥ : {currentShield}%", $"(ê¸°ë³¸ ë°©ì–´ë ¥ : {BaseShield}%)");
+        CreateBasic($"ìµœëŒ€ ì²´ë ¥ : {currentMaxHp:N0}", $"(ê¸°ë³¸ ìµœëŒ€ ì²´ë ¥ : {BaseMaxHp:N0})");
+        CreateBasic($"ì²´ë ¥ íšŒë³µëŸ‰ : {currentRegen:F2} / s", $"(ê¸°ë³¸ ì²´ë ¥ íšŒë³µëŸ‰ : {BaseRegen:F2} / s)");
+        CreateBasic($"ì´ë™ ì†ë„ : {currentSpeed}", $"(ê¸°ë³¸ ì´ë™ ì†ë„ : {BaseSpeed})");
 
         CreateDetail(
-            $"Ãß°¡ °ø°İ·Â : + {totalAttackBonus}",
-            $"(¾ÆÀÌÅÛ + {weaponAttackBonus}) + (¾÷±×·¹ÀÌµå + {upgradeAttackBonus})"
+            $"ì¶”ê°€ ê³µê²©ë ¥ : + {totalAttackBonus}",
+            $"(ì•„ì´í…œ + {weaponAttackBonus}) + (ì—…ê·¸ë ˆì´ë“œ + {upgradeAttackBonus})"
         );
 
         CreateDetail(
-            $"Ãß°¡ ¹æ¾î·Â : + {totalShieldBonus}%",
-            $"(¾ÆÀÌÅÛ + {shieldDefenseBonus}%)"
+            $"ì¶”ê°€ ë°©ì–´ë ¥ : + {totalShieldBonus}%",
+            $"(ì•„ì´í…œ + {shieldDefenseBonus}%)"
         );
 
         CreateDetail(
-            $"Ãß°¡ ÃÖ´ë Ã¼·Â : + {totalHpBonus:N0}",
-            $"(¾ÆÀÌÅÛ + {armorHpBonus:N0}) + (¾÷±×·¹ÀÌµå + {upgradeHpBonus:N0})"
+            $"ì¶”ê°€ ìµœëŒ€ ì²´ë ¥ : + {totalHpBonus:N0}",
+            $"(ì•„ì´í…œ + {armorHpBonus:N0}) + (ì—…ê·¸ë ˆì´ë“œ + {upgradeHpBonus:N0})"
         );
 
         CreateDetail(
-            $"Ãß°¡ Ã¼·Â È¸º¹·® : + {totalRegenBonus:F2} / s",
-            $"(¾÷±×·¹ÀÌµå + {upgradeRegenBonus:F2} / s)"
+            $"ì¶”ê°€ ì²´ë ¥ íšŒë³µëŸ‰ : + {totalRegenBonus:F2} / s",
+            $"(ì—…ê·¸ë ˆì´ë“œ + {upgradeRegenBonus:F2} / s)"
         );
 
         CreateDetail(
-            $"Ãß°¡ ÀÌµ¿ ¼Óµµ : + {totalSpeedBonus}",
-            $"(¾ÆÀÌÅÛ + {shoesSpeedBonus})"
+            $"ì¶”ê°€ ì´ë™ ì†ë„ : + {totalSpeedBonus}",
+            $"(ì•„ì´í…œ + {shoesSpeedBonus})"
         );
     }
 
-    // ±âº» ½ºÅÈ UI »ı¼º
+    // ê¸°ë³¸ ìŠ¤íƒ¯ UI ìƒì„±
     private void CreateBasic(string main, string sub)
     {
         if (basicParent == null || statBlockPrefab == null) return;
@@ -124,7 +124,7 @@ public class PlayerInfoUI : MonoBehaviour
         spawnedBlocks.Add(block);
     }
 
-    // »ó¼¼ ½ºÅÈ UI »ı¼º
+    // ìƒì„¸ ìŠ¤íƒ¯ UI ìƒì„±
     private void CreateDetail(string main, string sub)
     {
         if (detailParent == null || statBlockPrefab == null) return;
@@ -134,7 +134,7 @@ public class PlayerInfoUI : MonoBehaviour
         spawnedBlocks.Add(block);
     }
 
-    // »ı¼ºµÈ UI Á¦°Å
+    // ìƒì„±ëœ UI ì œê±°
     private void Clear()
     {
         for (int i = 0; i < spawnedBlocks.Count; i++)
@@ -185,7 +185,7 @@ public class PlayerInfoUI : MonoBehaviour
         return (UpgradeManager.Instance.GetCurrentLevel(UpgradeType.Regen) - 1) * 0.01;
     }
 
-    // UI ´İ±â
+    // UI ë‹«ê¸°
     public void ClosePlayerInfo()
     {
         UIManager.Instance?.ClosePanel(UIPanelType.PlayerInfo);

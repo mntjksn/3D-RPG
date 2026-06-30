@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 
-// ÇÃ·¹ÀÌ¾î HP Ã³¸®, »ç¸Á/ºÎÈ°, Æ÷¼Ç »ç¿ë ´ã´ç
+// í”Œë ˆì´ì–´ HP ì²˜ë¦¬, ì‚¬ë§/ë¶€í™œ, í¬ì…˜ ì‚¬ìš© ë‹´ë‹¹
 public class PlayerHealth : MonoBehaviourPun, IDamageable
 {
     private PlayerStat playerStat;
@@ -18,7 +18,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
     private Vector3 respawnPosition;
 
     [Header("Auto Heal")]
-    [SerializeField] private float healDelay = 3f; // ÇÇ°İ ÈÄ ÀÚµ¿ È¸º¹ ½ÃÀÛ±îÁö ´ë±â ½Ã°£
+    [SerializeField] private float healDelay = 3f; // í”¼ê²© í›„ ìë™ íšŒë³µ ì‹œì‘ê¹Œì§€ ëŒ€ê¸° ì‹œê°„
     private float lastHitTime;
 
     [Header("Respawn Delay")]
@@ -54,7 +54,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
             playerStat.OnHpChanged -= HandleHpChanged;
     }
 
-    // ÀÚµ¿ HP Àç»ı - ÇÇ°İ ÈÄ healDelay ÃÊ ÀÌÈÄ, HP°¡ °¡µæ Â÷Áö ¾Ê¾ÒÀ» ¶§¸¸ µ¿ÀÛ
+    // ìë™ HP ì¬ìƒ - í”¼ê²© í›„ healDelay ì´ˆ ì´í›„, HPê°€ ê°€ë“ ì°¨ì§€ ì•Šì•˜ì„ ë•Œë§Œ ë™ì‘
     private void Update()
     {
         if (!photonView.IsMine) return;
@@ -66,7 +66,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         playerStat.Heal(healAmount);
     }
 
-    // HP º¯°æ ½Ã UI °»½Å ¹× ´Ù¸¥ Å¬¶óÀÌ¾ğÆ®¿¡ µ¿±âÈ­
+    // HP ë³€ê²½ ì‹œ UI ê°±ì‹  ë° ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ì— ë™ê¸°í™”
     private void HandleHpChanged(float currentHp, float maxHp)
     {
         playerHealthBar?.UpdateHealthBar(currentHp, maxHp);
@@ -75,7 +75,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
             photonView.RPC(nameof(RPC_SyncHealthBar), RpcTarget.Others, currentHp, maxHp, isDead);
     }
 
-    // ¿ÜºÎ(PlayerSpawner)¿¡¼­ HP¹Ù ÄÄÆ÷³ÍÆ®¸¦ ¿¬°áÇÒ ¶§ È£Ãâ
+    // ì™¸ë¶€(PlayerSpawner)ì—ì„œ HPë°” ì»´í¬ë„ŒíŠ¸ë¥¼ ì—°ê²°í•  ë•Œ í˜¸ì¶œ
     public void SetHealthBar(PlayerHealthBar healthBar)
     {
         playerHealthBar = healthBar;
@@ -84,7 +84,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
             playerHealthBar.UpdateHealthBar(playerStat.CurrentHp, playerStat.MaxHp);
     }
 
-    // ·ÎÄÃ Á÷Á¢ ÇÇ°İ (Æ®¸®°Å Ãæµ¹ µî ·ÎÄÃ È£Ãâ¿ë)
+    // ë¡œì»¬ ì§ì ‘ í”¼ê²© (íŠ¸ë¦¬ê±° ì¶©ëŒ ë“± ë¡œì»¬ í˜¸ì¶œìš©)
     public void TakeDamage(float damage)
     {
         if (!photonView.IsMine) return;
@@ -96,7 +96,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
             Die();
     }
 
-    // ³×Æ®¿öÅ©¸¦ ÅëÇØ ÇÇ°İ Ã³¸® (´Ù¸¥ Å¬¶óÀÌ¾ğÆ®°¡ È£Ãâ)
+    // ë„¤íŠ¸ì›Œí¬ë¥¼ í†µí•´ í”¼ê²© ì²˜ë¦¬ (ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ê°€ í˜¸ì¶œ)
     [PunRPC]
     public void RPC_TakeDamage(float damage)
     {
@@ -109,7 +109,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
             Die();
     }
 
-    // ¿ø°İ Å¬¶óÀÌ¾ğÆ®ÀÇ HP¹Ù µ¿±âÈ­
+    // ì›ê²© í´ë¼ì´ì–¸íŠ¸ì˜ HPë°” ë™ê¸°í™”
     [PunRPC]
     private void RPC_SyncHealthBar(float currentHp, float maxHp, bool dead)
     {
@@ -119,7 +119,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         playerHealthBar?.UpdateHealthBar(currentHp, maxHp);
     }
 
-    // ¹æ¾î ÁßÀÌ°í °ø°İÀÚ°¡ ¹æ¾î ¹üÀ§ ¾È¿¡ ÀÖÀ¸¸é ¹æ¾î·Â¸¸Å­ ÇÇÇØ °¨¼Ò
+    // ë°©ì–´ ì¤‘ì´ê³  ê³µê²©ìê°€ ë°©ì–´ ë²”ìœ„ ì•ˆì— ìˆìœ¼ë©´ ë°©ì–´ë ¥ë§Œí¼ í”¼í•´ ê°ì†Œ
     public float ModifyIncomingDamage(Transform attacker, float damage)
     {
         if (isDead) return 0f;
@@ -140,7 +140,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         return !isDead && playerStat != null;
     }
 
-    // ÇÇÇØ Àû¿ë - È÷Æ® ÀÌÆåÆ® Àç»ı ¹× ¸¶Áö¸· ÇÇ°İ ½Ã°£ °»½Å
+    // í”¼í•´ ì ìš© - íˆíŠ¸ ì´í™íŠ¸ ì¬ìƒ ë° ë§ˆì§€ë§‰ í”¼ê²© ì‹œê°„ ê°±ì‹ 
     private void ApplyDamage(float damage)
     {
         playerStat.TakeDamage(damage);
@@ -153,7 +153,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         return playerStat.CurrentHp <= 0f;
     }
 
-    // »ç¸Á Ã³¸® - °ñµå ÆĞ³ÎÆ¼, »óÅÂ Àá±İ, ÀüÃ¼ Å¬¶ó¿¡ »ç¸Á ¿¬Ãâ µ¿±âÈ­
+    // ì‚¬ë§ ì²˜ë¦¬ - ê³¨ë“œ íŒ¨ë„í‹°, ìƒíƒœ ì ê¸ˆ, ì „ì²´ í´ë¼ì— ì‚¬ë§ ì—°ì¶œ ë™ê¸°í™”
     private void Die()
     {
         if (isDead) return;
@@ -161,7 +161,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         isDead = true;
         playerStat.SetCurrentHp(0f);
 
-        // °ñµåÀÇ 25% ¶Ç´Â ÃÖ¼Ò 10°ñµå¸¦ ÆĞ³ÎÆ¼·Î Â÷°¨
+        // ê³¨ë“œì˜ 25% ë˜ëŠ” ìµœì†Œ 10ê³¨ë“œë¥¼ íŒ¨ë„í‹°ë¡œ ì°¨ê°
         int currentGold = playerStat.Gold;
         int penalty = Mathf.Clamp(Mathf.Max(10, Mathf.FloorToInt(currentGold * 0.25f)), 0, currentGold);
         playerStat.UseGold(penalty);
@@ -177,7 +177,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         StartCoroutine(RespawnRoutine());
     }
 
-    // ÀüÃ¼ Å¬¶óÀÌ¾ğÆ®¿¡¼­ »ç¸Á ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+    // ì „ì²´ í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
     [PunRPC]
     private void RPC_PlayDie()
     {
@@ -191,14 +191,14 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         Respawn();
     }
 
-    // ºÎÈ° Ã³¸® - À§Ä¡ ÃÊ±âÈ­, HP ÀüÃ¼ È¸º¹, ÀüÃ¼ Å¬¶ó¿¡ ½Ã°¢ »óÅÂ º¹±¸
+    // ë¶€í™œ ì²˜ë¦¬ - ìœ„ì¹˜ ì´ˆê¸°í™”, HP ì „ì²´ íšŒë³µ, ì „ì²´ í´ë¼ì— ì‹œê° ìƒíƒœ ë³µêµ¬
     private void Respawn()
     {
         if (playerStat == null) return;
 
         isDead = false;
 
-        // CharacterController ºñÈ°¼ºÈ­ ÈÄ ÀÌµ¿ (È°¼º »óÅÂ¿¡¼­ À§Ä¡ º¯°æ ½Ã Ãæµ¹ ¿ÀÀÛµ¿ ¹æÁö)
+        // CharacterController ë¹„í™œì„±í™” í›„ ì´ë™ (í™œì„± ìƒíƒœì—ì„œ ìœ„ì¹˜ ë³€ê²½ ì‹œ ì¶©ëŒ ì˜¤ì‘ë™ ë°©ì§€)
         if (characterController != null)
             characterController.enabled = false;
 
@@ -220,7 +220,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         photonView.RPC(nameof(RPC_RespawnVisual), RpcTarget.All);
     }
 
-    // ÀüÃ¼ Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» Idle·Î º¹±¸
+    // ì „ì²´ í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì• ë‹ˆë©”ì´ì…˜ì„ Idleë¡œ ë³µêµ¬
     [PunRPC]
     private void RPC_RespawnVisual()
     {
@@ -228,7 +228,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         playerAnimation?.ResetAnimation();
     }
 
-    // Æ÷¼Ç »ç¿ë ½Ãµµ - ¾ÆÀÌÅÛ À¯È¿¼º ¹× ¼ö·® È®ÀÎ ÈÄ È¿°ú Àû¿ë
+    // í¬ì…˜ ì‚¬ìš© ì‹œë„ - ì•„ì´í…œ ìœ íš¨ì„± ë° ìˆ˜ëŸ‰ í™•ì¸ í›„ íš¨ê³¼ ì ìš©
     public bool TryUsePotion(ItemData itemData)
     {
         if (!photonView.IsMine) return false;
@@ -244,7 +244,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         bool used = ApplyPotionEffect(itemData);
         if (!used)
         {
-            // È¿°ú Àû¿ë ½ÇÆĞ ½Ã ¾ÆÀÌÅÛ ¹İÈ¯
+            // íš¨ê³¼ ì ìš© ì‹¤íŒ¨ ì‹œ ì•„ì´í…œ ë°˜í™˜
             InventoryManager.Instance.AddItem(itemData, 1);
             return false;
         }
@@ -253,7 +253,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
         return true;
     }
 
-    // Æ÷¼Ç ID¿¡ µû¶ó MaxHp ºñÀ²·Î È¸º¹·® °áÁ¤
+    // í¬ì…˜ IDì— ë”°ë¼ MaxHp ë¹„ìœ¨ë¡œ íšŒë³µëŸ‰ ê²°ì •
     private bool ApplyPotionEffect(ItemData itemData)
     {
         switch (itemData.itemId)
@@ -264,7 +264,7 @@ public class PlayerHealth : MonoBehaviourPun, IDamageable
             case "potion_hp_full": playerStat.Heal(playerStat.MaxHp); return true;
         }
 
-        Debug.LogWarning($"Á¤ÀÇµÇÁö ¾ÊÀº Æ÷¼ÇÀÔ´Ï´Ù: {itemData.itemId}");
+        Debug.LogWarning($"ì •ì˜ë˜ì§€ ì•Šì€ í¬ì…˜ì…ë‹ˆë‹¤: {itemData.itemId}");
         return false;
     }
 }

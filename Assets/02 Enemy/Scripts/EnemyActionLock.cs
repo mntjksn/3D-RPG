@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Àû Çàµ¿ °¡´É ¿©ºÎ¸¦ Áß¾Ó¿¡¼­ °ü¸® (ÀÌµ¿/°ø°İ Àá±İ)
+// ì  í–‰ë™ ê°€ëŠ¥ ì—¬ë¶€ë¥¼ ì¤‘ì•™ì—ì„œ ê´€ë¦¬ (ì´ë™/ê³µê²© ì ê¸ˆ)
 public class EnemyActionLock : MonoBehaviour
 {
     public bool CanMove { get; private set; }
@@ -8,19 +8,19 @@ public class EnemyActionLock : MonoBehaviour
     public bool IsMoving { get; private set; }
     public bool IsAttacking { get; private set; }
 
-    // »ı¼º/ºÎÈ° Á÷ÈÄ - ºÎÈ° ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³ª±â Àü±îÁö ¸ğµç Çàµ¿ Àá±İ
+    // ìƒì„±/ë¶€í™œ ì§í›„ - ë¶€í™œ ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚˜ê¸° ì „ê¹Œì§€ ëª¨ë“  í–‰ë™ ì ê¸ˆ
     public void ResetToSpawnState()
     {
         CanMove = CanAttack = IsMoving = IsAttacking = false;
     }
 
-    // ÀÌµ¿/°ø°İ Àá±İ (»ç¸Á, ÇÇ°İ °æÁ÷ µî)
+    // ì´ë™/ê³µê²© ì ê¸ˆ (ì‚¬ë§, í”¼ê²© ê²½ì§ ë“±)
     public void LockRecoverControls()
     {
         CanMove = CanAttack = false;
     }
 
-    // ÀÌµ¿/°ø°İ ÇØÁ¦
+    // ì´ë™/ê³µê²© í•´ì œ
     public void UnlockRecoverControls()
     {
         CanMove = CanAttack = true;
@@ -29,7 +29,7 @@ public class EnemyActionLock : MonoBehaviour
     public void SetMove(bool value) => IsMoving = value;
     public void SetAttack(bool value) => IsAttacking = value;
 
-    // »ç¸Á ½Ã È£Ãâ - Çàµ¿ Àá±İ ¹× »óÅÂ ÃÊ±âÈ­
+    // ì‚¬ë§ ì‹œ í˜¸ì¶œ - í–‰ë™ ì ê¸ˆ ë° ìƒíƒœ ì´ˆê¸°í™”
     public void OnDie()
     {
         LockRecoverControls();
@@ -37,7 +37,7 @@ public class EnemyActionLock : MonoBehaviour
         IsAttacking = false;
     }
 
-    // ºÎÈ° ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ½Ã Animation Event·Î È£Ãâ
+    // ë¶€í™œ ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ ì‹œ Animation Eventë¡œ í˜¸ì¶œ
     public void OnRecoverFinished()
     {
         UnlockRecoverControls();

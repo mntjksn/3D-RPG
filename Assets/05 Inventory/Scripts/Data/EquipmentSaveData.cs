@@ -1,11 +1,11 @@
 using System;
 
-// ÀåÂø ¾ÆÀÌÅÛ ÀúÀå µ¥ÀÌÅÍ
+// ì¥ì°© ì•„ì´í…œ ì €ì¥ ë°ì´í„°
 [Serializable]
 public class EquipmentSaveData
 {
-    public string weaponItemId;   // ¹«±â
-    public string armorItemId;    // °©¿Ê
-    public string shoesItemId;    // ½Å¹ß
-    public string shieldItemId;   // ¹æÆĞ
+    public string weaponItemId;   // ë¬´ê¸°
+    public string armorItemId;    // ê°‘ì˜·
+    public string shoesItemId;    // ì‹ ë°œ
+    public string shieldItemId;   // ë°©íŒ¨
 }

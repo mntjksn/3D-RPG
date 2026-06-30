@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ªÛ¡° ∆–≥Œ ø≠±‚, ∞≈∑° ∆Àæ˜, UI ∞ªΩ≈ ¥„¥Á
+// ÏÉÅÏ†ê Ìå®ÎÑê Ïó¥Í∏∞, Í±∞Îûò ÌåùÏóÖ, UI Í∞±Ïã† Îã¥Îãπ
 public class ShopPanelUI : MonoBehaviour
 {
     public static ShopPanelUI Instance { get; private set; }
@@ -18,7 +18,7 @@ public class ShopPanelUI : MonoBehaviour
 
     private void Awake()
     {
-        // ΩÃ±€≈Ê º≥¡§
+        // Ïã±Í∏ÄÌÜ§ ÏÑ§Ï†ï
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -40,7 +40,7 @@ public class ShopPanelUI : MonoBehaviour
 
     private IEnumerator InitAndOpen()
     {
-        // PlayerStat ¡ÿ∫Òµ… ∂ß±Ó¡ˆ ¥Î±‚
+        // PlayerStat Ï§ÄÎπÑÎê† ÎïåÍπåÏßÄ ÎåÄÍ∏∞
         yield return new WaitUntil(() =>
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
@@ -62,13 +62,13 @@ public class ShopPanelUI : MonoBehaviour
             ShopManager.Instance.OnTradeSuccess -= RefreshAllUI;
     }
 
-    // πˆ∆∞ ¿Ã∫•∆Æ ø¨∞·
+    // Î≤ÑÌäº Ïù¥Î≤§Ìä∏ Ïó∞Í≤∞
     private void BindButtons()
     {
         closeButton?.onClick.AddListener(CloseShop);
     }
 
-    // ªÛ¡° ΩΩ∑‘ ≈¨∏Ø √≥∏Æ
+    // ÏÉÅÏ†ê Ïä¨Î°Ø ÌÅ¥Î¶≠ Ï≤òÎ¶¨
     public void OnClickShopSlot(ShopSlotUI slotUI)
     {
         if (slotUI == null) return;
@@ -80,7 +80,7 @@ public class ShopPanelUI : MonoBehaviour
         tradePopupUI?.OpenBuy(itemData, slotUI.SlotIndex, maxBuyCount);
     }
 
-    // ¿Œ∫• ΩΩ∑‘ ≈¨∏Ø √≥∏Æ
+    // Ïù∏Î≤§ Ïä¨Î°Ø ÌÅ¥Î¶≠ Ï≤òÎ¶¨
     public void OnClickShopInventorySlot(ShopInventorySlotUI slotUI)
     {
         if (slotUI == null) return;
@@ -92,7 +92,7 @@ public class ShopPanelUI : MonoBehaviour
         tradePopupUI?.OpenSell(itemData, slotUI.SlotIndex, ownedCount);
     }
 
-    // ±∏∏≈ »Æ¡§
+    // Íµ¨Îß§ ÌôïÏ†ï
     public void ConfirmBuy(int shopSlotIndex, int quantity)
     {
         bool success = ShopService.TryBuy(shopSlotIndex, quantity, shopUI, playerStat);
@@ -101,7 +101,7 @@ public class ShopPanelUI : MonoBehaviour
             RefreshAllUI();
     }
 
-    // ∆«∏≈ »Æ¡§
+    // ÌåêÎß§ ÌôïÏ†ï
     public void ConfirmSell(int inventorySlotIndex, int quantity)
     {
         bool success = ShopService.TrySell(inventorySlotIndex, quantity, playerStat);
@@ -110,14 +110,14 @@ public class ShopPanelUI : MonoBehaviour
             RefreshAllUI();
     }
 
-    // ªÛ¡° UI ¿¸√º ∞ªΩ≈
+    // ÏÉÅÏ†ê UI Ï†ÑÏ≤¥ Í∞±Ïã†
     public void RefreshAllUI()
     {
         shopUI?.RefreshUI();
         shopInventoryUI?.RefreshUI();
     }
 
-    // ªÛ¡° ¥›±‚
+    // ÏÉÅÏ†ê Îã´Í∏∞
     public void CloseShop()
     {
         UIManager.Instance?.ClosePanel(UIPanelType.Shop);

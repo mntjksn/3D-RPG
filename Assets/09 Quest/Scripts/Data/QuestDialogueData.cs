@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "QuestDialogueData", menuName = "Quest/Dialogue Data")]
-// Äù½ºÆ® ´ë»ç µ¥ÀÌÅÍ
+// í€˜ìŠ¤íŠ¸ ëŒ€ì‚¬ ë°ì´í„°
 public class QuestDialogueData : ScriptableObject
 {
     [Header("ID")]
     public string dialogueId;
 
-    [Header("´ë»ç ¸ñ·Ï")]
+    [Header("ëŒ€ì‚¬ ëª©ë¡")]
     [TextArea(2, 5)]
     public List<string> lines = new();
 }

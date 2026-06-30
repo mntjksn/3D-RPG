@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// Äù½ºÆ® ÁøÇà ¾Ë¸² ¹× º¸»ó Ã³¸® ´ã´ç
+// í€˜ìŠ¤íŠ¸ ì§„í–‰ ì•Œë¦¼ ë° ë³´ìƒ ì²˜ë¦¬ ë‹´ë‹¹
 public static class QuestService
 {
-    // ÁøÇàµµ Áõ°¡
+    // ì§„í–‰ë„ ì¦ê°€
     public static void AddProgress(QuestData questData, int amount)
     {
         if (questData == null || amount <= 0)
@@ -21,7 +21,7 @@ public static class QuestService
         manager.SetProgress(questData, newValue);
     }
 
-    // ¸ó½ºÅÍ Ã³Ä¡
+    // ëª¬ìŠ¤í„° ì²˜ì¹˜
     public static void NotifyKill(string enemyId)
     {
         QuestManager manager = QuestManager.Instance;
@@ -38,7 +38,7 @@ public static class QuestService
         }
     }
 
-    // ¾ÆÀÌÅÛ È¹µæ
+    // ì•„ì´í…œ íšë“
     public static void NotifyCollectItem(string itemId, int amount)
     {
         QuestManager manager = QuestManager.Instance;
@@ -55,7 +55,7 @@ public static class QuestService
         }
     }
 
-    // ¾ÆÀÌÅÛ ±¸¸Å
+    // ì•„ì´í…œ êµ¬ë§¤
     public static void NotifyBuyItem(string itemId, int amount)
     {
         QuestManager manager = QuestManager.Instance;
@@ -72,7 +72,7 @@ public static class QuestService
         }
     }
 
-    // ¾ÆÀÌÅÛ ÆÇ¸Å
+    // ì•„ì´í…œ íŒë§¤
     public static void NotifySellItem(string itemId, int amount)
     {
         QuestManager manager = QuestManager.Instance;
@@ -89,7 +89,7 @@ public static class QuestService
         }
     }
 
-    // ¾ÆÀÌÅÛ ÀåÂø
+    // ì•„ì´í…œ ì¥ì°©
     public static void NotifyEquipItem(string itemId)
     {
         QuestManager manager = QuestManager.Instance;
@@ -106,7 +106,7 @@ public static class QuestService
         }
     }
 
-    // ¾÷±×·¹ÀÌµå
+    // ì—…ê·¸ë ˆì´ë“œ
     public static void NotifyUpgrade(string targetId)
     {
         QuestManager manager = QuestManager.Instance;
@@ -123,7 +123,7 @@ public static class QuestService
         }
     }
 
-    // º¸»ó ¼ö·É °¡´É ¿©ºÎ
+    // ë³´ìƒ ìˆ˜ë ¹ ê°€ëŠ¥ ì—¬ë¶€
     public static bool CanClaimReward(QuestData questData)
     {
         if (questData == null || QuestManager.Instance == null)
@@ -136,7 +136,7 @@ public static class QuestService
         return state.isAccepted && state.isCompleted && !state.isRewardClaimed;
     }
 
-    // º¸»ó ¼ö·É Ã³¸®
+    // ë³´ìƒ ìˆ˜ë ¹ ì²˜ë¦¬
     public static bool ClaimReward(QuestData questData)
     {
         if (!CanClaimReward(questData))
@@ -145,7 +145,7 @@ public static class QuestService
         if ((questData.rewardGold > 0 || questData.rewardExp > 0) && PlayerManager.Instance == null)
             return false;
 
-        // ¾ÆÀÌÅÛ Áö±Ş
+        // ì•„ì´í…œ ì§€ê¸‰
         if (questData.rewardItem != null && questData.rewardItemCount > 0)
         {
             if (InventoryManager.Instance == null)
@@ -155,11 +155,11 @@ public static class QuestService
                 return false;
         }
 
-        // °ñµå Áö±Ş
+        // ê³¨ë“œ ì§€ê¸‰
         if (questData.rewardGold > 0)
             PlayerManager.Instance.AddGold(questData.rewardGold);
 
-        // °æÇèÄ¡ Áö±Ş
+        // ê²½í—˜ì¹˜ ì§€ê¸‰
         if (questData.rewardExp > 0)
             PlayerManager.Instance.AddExp(questData.rewardExp);
 

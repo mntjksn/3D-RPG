@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ÀÎº¥Åä¸® µ¥ÀÌÅÍ °ü¸® ¹× ÀúÀå ´ã´ç
+// ì¸ë²¤í† ë¦¬ ë°ì´í„° ê´€ë¦¬ ë° ì €ì¥ ë‹´ë‹¹
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
@@ -23,7 +23,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -37,7 +37,7 @@ public class InventoryManager : MonoBehaviour
         InitializeInventory();
     }
 
-    // ¾ÆÀÌÅÛ lookup Å×ÀÌºí »ı¼º
+    // ì•„ì´í…œ lookup í…Œì´ë¸” ìƒì„±
     private void BuildItemLookup()
     {
         itemLookup.Clear();
@@ -51,7 +51,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ÀÎº¥ ÃÊ±âÈ­
+    // ì¸ë²¤ ì´ˆê¸°í™”
     public void InitializeInventory()
     {
         slots.Clear();
@@ -62,7 +62,7 @@ public class InventoryManager : MonoBehaviour
         OnInventoryChanged?.Invoke();
     }
 
-    // ItemData Á¶È¸
+    // ItemData ì¡°íšŒ
     public ItemData GetItemData(string itemId)
     {
         if (string.IsNullOrEmpty(itemId)) return null;
@@ -95,7 +95,7 @@ public class InventoryManager : MonoBehaviour
         return slot != null ? slot.amount : 0;
     }
 
-    // ÀüÃ¼ ¾ÆÀÌÅÛ °³¼ö °è»ê
+    // ì „ì²´ ì•„ì´í…œ ê°œìˆ˜ ê³„ì‚°
     public int GetItemCount(string itemId)
     {
         if (string.IsNullOrEmpty(itemId)) return 0;
@@ -114,7 +114,7 @@ public class InventoryManager : MonoBehaviour
         return total;
     }
 
-    // ¾ÆÀÌÅÛ Ãß°¡
+    // ì•„ì´í…œ ì¶”ê°€
     public bool AddItem(ItemData itemData, int amount = 1)
     {
         if (itemData == null || string.IsNullOrEmpty(itemData.itemId) || amount <= 0)
@@ -123,7 +123,7 @@ public class InventoryManager : MonoBehaviour
         int remain = amount;
         int maxStack = GetMaxStack(itemData);
 
-        // ½ºÅÃ °¡´ÉÇÑ ½½·Ô¿¡ ¸ÕÀú Ãß°¡
+        // ìŠ¤íƒ ê°€ëŠ¥í•œ ìŠ¬ë¡¯ì— ë¨¼ì € ì¶”ê°€
         if (maxStack > 1)
         {
             for (int i = 0; i < slots.Count; i++)
@@ -143,7 +143,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // ºó ½½·Ô¿¡ Ãß°¡
+        // ë¹ˆ ìŠ¬ë¡¯ì— ì¶”ê°€
         while (remain > 0)
         {
             int emptyIndex = FindFirstEmptySlot();
@@ -166,7 +166,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    // ¾ÆÀÌÅÛ Á¦°Å
+    // ì•„ì´í…œ ì œê±°
     public bool RemoveItem(string itemId, int amount = 1)
     {
         if (string.IsNullOrEmpty(itemId) || amount <= 0) return false;
@@ -217,7 +217,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    // ½½·Ô ±³È¯
+    // ìŠ¬ë¡¯ êµí™˜
     public bool SwapSlots(int fromIndex, int toIndex)
     {
         if (!IsValidSlotIndex(fromIndex) || !IsValidSlotIndex(toIndex)) return false;
@@ -236,7 +236,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    // ÀÎº¥ Á¤¸® (½ºÅÃ Á¤·Ä)
+    // ì¸ë²¤ ì •ë¦¬ (ìŠ¤íƒ ì •ë ¬)
     public void CompactInventory()
     {
         Dictionary<string, int> stackedItems = new();
@@ -274,7 +274,7 @@ public class InventoryManager : MonoBehaviour
             slots.Add(new InventorySlotData());
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    // ì €ì¥ ë°ì´í„° ìƒì„±
     public List<InventoryItemSaveData> GetSaveData()
     {
         List<InventoryItemSaveData> saveList = new();
@@ -295,7 +295,7 @@ public class InventoryManager : MonoBehaviour
         return saveList;
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ ·Îµå
+    // ì €ì¥ ë°ì´í„° ë¡œë“œ
     public void LoadFromSaveData(List<InventoryItemSaveData> saveList)
     {
         InitializeInventory();

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-// ¾÷±×·¹ÀÌµå ´Ü°èº° ºñ¿ë/È®·ü/Àç·á µ¥ÀÌÅÍ
+// ì—…ê·¸ë ˆì´ë“œ ë‹¨ê³„ë³„ ë¹„ìš©/í™•ë¥ /ì¬ë£Œ ë°ì´í„°
 [Serializable]
 public class UpgradeLevelData
 {

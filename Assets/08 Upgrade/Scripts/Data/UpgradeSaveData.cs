@@ -1,4 +1,4 @@
-// ¾÷±×·¹ÀÌµå ÀúÀå µ¥ÀÌÅÍ
+// ì—…ê·¸ë ˆì´ë“œ ì €ì¥ ë°ì´í„°
 [System.Serializable]
 public class UpgradeSaveData
 {

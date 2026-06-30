@@ -1,6 +1,6 @@
-// Æ÷¼Ç ½½·Ô ÀúÀå µ¥ÀÌÅÍ
+// í¬ì…˜ ìŠ¬ë¡¯ ì €ì¥ ë°ì´í„°
 [System.Serializable]
 public class PotionSlotSaveData
 {
-    public string registeredItemId;  // µî·ÏµÈ Æ÷¼Ç ID
+    public string registeredItemId;  // ë“±ë¡ëœ í¬ì…˜ ID
 }

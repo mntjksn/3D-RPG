@@ -2,7 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(CharacterController))]
-// ÇÃ·¹ÀÌ¾î ÀÌµ¿, Áß·Â Àû¿ë, ¹ß¼Ò¸® Àç»ı Ã³¸®
+// í”Œë ˆì´ì–´ ì´ë™, ì¤‘ë ¥ ì ìš©, ë°œì†Œë¦¬ ì¬ìƒ ì²˜ë¦¬
 public class PlayerMovement : MonoBehaviourPun
 {
     [Header("Move")]
@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviourPun
 
     private void Update()
     {
-        // ¿ø°İ ÇÃ·¹ÀÌ¾î´Â Áß·Â¸¸ Àû¿ë
+        // ì›ê²© í”Œë ˆì´ì–´ëŠ” ì¤‘ë ¥ë§Œ ì ìš©
         if (!photonView.IsMine)
         {
             verticalVelocity += gravity * Time.deltaTime;
@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviourPun
         if (inputDir.magnitude > 1f)
             inputDir.Normalize();
 
-        // °ø°İ/¹æ¾î Áß¿¡´Â ÀÌµ¿ ¼Óµµ Á¦ÇÑ
+        // ê³µê²©/ë°©ì–´ ì¤‘ì—ëŠ” ì´ë™ ì†ë„ ì œí•œ
         float targetSpeed = inputDir.magnitude * playerStat.GetSpeed();
         if (actionLock != null && actionLock.IsAttacking)
             targetSpeed = inputDir.magnitude > 0.01f ? attackMoveSpeed : 0f;
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviourPun
         Vector3 move = inputDir.normalized * currentSpeed;
         playerAnimation?.SetMoveSpeed(currentSpeed);
 
-        // ÂøÁö ½Ã ³«ÇÏ ¼Óµµ ¸®¼Â (Æ¨±è ¹æÁö)
+        // ì°©ì§€ ì‹œ ë‚™í•˜ ì†ë„ ë¦¬ì…‹ (íŠ•ê¹€ ë°©ì§€)
         if (characterController.isGrounded && verticalVelocity < 0)
             verticalVelocity = -2f;
 
@@ -83,10 +83,10 @@ public class PlayerMovement : MonoBehaviourPun
         HandleFootstepSound(inputDir);
     }
 
-    // ÀÌµ¿ ¼Óµµ¿¡ µû¶ó ¹ß¼Ò¸® Àç»ı °£°İÀ» µ¿ÀûÀ¸·Î Á¶Àı
+    // ì´ë™ ì†ë„ì— ë”°ë¼ ë°œì†Œë¦¬ ì¬ìƒ ê°„ê²©ì„ ë™ì ìœ¼ë¡œ ì¡°ì ˆ
     private void HandleFootstepSound(Vector3 inputDir)
     {
-        // °ø°İ/¹æ¾î Áß¿¡´Â ¹ß¼Ò¸® Å¸ÀÌ¸Ó ¸®¼Â
+        // ê³µê²©/ë°©ì–´ ì¤‘ì—ëŠ” ë°œì†Œë¦¬ íƒ€ì´ë¨¸ ë¦¬ì…‹
         if (actionLock != null && (actionLock.IsAttacking || actionLock.IsShielding))
         {
             footstepTimer = 0f;
@@ -104,13 +104,13 @@ public class PlayerMovement : MonoBehaviourPun
 
         if (footstepTimer <= 0f)
         {
-            // ³Ê¹« ÂªÀº °£°İÀ¸·Î Áßº¹ Àç»ı ¹æÁö
+            // ë„ˆë¬´ ì§§ì€ ê°„ê²©ìœ¼ë¡œ ì¤‘ë³µ ì¬ìƒ ë°©ì§€
             if (Time.time - lastFootstepTime < 0.1f) return;
 
             SoundManager.Instance?.PlaySFX(SfxType.Footstep);
             lastFootstepTime = Time.time;
 
-            // ¼Óµµ°¡ ºü¸¦¼ö·Ï ¹ß¼Ò¸® °£°İ Âª¾ÆÁü
+            // ì†ë„ê°€ ë¹ ë¥¼ìˆ˜ë¡ ë°œì†Œë¦¬ ê°„ê²© ì§§ì•„ì§
             float maxSpeed = Mathf.Max(playerStat.GetSpeed(), 0.01f);
             float speedRatio = Mathf.Clamp01(currentSpeed / maxSpeed);
             footstepTimer = Mathf.Lerp(maxFootstepInterval, minFootstepInterval, speedRatio);

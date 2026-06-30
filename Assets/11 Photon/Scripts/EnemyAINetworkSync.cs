@@ -4,7 +4,7 @@ using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyAI))]
-// Àû À§Ä¡, È¸Àü, ÀÌµ¿ ¼Óµµ ³×Æ®¿öÅ© µ¿±âÈ­ ´ã´ç
+// ì  ìœ„ì¹˜, íšŒì „, ì´ë™ ì†ë„ ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ë‹´ë‹¹
 public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
 {
     private const byte PositionSyncEvent = 70;
@@ -28,7 +28,7 @@ public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    // ³×Æ®¿öÅ© ÀÌº¥Æ® ¼ö½Å
+    // ë„¤íŠ¸ì›Œí¬ ì´ë²¤íŠ¸ ìˆ˜ì‹ 
     public void OnEvent(EventData photonEvent)
     {
         if (!enemyAI.IsInitialized) return;
@@ -47,7 +47,7 @@ public class EnemyAINetworkSync : MonoBehaviour, IOnEventCallback
         enemyAI.ApplyNetworkState(networkPosition, networkRotation, networkMoveSpeed);
     }
 
-    // ÇöÀç »óÅÂ Àü¼Û
+    // í˜„ì¬ ìƒíƒœ ì „ì†¡
     public void TrySyncState(Vector3 position, Quaternion rotation, float moveSpeed)
     {
         if (!PhotonNetwork.IsMasterClient) return;

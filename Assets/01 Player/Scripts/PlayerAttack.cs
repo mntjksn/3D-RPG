@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-// ¸¶¿ì½º ÁÂÅ¬¸¯ °ø°İ ÀÔ·Â Ã³¸®, ¹üÀ§ ³» °¡Àå °¡±î¿î ´ë»ó¿¡°Ô ÇÇÇØ Àû¿ë
+// ë§ˆìš°ìŠ¤ ì¢Œí´ë¦­ ê³µê²© ì…ë ¥ ì²˜ë¦¬, ë²”ìœ„ ë‚´ ê°€ì¥ ê°€ê¹Œìš´ ëŒ€ìƒì—ê²Œ í”¼í•´ ì ìš©
 public class PlayerAttack : MonoBehaviourPun
 {
     private PlayerAnimation playerAnimation;
@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviourPun
 
     private bool isAttacking;
 
-    // °ø°İ ¹üÀ§ ³» ´ë»ó ¸ñ·Ï (PlayerAttackTrigger¿¡¼­ °ü¸®)
+    // ê³µê²© ë²”ìœ„ ë‚´ ëŒ€ìƒ ëª©ë¡ (PlayerAttackTriggerì—ì„œ ê´€ë¦¬)
     private readonly List<IDamageable> targetsInRange = new();
 
     private void Awake()
@@ -35,7 +35,7 @@ public class PlayerAttack : MonoBehaviourPun
         }
     }
 
-    // ¹üÀ§ ÁøÀÔ ½Ã PlayerAttackTrigger¿¡¼­ È£Ãâ
+    // ë²”ìœ„ ì§„ì… ì‹œ PlayerAttackTriggerì—ì„œ í˜¸ì¶œ
     public void AddTarget(IDamageable target)
     {
         if (!photonView.IsMine) return;
@@ -43,19 +43,19 @@ public class PlayerAttack : MonoBehaviourPun
         targetsInRange.Add(target);
     }
 
-    // ¹üÀ§ ÀÌÅ» ½Ã PlayerAttackTrigger¿¡¼­ È£Ãâ
+    // ë²”ìœ„ ì´íƒˆ ì‹œ PlayerAttackTriggerì—ì„œ í˜¸ì¶œ
     public void RemoveTarget(IDamageable target)
     {
         if (!photonView.IsMine) return;
         targetsInRange.Remove(target);
     }
 
-    // Animation Event·Î È£Ãâ - °¡Àå °¡±î¿î ´ë»ó¿¡°Ô ÇÇÇØ Àû¿ë
+    // Animation Eventë¡œ í˜¸ì¶œ - ê°€ì¥ ê°€ê¹Œìš´ ëŒ€ìƒì—ê²Œ í”¼í•´ ì ìš©
     public void AttackHit()
     {
         if (!photonView.IsMine) return;
 
-        // null ÂüÁ¶ Á¤¸®
+        // null ì°¸ì¡° ì •ë¦¬
         for (int i = targetsInRange.Count - 1; i >= 0; i--)
         {
             if (targetsInRange[i] == null)
@@ -64,7 +64,7 @@ public class PlayerAttack : MonoBehaviourPun
 
         if (targetsInRange.Count == 0) return;
 
-        // °¡Àå °¡±î¿î ´ë»ó Å½»ö
+        // ê°€ì¥ ê°€ê¹Œìš´ ëŒ€ìƒ íƒìƒ‰
         IDamageable nearest = null;
         float nearestDist = float.MaxValue;
 
@@ -86,14 +86,14 @@ public class PlayerAttack : MonoBehaviourPun
         float finalDamage = playerStat != null ? playerStat.AttackPower : 0f;
         int attackerActorNumber = photonView.OwnerActorNr;
 
-        // ¿¡³Ê¹Ì´Â °ø°İÀÚ Á¤º¸ Æ÷ÇÔ, ±× ¿Ü´Â ±âº» TakeDamage È£Ãâ
+        // ì—ë„ˆë¯¸ëŠ” ê³µê²©ì ì •ë³´ í¬í•¨, ê·¸ ì™¸ëŠ” ê¸°ë³¸ TakeDamage í˜¸ì¶œ
         if (nearest is EnemyHealth enemyHealth)
             enemyHealth.TakeDamage(finalDamage, attackerActorNumber);
         else
             nearest.TakeDamage(finalDamage);
     }
 
-    // Animation Event·Î È£Ãâ - °ø°İ Á¾·á
+    // Animation Eventë¡œ í˜¸ì¶œ - ê³µê²© ì¢…ë£Œ
     public void EndAttack()
     {
         if (!photonView.IsMine) return;
@@ -102,7 +102,7 @@ public class PlayerAttack : MonoBehaviourPun
         actionLock?.SetAttack(false);
     }
 
-    // »ç¸Á ¶Ç´Â ºÎÈ° ½Ã °ø°İ »óÅÂ ¿ÏÀü ÃÊ±âÈ­
+    // ì‚¬ë§ ë˜ëŠ” ë¶€í™œ ì‹œ ê³µê²© ìƒíƒœ ì™„ì „ ì´ˆê¸°í™”
     public void ResetAttackState()
     {
         if (!photonView.IsMine) return;
@@ -112,7 +112,7 @@ public class PlayerAttack : MonoBehaviourPun
         actionLock?.SetAttack(false);
     }
 
-    // Animation Event·Î È£Ãâ - °ø°İ »ç¿îµå Àç»ı
+    // Animation Eventë¡œ í˜¸ì¶œ - ê³µê²© ì‚¬ìš´ë“œ ì¬ìƒ
     public void PlayAttackSFX()
     {
         if (!photonView.IsMine) return;

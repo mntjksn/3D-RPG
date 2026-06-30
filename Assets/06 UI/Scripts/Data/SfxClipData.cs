@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-// SFX е╦ют╟З ©ю╣П©ю е╛╦Ё ╦егн ╣╔юлем
+// SFX М┐─Л·┘ЙЁ╪ Л≤╓К■■Л≤╓ М│╢К╕╫ К╖╓М∙▒ К█╟Л²╢М└╟
 [Serializable]
 public class SfxClipData
 {
-    public SfxType type;     // х©╟Зю╫ а╬╥Ы
-    public AudioClip clip;   // ©ю╣П©ю е╛╦Ё
+    public SfxType type;     // М ╗ЙЁ╪Л²▄ Л╒┘К╔≤
+    public AudioClip clip;   // Л≤╓К■■Л≤╓ М│╢К╕╫
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Game/Enemy Data")]
-// Àû ±âº» ´É·ÂÄ¡, µå¶ø, ½ºÆù µ¥ÀÌÅÍ
+// ì  ê¸°ë³¸ ëŠ¥ë ¥ì¹˜, ë“œë, ìŠ¤í° ë°ì´í„°
 public class EnemyData : ScriptableObject
 {
     [Header("Info")]

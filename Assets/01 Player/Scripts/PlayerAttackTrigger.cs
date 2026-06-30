@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// °ø°İ ÆÇÁ¤ Æ®¸®°Å - ¹üÀ§ ÁøÀÔ/ÀÌÅ» ½Ã PlayerAttack¿¡ ´ë»ó µî·Ï/ÇØÁ¦
+// ê³µê²© íŒì • íŠ¸ë¦¬ê±° - ë²”ìœ„ ì§„ì…/ì´íƒˆ ì‹œ PlayerAttackì— ëŒ€ìƒ ë“±ë¡/í•´ì œ
 public class PlayerAttackTrigger : MonoBehaviour
 {
     [SerializeField] private PlayerAttack playerAttack;
 
-    // Inspector Reset ½Ã ºÎ¸ğ¿¡¼­ PlayerAttack ÀÚµ¿ ÇÒ´ç
+    // Inspector Reset ì‹œ ë¶€ëª¨ì—ì„œ PlayerAttack ìë™ í• ë‹¹
     private void Reset()
     {
         playerAttack = GetComponentInParent<PlayerAttack>();
@@ -14,7 +14,7 @@ public class PlayerAttackTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (playerAttack == null) return;
-        if (other.transform.root == transform.root) return; // ÀÚ±â ÀÚ½Å ¹«½Ã
+        if (other.transform.root == transform.root) return; // ìê¸° ìì‹  ë¬´ì‹œ
 
         IDamageable damageable = other.GetComponentInParent<IDamageable>();
         if (damageable == null) return;

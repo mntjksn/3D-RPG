@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// Àû Animator ÆÄ¶ó¹ÌÅÍ¸¦ ·¡ÇÎÇØ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı ÀÎÅÍÆäÀÌ½º Á¦°ø
+// ì  Animator íŒŒë¼ë¯¸í„°ë¥¼ ë˜í•‘í•´ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ ì¸í„°í˜ì´ìŠ¤ ì œê³µ
 public class EnemyAnimation : MonoBehaviour
 {
     private Animator animator;
 
-    // ¹®ÀÚ¿­ ´ë½Å ÇØ½Ã°ªÀ¸·Î ÆÄ¶ó¹ÌÅÍ Á¢±Ù (¼º´É ÃÖÀûÈ­)
+    // ë¬¸ìì—´ ëŒ€ì‹  í•´ì‹œê°’ìœ¼ë¡œ íŒŒë¼ë¯¸í„° ì ‘ê·¼ (ì„±ëŠ¥ ìµœì í™”)
     private readonly int hashSpeed = Animator.StringToHash("Speed");
     private readonly int hashIdle = Animator.StringToHash("Idle");
     private readonly int hashAttack = Animator.StringToHash("Attack");
@@ -16,7 +16,7 @@ public class EnemyAnimation : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    // ¿ÀºêÁ§Æ® Ç®¿¡¼­ Àç»ç¿ë ½Ã ¾Ö´Ï¸ŞÀÌÅÍ ¿ÏÀü ÃÊ±âÈ­
+    // ì˜¤ë¸Œì íŠ¸ í’€ì—ì„œ ì¬ì‚¬ìš© ì‹œ ì• ë‹ˆë©”ì´í„° ì™„ì „ ì´ˆê¸°í™”
     public void ResetAnimation()
     {
         if (animator == null) return;
@@ -24,7 +24,7 @@ public class EnemyAnimation : MonoBehaviour
         animator.Update(0f);
     }
 
-    // ÀÌµ¿ ¼Óµµ¸¦ ºí·»µùÀ¸·Î ºÎµå·´°Ô ¹İ¿µ
+    // ì´ë™ ì†ë„ë¥¼ ë¸”ë Œë”©ìœ¼ë¡œ ë¶€ë“œëŸ½ê²Œ ë°˜ì˜
     public void SetMoveSpeed(float speed)
     {
         if (animator == null) return;

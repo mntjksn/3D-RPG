@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Æ÷¼Ç ½½·Ô µî·Ï ¹× UI °»½Å ´ã´ç
+// í¬ì…˜ ìŠ¬ë¡¯ ë“±ë¡ ë° UI ê°±ì‹  ë‹´ë‹¹
 public class PotionSlotUI : MonoBehaviour, IDropHandler
 {
     [SerializeField] private Image iconImage;
@@ -12,7 +12,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
         RefreshUI();
     }
 
-    // µå·ÓÇÑ ¾ÆÀÌÅÛÀ» Æ÷¼Ç ½½·Ô¿¡ µî·Ï
+    // ë“œë¡­í•œ ì•„ì´í…œì„ í¬ì…˜ ìŠ¬ë¡¯ì— ë“±ë¡
     public void OnDrop(PointerEventData eventData)
     {
         if (InventoryDragData.SourceSlot == null)
@@ -32,7 +32,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
         SoundManager.Instance?.PlaySFX(SfxType.Equip);
     }
 
-    // µî·ÏµÈ Æ÷¼Ç ItemData Á¶È¸
+    // ë“±ë¡ëœ í¬ì…˜ ItemData ì¡°íšŒ
     public ItemData GetRegisteredItemData()
     {
         if (PotionSlotManager.Instance == null || InventoryManager.Instance == null)
@@ -45,7 +45,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
         return InventoryManager.Instance.GetItemData(itemId);
     }
 
-    // Æ÷¼Ç ½½·Ô UI °»½Å
+    // í¬ì…˜ ìŠ¬ë¡¯ UI ê°±ì‹ 
     public void RefreshUI()
     {
         if (iconImage == null)
@@ -64,7 +64,7 @@ public class PotionSlotUI : MonoBehaviour, IDropHandler
         iconImage.enabled = itemData.icon != null;
     }
 
-    // Æ÷¼Ç ½½·Ô ºñ¿ì±â
+    // í¬ì…˜ ìŠ¬ë¡¯ ë¹„ìš°ê¸°
     public void ClearSlot()
     {
         PotionSlotManager.Instance?.ClearPotion();

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-// Àû AI - ¸¶½ºÅÍ Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¼øÂû/Ãß°İ/°ø°İ »óÅÂ¸¦ Ã³¸®ÇÏ°í ¿ø°İ Å¬¶óÀÌ¾ğÆ®¿¡ µ¿±âÈ­
+// ì  AI - ë§ˆìŠ¤í„° í´ë¼ì´ì–¸íŠ¸ì—ì„œ ìˆœì°°/ì¶”ê²©/ê³µê²© ìƒíƒœë¥¼ ì²˜ë¦¬í•˜ê³  ì›ê²© í´ë¼ì´ì–¸íŠ¸ì— ë™ê¸°í™”
 public class EnemyAI : MonoBehaviour
 {
     [Header("Data")]
@@ -24,11 +24,11 @@ public class EnemyAI : MonoBehaviour
     private bool isChasing;
     private bool isReturning;
 
-    // °¡Àå °¡±î¿î ÇÃ·¹ÀÌ¾î¸¦ ÁÖ±âÀûÀ¸·Î ÀçÅ½»öÇÏ´Â Å¸ÀÌ¸Ó
+    // ê°€ì¥ ê°€ê¹Œìš´ í”Œë ˆì´ì–´ë¥¼ ì£¼ê¸°ì ìœ¼ë¡œ ì¬íƒìƒ‰í•˜ëŠ” íƒ€ì´ë¨¸
     private float retargetTimer = 0f;
     private const float retargetInterval = 1f;
 
-    // ¿ø°İ Å¬¶óÀÌ¾ğÆ®¿¡¼­ º¸°£¿¡ »ç¿ëÇÒ ³×Æ®¿öÅ© µ¿±âÈ­ °ª
+    // ì›ê²© í´ë¼ì´ì–¸íŠ¸ì—ì„œ ë³´ê°„ì— ì‚¬ìš©í•  ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ê°’
     private Vector3 networkPosition;
     private Quaternion networkRotation;
     private float networkMoveSpeed;
@@ -39,7 +39,7 @@ public class EnemyAI : MonoBehaviour
 
     public int SpawnerIndex => mySpawnerIndex;
     public int PoolIndex => myPoolIndex;
-    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex; // ½ºÆ÷³Ê+Ç® ÀÎµ¦½º·Î °íÀ¯ ID »ı¼º
+    public int UniqueId => (mySpawnerIndex << 16) | myPoolIndex; // ìŠ¤í¬ë„ˆ+í’€ ì¸ë±ìŠ¤ë¡œ ê³ ìœ  ID ìƒì„±
     public bool IsInitialized => isInitialized;
 
     private void Awake()
@@ -64,7 +64,7 @@ public class EnemyAI : MonoBehaviour
             UpdateRemoteAI();
     }
 
-    // ¸¶½ºÅÍ Å¬¶óÀÌ¾ğÆ® Àü¿ë - Å¸°Ù Å½»ö, »óÅÂ ÀüÈ¯, ÀÌµ¿/°ø°İ Ã³¸®
+    // ë§ˆìŠ¤í„° í´ë¼ì´ì–¸íŠ¸ ì „ìš© - íƒ€ê²Ÿ íƒìƒ‰, ìƒíƒœ ì „í™˜, ì´ë™/ê³µê²© ì²˜ë¦¬
     private void UpdateMasterAI()
     {
         retargetTimer -= Time.deltaTime;
@@ -106,12 +106,12 @@ public class EnemyAI : MonoBehaviour
             agent.isStopped ? 0f : agent.velocity.magnitude);
     }
 
-    // ¿ø°İ Å¬¶óÀÌ¾ğÆ® Àü¿ë - ³×Æ®¿öÅ© µ¿±âÈ­ °ªÀ¸·Î À§Ä¡/¾Ö´Ï¸ŞÀÌ¼Ç º¸°£
+    // ì›ê²© í´ë¼ì´ì–¸íŠ¸ ì „ìš© - ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ê°’ìœ¼ë¡œ ìœ„ì¹˜/ì• ë‹ˆë©”ì´ì…˜ ë³´ê°„
     private void UpdateRemoteAI()
     {
         if (!isInitialized) return;
 
-        // ¿ø°İ¿¡¼­´Â NavMeshAgent ºñÈ°¼ºÈ­ (¸¶½ºÅÍ°¡ ÀÌµ¿ Á¦¾î)
+        // ì›ê²©ì—ì„œëŠ” NavMeshAgent ë¹„í™œì„±í™” (ë§ˆìŠ¤í„°ê°€ ì´ë™ ì œì–´)
         if (agent != null && agent.enabled)
             agent.enabled = false;
 
@@ -121,7 +121,7 @@ public class EnemyAI : MonoBehaviour
 
             if (dist > 3f)
             {
-                // ¿ÀÂ÷°¡ ³Ê¹« Å©¸é Áï½Ã ½º³À
+                // ì˜¤ì°¨ê°€ ë„ˆë¬´ í¬ë©´ ì¦‰ì‹œ ìŠ¤ëƒ…
                 transform.position = networkPosition;
                 transform.rotation = networkRotation;
             }
@@ -145,7 +145,7 @@ public class EnemyAI : MonoBehaviour
         enemyAnimation?.SetMoveSpeed(networkMoveSpeed);
     }
 
-    // ³×Æ®¿öÅ© µ¿±âÈ­ µ¥ÀÌÅÍ ¼ö½Å (EnemyAINetworkSync¿¡¼­ È£Ãâ)
+    // ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ë°ì´í„° ìˆ˜ì‹  (EnemyAINetworkSyncì—ì„œ í˜¸ì¶œ)
     public void ApplyNetworkState(Vector3 position, Quaternion rotation, float moveSpeed)
     {
         networkPosition = position;
@@ -153,7 +153,7 @@ public class EnemyAI : MonoBehaviour
         networkMoveSpeed = moveSpeed;
     }
 
-    // ÅÂ±×°¡ "Player"ÀÎ ¿ÀºêÁ§Æ® Áß °¡Àå °¡±î¿î ´ë»óÀ» Å¸°ÙÀ¸·Î ¼³Á¤
+    // íƒœê·¸ê°€ "Player"ì¸ ì˜¤ë¸Œì íŠ¸ ì¤‘ ê°€ì¥ ê°€ê¹Œìš´ ëŒ€ìƒì„ íƒ€ê²Ÿìœ¼ë¡œ ì„¤ì •
     private void FindNearestTarget()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -183,7 +183,7 @@ public class EnemyAI : MonoBehaviour
         enemyAttack?.SetTarget(target);
     }
 
-    // Çàµ¿ Àá±İ »óÅÂÀÌ¸é ÀÌµ¿ Áß´Ü ÈÄ true ¹İÈ¯
+    // í–‰ë™ ì ê¸ˆ ìƒíƒœì´ë©´ ì´ë™ ì¤‘ë‹¨ í›„ true ë°˜í™˜
     private bool HandleLockedState()
     {
         if (enemyActionLock == null || enemyActionLock.CanMove)
@@ -198,17 +198,17 @@ public class EnemyAI : MonoBehaviour
     private float GetDistanceToTarget() => Vector3.Distance(transform.position, target.position);
     private float GetDistanceToSpawn() => Vector3.Distance(transform.position, spawnPosition);
 
-    // °Å¸®¿¡ µû¶ó Ãß°İ/±ÍÈ¯ »óÅÂ ÀüÈ¯
+    // ê±°ë¦¬ì— ë”°ë¼ ì¶”ê²©/ê·€í™˜ ìƒíƒœ ì „í™˜
     private void UpdateStateByDistance(float distToTarget)
     {
-        // Å½Áö ¹üÀ§ ÁøÀÔ ½Ã Ãß°İ ½ÃÀÛ
+        // íƒì§€ ë²”ìœ„ ì§„ì… ì‹œ ì¶”ê²© ì‹œì‘
         if (!isChasing && !isReturning && distToTarget <= enemyData.detectRange)
         {
             isChasing = true;
             isPatrolling = false;
         }
 
-        // ÀÌÅ» ¹üÀ§ ¹ş¾î³ª¸é ½ºÆù À§Ä¡·Î ±ÍÈ¯
+        // ì´íƒˆ ë²”ìœ„ ë²—ì–´ë‚˜ë©´ ìŠ¤í° ìœ„ì¹˜ë¡œ ê·€í™˜
         if (isChasing && distToTarget >= enemyData.loseRange)
         {
             isChasing = false;
@@ -217,7 +217,7 @@ public class EnemyAI : MonoBehaviour
             agent.SetDestination(spawnPosition);
         }
 
-        // ±ÍÈ¯ Áß ´Ù½Ã Å½Áö ¹üÀ§ ¾È¿¡ µé¾î¿À¸é Ãß°İ Àç°³
+        // ê·€í™˜ ì¤‘ ë‹¤ì‹œ íƒì§€ ë²”ìœ„ ì•ˆì— ë“¤ì–´ì˜¤ë©´ ì¶”ê²© ì¬ê°œ
         if (isReturning && distToTarget <= enemyData.detectRange)
         {
             isReturning = false;
@@ -225,7 +225,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // ¼øÂû »óÅÂ¸é ¼øÂû Ã³¸® ÈÄ true ¹İÈ¯
+    // ìˆœì°° ìƒíƒœë©´ ìˆœì°° ì²˜ë¦¬ í›„ true ë°˜í™˜
     private bool HandlePatrolState()
     {
         if (isChasing || isReturning) return false;
@@ -233,7 +233,7 @@ public class EnemyAI : MonoBehaviour
         return true;
     }
 
-    // ±ÍÈ¯ »óÅÂ Ã³¸® - ½ºÆù À§Ä¡¿¡ µµÂøÇÏ¸é ±ÍÈ¯ Á¾·á
+    // ê·€í™˜ ìƒíƒœ ì²˜ë¦¬ - ìŠ¤í° ìœ„ì¹˜ì— ë„ì°©í•˜ë©´ ê·€í™˜ ì¢…ë£Œ
     private bool HandleReturnState(float distToTarget, float distToSpawn)
     {
         if (!isReturning) return false;
@@ -257,7 +257,7 @@ public class EnemyAI : MonoBehaviour
         return true;
     }
 
-    // °ø°İ ¹üÀ§ ³»¸é °ø°İ, ¾Æ´Ï¸é Ãß°İ
+    // ê³µê²© ë²”ìœ„ ë‚´ë©´ ê³µê²©, ì•„ë‹ˆë©´ ì¶”ê²©
     private void HandleChaseAndAttack(float distToTarget)
     {
         if (distToTarget <= enemyData.attackRange)
@@ -266,12 +266,12 @@ public class EnemyAI : MonoBehaviour
             HandleChaseRange();
     }
 
-    // °ø°İ ¹üÀ§ ³» Ã³¸® - Å¸°ÙÀ» ¹Ù¶óº¸°í °ø°İ ½Ãµµ
+    // ê³µê²© ë²”ìœ„ ë‚´ ì²˜ë¦¬ - íƒ€ê²Ÿì„ ë°”ë¼ë³´ê³  ê³µê²© ì‹œë„
     private void HandleAttackRange(float distToTarget)
     {
         attackRecoverTimer = enemyData.attackRecoverTime;
 
-        // YÃà È¸Àü¸¸ Àû¿ëÇØ ¼öÆòÀ¸·Î Å¸°ÙÀ» ¹Ù¶óº½
+        // Yì¶• íšŒì „ë§Œ ì ìš©í•´ ìˆ˜í‰ìœ¼ë¡œ íƒ€ê²Ÿì„ ë°”ë¼ë´„
         Vector3 lookPos = new Vector3(target.position.x, transform.position.y, target.position.z);
         transform.LookAt(lookPos);
 
@@ -289,7 +289,7 @@ public class EnemyAI : MonoBehaviour
         enemyAttack?.TryAttack();
     }
 
-    // Ãß°İ ¹üÀ§ Ã³¸® - Å¸°Ù ¹æÇâÀ¸·Î ÀÌµ¿
+    // ì¶”ê²© ë²”ìœ„ ì²˜ë¦¬ - íƒ€ê²Ÿ ë°©í–¥ìœ¼ë¡œ ì´ë™
     private void HandleChaseRange()
     {
         agent.isStopped = false;
@@ -297,7 +297,7 @@ public class EnemyAI : MonoBehaviour
         agent.SetDestination(target.position);
     }
 
-    // °ø°İ ÈÄ °æÁ÷ ½Ã°£ µ¿¾È °ø°İ ¼Óµµ·Î ÀÌµ¿, ÀÌÈÄ ÀÏ¹İ ÀÌµ¿ ¼Óµµ ¹İÈ¯
+    // ê³µê²© í›„ ê²½ì§ ì‹œê°„ ë™ì•ˆ ê³µê²© ì†ë„ë¡œ ì´ë™, ì´í›„ ì¼ë°˜ ì´ë™ ì†ë„ ë°˜í™˜
     private float GetChaseSpeed()
     {
         if (attackRecoverTimer > 0f)
@@ -328,7 +328,7 @@ public class EnemyAI : MonoBehaviour
         isReturning = false;
     }
 
-    // NavMeshAgent¿¡ EnemyData °ª Àû¿ë
+    // NavMeshAgentì— EnemyData ê°’ ì ìš©
     private void ApplyData()
     {
         if (enemyData == null || agent == null) return;
@@ -339,7 +339,7 @@ public class EnemyAI : MonoBehaviour
         agent.stoppingDistance = enemyData.attackRange;
     }
 
-    // ¿ÀºêÁ§Æ® Ç®¿¡¼­ ²¨³¾ ¶§ AI »óÅÂ ÀüÃ¼ ÃÊ±âÈ­
+    // ì˜¤ë¸Œì íŠ¸ í’€ì—ì„œ êº¼ë‚¼ ë•Œ AI ìƒíƒœ ì „ì²´ ì´ˆê¸°í™”
     private void ResetAIState()
     {
         if (agent != null && !agent.enabled)
@@ -370,10 +370,10 @@ public class EnemyAI : MonoBehaviour
         enemyAnimation?.SetMoveSpeed(0f);
         enemyAttack?.SetData(enemyData, mySpawnerIndex, myPoolIndex);
         enemyAttack?.SetTarget(target);
-        enemyAttack?.RefreshCachedPlayers(); // ÃÊ±âÈ­ ½Ã ÇÑ ¹ø Ä³½Ì
+        enemyAttack?.RefreshCachedPlayers(); // ì´ˆê¸°í™” ì‹œ í•œ ë²ˆ ìºì‹±
     }
 
-    // ¼øÂû Ã³¸® - ´ë±â ÈÄ ·£´ı À§Ä¡·Î ÀÌµ¿ ¹İº¹
+    // ìˆœì°° ì²˜ë¦¬ - ëŒ€ê¸° í›„ ëœë¤ ìœ„ì¹˜ë¡œ ì´ë™ ë°˜ë³µ
     private void HandlePatrol()
     {
         patrolTimer -= Time.deltaTime;
@@ -383,7 +383,7 @@ public class EnemyAI : MonoBehaviour
             agent.isStopped = false;
             agent.speed = enemyData.patrolSpeed;
 
-            // ¸ñÀûÁö µµÂø ½Ã ´ë±â ÈÄ ´Ù½Ã ¼øÂû
+            // ëª©ì ì§€ ë„ì°© ì‹œ ëŒ€ê¸° í›„ ë‹¤ì‹œ ìˆœì°°
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 isPatrolling = false;
@@ -405,7 +405,7 @@ public class EnemyAI : MonoBehaviour
         UpdateMoveAnimation();
     }
 
-    // ½ºÆù À§Ä¡ ±âÁØ ¹İ°æ ³» NavMesh À§ÀÇ ·£´ı ¼øÂû ÁöÁ¡ ¹İÈ¯
+    // ìŠ¤í° ìœ„ì¹˜ ê¸°ì¤€ ë°˜ê²½ ë‚´ NavMesh ìœ„ì˜ ëœë¤ ìˆœì°° ì§€ì  ë°˜í™˜
     private Vector3 GetRandomPatrolPoint()
     {
         Vector2 randomCircle = Random.insideUnitCircle * enemyData.patrolRadius;
@@ -417,7 +417,7 @@ public class EnemyAI : MonoBehaviour
         return spawnPosition;
     }
 
-    // ¿ÜºÎ(EnemySpawner/Pool)¿¡¼­ ÃÊ±âÈ­ ½Ã È£Ãâ
+    // ì™¸ë¶€(EnemySpawner/Pool)ì—ì„œ ì´ˆê¸°í™” ì‹œ í˜¸ì¶œ
     public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;

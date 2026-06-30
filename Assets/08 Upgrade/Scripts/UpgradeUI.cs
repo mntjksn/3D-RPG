@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ¾÷±×·¹ÀÌµå UI ÀüÃ¼ °»½Å ¹× °­È­ Ã³¸® ´ã´ç
+// ì—…ê·¸ë ˆì´ë“œ UI ì „ì²´ ê°±ì‹  ë° ê°•í™” ì²˜ë¦¬ ë‹´ë‹¹
 public class UpgradeUI : MonoBehaviour
 {
     [Header("Rows")]
@@ -41,7 +41,7 @@ public class UpgradeUI : MonoBehaviour
 
     private IEnumerator InitAndRefresh()
     {
-        // PlayerStat ÁØºñµÉ ¶§±îÁö ´ë±â
+        // PlayerStat ì¤€ë¹„ë  ë•Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitUntil(() =>
             PlayerManager.Instance != null &&
             PlayerManager.Instance.Stat != null);
@@ -52,7 +52,7 @@ public class UpgradeUI : MonoBehaviour
         RefreshAll();
     }
 
-    // ¾÷±×·¹ÀÌµå UI ÀüÃ¼ °»½Å
+    // ì—…ê·¸ë ˆì´ë“œ UI ì „ì²´ ê°±ì‹ 
     public void RefreshAll()
     {
         upgradeInventoryUI?.RefreshUI();
@@ -61,14 +61,14 @@ public class UpgradeUI : MonoBehaviour
         RefreshRows();
     }
 
-    // Àç·á µå·Ó Ã³¸®
+    // ì¬ë£Œ ë“œë¡­ ì²˜ë¦¬
     public void OnDropMaterial(UpgradeType type, ItemData itemData)
     {
         UpgradeManager.Instance?.SetSelectedMaterial(type, itemData);
         RefreshAll();
     }
 
-    // ¾÷±×·¹ÀÌµå ¹öÆ° Å¬¸¯ Ã³¸®
+    // ì—…ê·¸ë ˆì´ë“œ ë²„íŠ¼ í´ë¦­ ì²˜ë¦¬
     public void OnClickUpgrade(UpgradeType type)
     {
         StatUpgradeData statData = GetStatData(type);
@@ -86,7 +86,7 @@ public class UpgradeUI : MonoBehaviour
         RefreshAll();
     }
 
-    // ¼±ÅÃ ½½·Ô °»½Å
+    // ì„ íƒ ìŠ¬ë¡¯ ê°±ì‹ 
     private void RefreshSelectedSlots()
     {
         RefreshSelectedSlot(UpgradeType.Attack, attackSlotUI);
@@ -117,7 +117,7 @@ public class UpgradeUI : MonoBehaviour
         slotUI.RefreshSlot(itemData, count);
     }
 
-    // ¾÷±×·¹ÀÌµå Çà °»½Å
+    // ì—…ê·¸ë ˆì´ë“œ í–‰ ê°±ì‹ 
     private void RefreshRows()
     {
         RefreshRow(UpgradeType.Attack, attackRowUI, attackData);
@@ -158,7 +158,7 @@ public class UpgradeUI : MonoBehaviour
         }
     }
 
-    // ¾÷±×·¹ÀÌµå Ã¢ ´İ±â
+    // ì—…ê·¸ë ˆì´ë“œ ì°½ ë‹«ê¸°
     public void CloseUpgrade()
     {
         UIManager.Instance?.ClosePanel(UIPanelType.Upgrade);

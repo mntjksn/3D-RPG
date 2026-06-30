@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Photon.Pun;
 
-// Àû »ı¼º, Ç® °ü¸®, ³×Æ®¿öÅ© µ¿±âÈ­ ´ã´ç
+// ì  ìƒì„±, í’€ ê´€ë¦¬, ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ë‹´ë‹¹
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
@@ -43,7 +43,7 @@ public class EnemySpawner : MonoBehaviour
         CreatePools();
     }
 
-    // Ç® »ı¼º
+    // í’€ ìƒì„±
     private void CreatePools()
     {
         if (!HasEnemyData())
@@ -59,7 +59,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // Å¸ÀÔº° Ç® »ı¼º
+    // íƒ€ì…ë³„ í’€ ìƒì„±
     private Queue<GameObject> CreatePool(EnemyData data)
     {
         Queue<GameObject> pool = new Queue<GameObject>();
@@ -86,7 +86,7 @@ public class EnemySpawner : MonoBehaviour
         return pool;
     }
 
-    // ÃÊ±â ½ºÆù ÈÄ ÀüÃ¼ Å¬¶ó¿¡ ºê·ÎµåÄ³½ºÆ®
+    // ì´ˆê¸° ìŠ¤í° í›„ ì „ì²´ í´ë¼ì— ë¸Œë¡œë“œìºìŠ¤íŠ¸
     public void SpawnInitialEnemiesAndBroadcast()
     {
         if (!HasEnemyData())
@@ -109,7 +109,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // ·£´ı Å¸ÀÔ ½ºÆù ½Ãµµ
+    // ëœë¤ íƒ€ì… ìŠ¤í° ì‹œë„
     public bool TrySpawnEnemy(out int dataIndex, out int poolIndex, out Vector3 spawnPos, out int viewId)
     {
         dataIndex = -1;
@@ -124,7 +124,7 @@ public class EnemySpawner : MonoBehaviour
         return TrySpawnEnemy(selectedData, out dataIndex, out poolIndex, out spawnPos, out viewId);
     }
 
-    // Æ¯Á¤ Å¸ÀÔ ½ºÆù ½Ãµµ
+    // íŠ¹ì • íƒ€ì… ìŠ¤í° ì‹œë„
     public bool TrySpawnEnemy(EnemyData selectedData, out int dataIndex, out int poolIndex, out Vector3 spawnPos, out int viewId)
     {
         dataIndex = -1;
@@ -154,7 +154,7 @@ public class EnemySpawner : MonoBehaviour
         return true;
     }
 
-    // »ç¸Á ÈÄ ¸®½ºÆù ¿äÃ»
+    // ì‚¬ë§ í›„ ë¦¬ìŠ¤í° ìš”ì²­
     public void RequestRespawn(EnemyData deadEnemyData)
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -200,7 +200,7 @@ public class EnemySpawner : MonoBehaviour
             networkSync.BroadcastReturn(dataIndex, poolIndex);
     }
 
-    // Àû È°¼ºÈ­
+    // ì  í™œì„±í™”
     public void ActivateEnemy(int dataIndex, int poolIndex, Vector3 spawnPos, int viewId)
     {
         if (enemyDatas == null || dataIndex < 0 || dataIndex >= enemyDatas.Length)
@@ -240,7 +240,7 @@ public class EnemySpawner : MonoBehaviour
             enemyAI.SetData(data, spawnerIndex, poolIndex);
     }
 
-    // ÀÎµ¦½º·Î ¹İÈ¯ Ã³¸®
+    // ì¸ë±ìŠ¤ë¡œ ë°˜í™˜ ì²˜ë¦¬
     public void ReturnEnemyByIndex(int dataIndex, int poolIndex)
     {
         if (enemyDatas == null || dataIndex < 0 || dataIndex >= enemyDatas.Length)
@@ -263,7 +263,7 @@ public class EnemySpawner : MonoBehaviour
         enemyObj.SetActive(false);
     }
 
-    // »õ ÇÃ·¹ÀÌ¾î¿¡°Ô ÇöÀç »óÅÂ Àü´Ş
+    // ìƒˆ í”Œë ˆì´ì–´ì—ê²Œ í˜„ì¬ ìƒíƒœ ì „ë‹¬
     public void SendCurrentStateToPlayer(Photon.Realtime.Player newPlayer)
     {
         if (networkSync == null)
@@ -289,7 +289,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    // ½ºÆù À§Ä¡ Å½»ö
+    // ìŠ¤í° ìœ„ì¹˜ íƒìƒ‰
     private bool TryGetSpawnPosition(out Vector3 spawnPosition)
     {
         for (int i = 0; i < maxTryCount; i++)
@@ -314,7 +314,7 @@ public class EnemySpawner : MonoBehaviour
         return false;
     }
 
-    // Ç®¿¡¼­ ºñÈ°¼º ¿ÀºêÁ§Æ® Ã£±â
+    // í’€ì—ì„œ ë¹„í™œì„± ì˜¤ë¸Œì íŠ¸ ì°¾ê¸°
     private GameObject GetFromPool(EnemyData data)
     {
         Queue<GameObject> pool;

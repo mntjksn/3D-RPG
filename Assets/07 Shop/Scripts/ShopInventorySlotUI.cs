@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ªÛ¡° ¿Œ∫• ΩΩ∑‘ UI π◊ ≈¨∏Ø √≥∏Æ ¥„¥Á
+// ÏÉÅÏ†ê Ïù∏Î≤§ Ïä¨Î°Ø UI Î∞è ÌÅ¥Î¶≠ Ï≤òÎ¶¨ Îã¥Îãπ
 public class ShopInventorySlotUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
@@ -22,14 +22,14 @@ public class ShopInventorySlotUI : MonoBehaviour
         button?.onClick.AddListener(OnClickSlot);
     }
 
-    // ΩΩ∑‘ ¿Œµ¶Ω∫ º≥¡§
+    // Ïä¨Î°Ø Ïù∏Îç±Ïä§ ÏÑ§Ï†ï
     public void SetIndex(int index)
     {
         slotIndex = index;
         gameObject.name = $"ShopInventorySlot_{index}";
     }
 
-    // ΩΩ∑‘ ∫ÒøÏ±‚
+    // Ïä¨Î°Ø ÎπÑÏö∞Í∏∞
     public void SetEmpty()
     {
         slotIndex = -1;
@@ -45,7 +45,7 @@ public class ShopInventorySlotUI : MonoBehaviour
         countText?.SetText(string.Empty);
     }
 
-    // ΩΩ∑‘ æ∆¿Ã≈€ º≥¡§
+    // Ïä¨Î°Ø ÏïÑÏù¥ÌÖú ÏÑ§Ï†ï
     public void SetItem(ItemData itemData, int count)
     {
         currentItemData = itemData;
@@ -60,7 +60,7 @@ public class ShopInventorySlotUI : MonoBehaviour
         countText?.SetText(count > 1 ? count.ToString() : string.Empty);
     }
 
-    // ΩΩ∑‘ ≈¨∏Ø √≥∏Æ
+    // Ïä¨Î°Ø ÌÅ¥Î¶≠ Ï≤òÎ¶¨
     private void OnClickSlot()
     {
         if (slotIndex < 0 || currentItemData == null)

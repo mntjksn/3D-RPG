@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î °ü·Ã ÄÄÆ÷³ÍÆ®¸¦ ÅëÇÕ °ü¸®ÇÏ´Â ½Ì±ÛÅæ ¸Å´ÏÀú
+// í”Œë ˆì´ì–´ ê´€ë ¨ ì»´í¬ë„ŒíŠ¸ë¥¼ í†µí•© ê´€ë¦¬í•˜ëŠ” ì‹±ê¸€í†¤ ë§¤ë‹ˆì €
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance { get; private set; }
@@ -8,11 +8,11 @@ public class PlayerManager : MonoBehaviour
     private PlayerStat playerStat;
     private PlayerHealth playerHealth;
 
-    // ¿ÜºÎ Á¢±Ù¿ë ÄÄÆ÷³ÍÆ® ÂüÁ¶
+    // ì™¸ë¶€ ì ‘ê·¼ìš© ì»´í¬ë„ŒíŠ¸ ì°¸ì¡°
     public PlayerStat Stat => playerStat;
     public PlayerHealth Health => playerHealth;
 
-    // PlayerStat °ªÀ» ¿ÜºÎ¿¡¼­ ÀĞÀ» ¼ö ÀÖµµ·Ï À§ÀÓ ÇÁ·ÎÆÛÆ¼
+    // PlayerStat ê°’ì„ ì™¸ë¶€ì—ì„œ ì½ì„ ìˆ˜ ìˆë„ë¡ ìœ„ì„ í”„ë¡œí¼í‹°
     public float CurrentHp => playerStat != null ? playerStat.CurrentHp : 0f;
     public float MaxHp => playerStat != null ? playerStat.MaxHp : 0f;
     public float AttackPower => playerStat != null ? playerStat.AttackPower : 0f;
@@ -31,7 +31,7 @@ public class PlayerManager : MonoBehaviour
         CacheComponents();
     }
 
-    // ½Ì±ÛÅæ ¼³Á¤ - Áßº¹ ÀÎ½ºÅÏ½º´Â ÄÄÆ÷³ÍÆ®¸¸ ºñÈ°¼ºÈ­ (¿ÀºêÁ§Æ®´Â À¯Áö)
+    // ì‹±ê¸€í†¤ ì„¤ì • - ì¤‘ë³µ ì¸ìŠ¤í„´ìŠ¤ëŠ” ì»´í¬ë„ŒíŠ¸ë§Œ ë¹„í™œì„±í™” (ì˜¤ë¸Œì íŠ¸ëŠ” ìœ ì§€)
     private void SetupSingleton()
     {
         if (Instance != null && Instance != this)
@@ -42,26 +42,26 @@ public class PlayerManager : MonoBehaviour
         Instance = this;
     }
 
-    // °°Àº ¿ÀºêÁ§Æ®¿¡¼­ ÇÊ¿äÇÑ ÄÄÆ÷³ÍÆ® Ä³½Ì
+    // ê°™ì€ ì˜¤ë¸Œì íŠ¸ì—ì„œ í•„ìš”í•œ ì»´í¬ë„ŒíŠ¸ ìºì‹±
     private void CacheComponents()
     {
         playerStat = GetComponent<PlayerStat>();
         playerHealth = GetComponent<PlayerHealth>();
 
         if (playerStat == null)
-            Debug.LogWarning("PlayerStat ÄÄÆ÷³ÍÆ®°¡ ¾ø½À´Ï´Ù.");
+            Debug.LogWarning("PlayerStat ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
         if (playerHealth == null)
-            Debug.LogWarning("PlayerHealth ÄÄÆ÷³ÍÆ®°¡ ¾ø½À´Ï´Ù.");
+            Debug.LogWarning("PlayerHealth ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
     }
 
-    // ÇÃ·¹ÀÌ¾î ½ºÅÈ ÃÊ±âÈ­ (°ÔÀÓ ½ÃÀÛ ¶Ç´Â Àç½ÃÀÛ ½Ã È£Ãâ)
+    // í”Œë ˆì´ì–´ ìŠ¤íƒ¯ ì´ˆê¸°í™” (ê²Œì„ ì‹œì‘ ë˜ëŠ” ì¬ì‹œì‘ ì‹œ í˜¸ì¶œ)
     public void InitializePlayer()
     {
         if (playerStat == null) return;
         playerStat.InitializeStat();
     }
 
-    // °æÇèÄ¡ Ãß°¡ ÈÄ ¼¼ÀÌºê µ¥ÀÌÅÍ °»½Å ¿¹¾à
+    // ê²½í—˜ì¹˜ ì¶”ê°€ í›„ ì„¸ì´ë¸Œ ë°ì´í„° ê°±ì‹  ì˜ˆì•½
     public void AddExp(int amount)
     {
         if (playerStat == null) return;
@@ -69,7 +69,7 @@ public class PlayerManager : MonoBehaviour
         SaveManager.Instance?.MarkDirty();
     }
 
-    // °ñµå Ãß°¡ ÈÄ ¼¼ÀÌºê µ¥ÀÌÅÍ °»½Å ¿¹¾à
+    // ê³¨ë“œ ì¶”ê°€ í›„ ì„¸ì´ë¸Œ ë°ì´í„° ê°±ì‹  ì˜ˆì•½
     public void AddGold(int amount)
     {
         if (playerStat == null) return;
@@ -77,13 +77,13 @@ public class PlayerManager : MonoBehaviour
         SaveManager.Instance?.MarkDirty();
     }
 
-    // ÇöÀç ÇÃ·¹ÀÌ¾î »óÅÂ¸¦ ¼¼ÀÌºê µ¥ÀÌÅÍ·Î ¹İÈ¯
+    // í˜„ì¬ í”Œë ˆì´ì–´ ìƒíƒœë¥¼ ì„¸ì´ë¸Œ ë°ì´í„°ë¡œ ë°˜í™˜
     public PlayerSaveData GetSaveData()
     {
         return playerStat != null ? playerStat.GetSaveData() : null;
     }
 
-    // ¼¼ÀÌºê µ¥ÀÌÅÍ¸¦ ÇÃ·¹ÀÌ¾î ½ºÅÈ¿¡ Àû¿ë
+    // ì„¸ì´ë¸Œ ë°ì´í„°ë¥¼ í”Œë ˆì´ì–´ ìŠ¤íƒ¯ì— ì ìš©
     public void LoadFromSaveData(PlayerSaveData saveData)
     {
         if (playerStat == null || saveData == null) return;

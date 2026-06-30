@@ -5,7 +5,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 
 [RequireComponent(typeof(EnemySpawner))]
-// Àû ½ºÆ÷³Ê »óÅÂ ³×Æ®¿öÅ© µ¿±âÈ­ ´ã´ç
+// ì  ìŠ¤í¬ë„ˆ ìƒíƒœ ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ë‹´ë‹¹
 public class EnemySpawnerNetworkSync : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     private const byte BaseActivateEventCode = 10;
@@ -38,7 +38,7 @@ public class EnemySpawnerNetworkSync : MonoBehaviourPunCallbacks, IOnEventCallba
         StartCoroutine(WaitForRoomAndSpawn());
     }
 
-    // ¹æ ÀÔÀå ÈÄ ÃÊ±â ½ºÆù
+    // ë°© ì…ì¥ í›„ ì´ˆê¸° ìŠ¤í°
     private IEnumerator WaitForRoomAndSpawn()
     {
         yield return new WaitUntil(() => PhotonNetwork.InRoom);
@@ -63,14 +63,14 @@ public class EnemySpawnerNetworkSync : MonoBehaviourPunCallbacks, IOnEventCallba
         StartCoroutine(SendCurrentStateRoutine(newPlayer));
     }
 
-    // »õ ÇÃ·¹ÀÌ¾î¿¡°Ô ÇöÀç »óÅÂ Àü¼Û
+    // ìƒˆ í”Œë ˆì´ì–´ì—ê²Œ í˜„ì¬ ìƒíƒœ ì „ì†¡
     private IEnumerator SendCurrentStateRoutine(Player newPlayer)
     {
         yield return new WaitForSeconds(1f);
         spawner.SendCurrentStateToPlayer(newPlayer);
     }
 
-    // Àû »ı¼º ºê·ÎµåÄ³½ºÆ®
+    // ì  ìƒì„± ë¸Œë¡œë“œìºìŠ¤íŠ¸
     public void BroadcastActivate(int dataIndex, int poolIndex, Vector3 spawnPos, int viewId)
     {
         object[] eventData =
@@ -94,7 +94,7 @@ public class EnemySpawnerNetworkSync : MonoBehaviourPunCallbacks, IOnEventCallba
         );
     }
 
-    // Àû ¹İÈ¯ ºê·ÎµåÄ³½ºÆ®
+    // ì  ë°˜í™˜ ë¸Œë¡œë“œìºìŠ¤íŠ¸
     public void BroadcastReturn(int dataIndex, int poolIndex)
     {
         object[] eventData =
@@ -116,7 +116,7 @@ public class EnemySpawnerNetworkSync : MonoBehaviourPunCallbacks, IOnEventCallba
         );
     }
 
-    // Æ¯Á¤ ÇÃ·¹ÀÌ¾î¿¡°Ô »ı¼º Á¤º¸ Àü¼Û
+    // íŠ¹ì • í”Œë ˆì´ì–´ì—ê²Œ ìƒì„± ì •ë³´ ì „ì†¡
     public void SendActivateToPlayer(Player player, int dataIndex, int poolIndex, Vector3 spawnPos, int viewId)
     {
         object[] eventData =
@@ -139,7 +139,7 @@ public class EnemySpawnerNetworkSync : MonoBehaviourPunCallbacks, IOnEventCallba
         );
     }
 
-    // ÀÌº¥Æ® ¼ö½Å
+    // ì´ë²¤íŠ¸ ìˆ˜ì‹ 
     public void OnEvent(EventData photonEvent)
     {
         if (!gameObject.activeInHierarchy)

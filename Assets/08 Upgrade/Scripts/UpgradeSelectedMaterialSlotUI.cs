@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// °­È­ Àç·á ½½·Ô µå·Ó ¹× UI °»½Å ´ã´ç
+// ê°•í™” ì¬ë£Œ ìŠ¬ë¡¯ ë“œë¡­ ë° UI ê°±ì‹  ë‹´ë‹¹
 public class UpgradeSelectedMaterialSlotUI : MonoBehaviour, IDropHandler
 {
     [Header("Type")]
@@ -16,7 +16,7 @@ public class UpgradeSelectedMaterialSlotUI : MonoBehaviour, IDropHandler
     [Header("Owner")]
     [SerializeField] private UpgradeUI upgradeUI;
 
-    // Àç·á µå·Ó Ã³¸®
+    // ì¬ë£Œ ë“œë¡­ ì²˜ë¦¬
     public void OnDrop(PointerEventData eventData)
     {
         if (UpgradeDragData.DraggedItem == null)
@@ -32,7 +32,7 @@ public class UpgradeSelectedMaterialSlotUI : MonoBehaviour, IDropHandler
         SoundManager.Instance?.PlaySFX(SfxType.Equip);
     }
 
-    // ½½·Ô UI °»½Å
+    // ìŠ¬ë¡¯ UI ê°±ì‹ 
     public void RefreshSlot(ItemData itemData, int ownedCount)
     {
         if (iconImage != null)
@@ -44,7 +44,7 @@ public class UpgradeSelectedMaterialSlotUI : MonoBehaviour, IDropHandler
         countText?.SetText(itemData != null ? ownedCount.ToString() : string.Empty);
     }
 
-    // ½½·Ô ºñ¿ì±â
+    // ìŠ¬ë¡¯ ë¹„ìš°ê¸°
     public void ClearSlot()
     {
         if (iconImage != null)

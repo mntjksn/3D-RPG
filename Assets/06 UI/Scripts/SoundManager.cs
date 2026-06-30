@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// »ç¿îµå Àç»ı ¹× º¼·ı ÀúÀå ´ã´ç
+// ì‚¬ìš´ë“œ ì¬ìƒ ë° ë³¼ë¥¨ ì €ì¥ ë‹´ë‹¹
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -38,7 +38,7 @@ public class SoundManager : MonoBehaviour
         ApplyVolume();
     }
 
-    // È¿°úÀ½ Å×ÀÌºí »ı¼º
+    // íš¨ê³¼ìŒ í…Œì´ë¸” ìƒì„±
     private void InitDictionary()
     {
         sfxDict = new Dictionary<SfxType, AudioClip>();
@@ -52,7 +52,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // È¿°úÀ½ Àç»ı
+    // íš¨ê³¼ìŒ ì¬ìƒ
     public void PlaySFX(SfxType type)
     {
         if (sfxSource == null) return;
@@ -62,7 +62,7 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(clip, sfxVolume);
     }
 
-    // ¹è°æÀ½ º¼·ı º¯°æ
+    // ë°°ê²½ìŒ ë³¼ë¥¨ ë³€ê²½
     public void SetBgmVolume(float value)
     {
         bgmVolume = Mathf.Clamp01(value);
@@ -73,21 +73,21 @@ public class SoundManager : MonoBehaviour
         SaveVolume();
     }
 
-    // È¿°úÀ½ º¼·ı º¯°æ
+    // íš¨ê³¼ìŒ ë³¼ë¥¨ ë³€ê²½
     public void SetSfxVolume(float value)
     {
         sfxVolume = Mathf.Clamp01(value);
         SaveVolume();
     }
 
-    // ÇöÀç º¼·ı Àû¿ë
+    // í˜„ì¬ ë³¼ë¥¨ ì ìš©
     private void ApplyVolume()
     {
         if (bgmSource != null)
             bgmSource.volume = bgmVolume;
     }
 
-    // º¼·ı ÀúÀå
+    // ë³¼ë¥¨ ì €ì¥
     private void SaveVolume()
     {
         PlayerPrefs.SetFloat("BGM_VOLUME", bgmVolume);
@@ -95,7 +95,7 @@ public class SoundManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // ÀúÀåµÈ º¼·ı ºÒ·¯¿À±â
+    // ì €ì¥ëœ ë³¼ë¥¨ ë¶ˆëŸ¬ì˜¤ê¸°
     private void LoadVolume()
     {
         bgmVolume = PlayerPrefs.GetFloat("BGM_VOLUME", 0.5f);

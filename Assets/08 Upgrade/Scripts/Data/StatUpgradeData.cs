@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "StatUpgradeData", menuName = "Upgrade/Stat Upgrade Data")]
-// ½ºÅÈ ¾÷±×·¹ÀÌµå ±âº»°ª ¹× ´Ü°è µ¥ÀÌÅÍ
+// ìŠ¤íƒ¯ ì—…ê·¸ë ˆì´ë“œ ê¸°ë³¸ê°’ ë° ë‹¨ê³„ ë°ì´í„°
 public class StatUpgradeData : ScriptableObject
 {
     [Header("Info")]
@@ -15,20 +15,20 @@ public class StatUpgradeData : ScriptableObject
     [Header("Table")]
     public UpgradeTable upgradeTable;
 
-    // ÇöÀç ·¹º§ ±âÁØ °ª °è»ê
+    // í˜„ì¬ ë ˆë²¨ ê¸°ì¤€ ê°’ ê³„ì‚°
     public float GetValue(int level)
     {
         level = Mathf.Clamp(level, 1, maxLevel);
         return baseValue + (level - 1) * valuePerLevel;
     }
 
-    // ÃÖ´ë ·¹º§ ¿©ºÎ
+    // ìµœëŒ€ ë ˆë²¨ ì—¬ë¶€
     public bool IsMaxLevel(int level)
     {
         return level >= maxLevel;
     }
 
-    // ´ÙÀ½ ·¹º§ ¾÷±×·¹ÀÌµå µ¥ÀÌÅÍ Á¶È¸
+    // ë‹¤ìŒ ë ˆë²¨ ì—…ê·¸ë ˆì´ë“œ ë°ì´í„° ì¡°íšŒ
     public UpgradeLevelData GetNextLevelData(int currentLevel)
     {
         if (upgradeTable == null)

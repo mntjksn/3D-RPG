@@ -4,7 +4,7 @@ using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyAttack))]
-// Àû °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ³×Æ®¿öÅ© µ¿±âÈ­ ´ã´ç
+// ì  ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ë‹´ë‹¹
 public class EnemyAttackNetworkSync : MonoBehaviour, IOnEventCallback
 {
     private const byte AttackEvent = 50;
@@ -26,7 +26,7 @@ public class EnemyAttackNetworkSync : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    // °ø°İ ÀÌº¥Æ® Àü¼Û
+    // ê³µê²© ì´ë²¤íŠ¸ ì „ì†¡
     public void BroadcastAttack()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -45,7 +45,7 @@ public class EnemyAttackNetworkSync : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RaiseEvent(AttackEvent, data, options, SendOptions.SendReliable);
     }
 
-    // °ø°İ ÀÌº¥Æ® ¼ö½Å
+    // ê³µê²© ì´ë²¤íŠ¸ ìˆ˜ì‹ 
     public void OnEvent(EventData photonEvent)
     {
         if (!enemyAttack.IsInitialized) return;

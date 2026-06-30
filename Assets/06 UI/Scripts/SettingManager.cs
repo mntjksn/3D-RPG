@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// ¼³Á¤ UI ¹× º¼·ı Á¶Àı ´ã´ç
+// ì„¤ì • UI ë° ë³¼ë¥¨ ì¡°ì ˆ ë‹´ë‹¹
 public class SettingManager : MonoBehaviour
 {
     [Header("UI Roots")]
@@ -18,7 +18,7 @@ public class SettingManager : MonoBehaviour
         InitSliders();
     }
 
-    // ½½¶óÀÌ´õ ÃÊ±âÈ­ ¹× ÀÌº¥Æ® ¿¬°á
+    // ìŠ¬ë¼ì´ë” ì´ˆê¸°í™” ë° ì´ë²¤íŠ¸ ì—°ê²°
     private void InitSliders()
     {
         if (SoundManager.Instance == null) return;
@@ -33,7 +33,7 @@ public class SettingManager : MonoBehaviour
         isInitialized = true;
     }
 
-    // ¹è°æÀ½ º¼·ı º¯°æ
+    // ë°°ê²½ìŒ ë³¼ë¥¨ ë³€ê²½
     private void OnBgmChanged(float value)
     {
         if (!isInitialized) return;
@@ -41,7 +41,7 @@ public class SettingManager : MonoBehaviour
         SoundManager.Instance?.SetBgmVolume(value);
     }
 
-    // È¿°úÀ½ º¼·ı º¯°æ
+    // íš¨ê³¼ìŒ ë³¼ë¥¨ ë³€ê²½
     private void OnSfxChanged(float value)
     {
         if (!isInitialized) return;
@@ -49,13 +49,13 @@ public class SettingManager : MonoBehaviour
         SoundManager.Instance?.SetSfxVolume(value);
     }
 
-    // ¼³Á¤Ã¢ ´İ±â
+    // ì„¤ì •ì°½ ë‹«ê¸°
     public void CloseSetting()
     {
         UIManager.Instance?.ClosePanel(UIPanelType.Setting);
     }
 
-    // °ÔÀÓ Á¾·á
+    // ê²Œì„ ì¢…ë£Œ
     public void ExitGame()
     {
         if (SaveManager.Instance != null)

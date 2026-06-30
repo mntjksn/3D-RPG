@@ -3,7 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Photon ¼­¹ö ¿¬°á ¹× ¿¬°á »óÅÂ Äİ¹é °ü¸®
+// Photon ì„œë²„ ì—°ê²° ë° ì—°ê²° ìƒíƒœ ì½œë°± ê´€ë¦¬
 public class PhotonNetworkManager : MonoBehaviourPunCallbacks
 {
     public static PhotonNetworkManager Instance { get; private set; }
@@ -13,7 +13,7 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -23,25 +23,25 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // ¾À ÀüÈ¯ ½Ã ÀÚµ¿ µ¿±âÈ­
+        // ì”¬ ì „í™˜ ì‹œ ìë™ ë™ê¸°í™”
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    // Photon ¿¬°á ½Ãµµ
+    // Photon ì—°ê²° ì‹œë„
     public void ConnectToPhoton(string nickname, Action<bool, string> callback)
     {
         connectCallback = callback;
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            connectCallback?.Invoke(true, "¸ÖÆ¼ÇÃ·¹ÀÌ ¼­¹ö ¿¬°á ¿Ï·á!");
+            connectCallback?.Invoke(true, "ë©€í‹°í”Œë ˆì´ ì„œë²„ ì—°ê²° ì™„ë£Œ!");
             connectCallback = null;
             return;
         }
 
         if (PhotonNetwork.IsConnected)
         {
-            connectCallback?.Invoke(true, "¸ÖÆ¼ÇÃ·¹ÀÌ ¼­¹ö ¿¬°á ¿Ï·á!");
+            connectCallback?.Invoke(true, "ë©€í‹°í”Œë ˆì´ ì„œë²„ ì—°ê²° ì™„ë£Œ!");
             connectCallback = null;
             return;
         }
@@ -60,7 +60,7 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     {
         isConnecting = false;
 
-        connectCallback?.Invoke(true, "¸ÖÆ¼ÇÃ·¹ÀÌ ¼­¹ö ¿¬°á ¿Ï·á!");
+        connectCallback?.Invoke(true, "ë©€í‹°í”Œë ˆì´ ì„œë²„ ì—°ê²° ì™„ë£Œ!");
         connectCallback = null;
     }
 
@@ -68,7 +68,7 @@ public class PhotonNetworkManager : MonoBehaviourPunCallbacks
     {
         isConnecting = false;
 
-        connectCallback?.Invoke(false, $"¼­¹ö ¿¬°á ½ÇÆĞ: {cause}");
+        connectCallback?.Invoke(false, $"ì„œë²„ ì—°ê²° ì‹¤íŒ¨: {cause}");
         connectCallback = null;
     }
 }

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Ã¤ÆÃ ÀÔ·Â, Àü¼Û, ¸Ş½ÃÁö Ç¥½Ã ´ã´ç
+// ì±„íŒ… ì…ë ¥, ì „ì†¡, ë©”ì‹œì§€ í‘œì‹œ ë‹´ë‹¹
 public class ChatManager : MonoBehaviourPun
 {
     public static ChatManager Instance { get; private set; }
@@ -21,7 +21,7 @@ public class ChatManager : MonoBehaviourPun
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -31,13 +31,13 @@ public class ChatManager : MonoBehaviourPun
         Instance = this;
     }
 
-    // ÇÃ·¹ÀÌ¾î Á¶ÀÛ Àá±İ ´ë»ó µî·Ï
+    // í”Œë ˆì´ì–´ ì¡°ì‘ ì ê¸ˆ ëŒ€ìƒ ë“±ë¡
     public void RegisterPlayer(PlayerActionLock actionLock)
     {
         playerActionLock = actionLock;
     }
 
-    // Enter ÀÔ·Â Ã³¸®
+    // Enter ì…ë ¥ ì²˜ë¦¬
     public void OnPressEnter()
     {
         if (!isChatFocused)
@@ -46,7 +46,7 @@ public class ChatManager : MonoBehaviourPun
             SendChatMessage();
     }
 
-    // Ã¤ÆÃ ÀÔ·Â ½ÃÀÛ
+    // ì±„íŒ… ì…ë ¥ ì‹œì‘
     private void OpenChat()
     {
         isChatFocused = true;
@@ -59,7 +59,7 @@ public class ChatManager : MonoBehaviourPun
         playerActionLock?.LockRecoverControls();
     }
 
-    // Ã¤ÆÃ ÀÔ·Â Á¾·á
+    // ì±„íŒ… ì…ë ¥ ì¢…ë£Œ
     private void CloseChat()
     {
         isChatFocused = false;
@@ -77,7 +77,7 @@ public class ChatManager : MonoBehaviourPun
         playerActionLock?.UnlockRecoverControls();
     }
 
-    // Ã¤ÆÃ ¸Ş½ÃÁö Àü¼Û
+    // ì±„íŒ… ë©”ì‹œì§€ ì „ì†¡
     private void SendChatMessage()
     {
         if (inputField == null)
@@ -102,7 +102,7 @@ public class ChatManager : MonoBehaviourPun
         CloseChat();
     }
 
-    // Ã¤ÆÃ ¸Ş½ÃÁö Ç¥½Ã
+    // ì±„íŒ… ë©”ì‹œì§€ í‘œì‹œ
     [PunRPC]
     private void ReceiveMessage(string message)
     {

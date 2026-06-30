@@ -1,12 +1,12 @@
 using UnityEngine;
 using Photon.Pun;
 
-// Animator ÆÄ¶ó¹ÌÅÍ¸¦ ·¡ÇÎÇØ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı ÀÎÅÍÆäÀÌ½º Á¦°ø
+// Animator íŒŒë¼ë¯¸í„°ë¥¼ ë˜í•‘í•´ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ ì¸í„°í˜ì´ìŠ¤ ì œê³µ
 public class PlayerAnimation : MonoBehaviourPun
 {
     private Animator animator;
 
-    // ¹®ÀÚ¿­ ´ë½Å ÇØ½Ã°ªÀ¸·Î ÆÄ¶ó¹ÌÅÍ Á¢±Ù (¼º´É ÃÖÀûÈ­)
+    // ë¬¸ìì—´ ëŒ€ì‹  í•´ì‹œê°’ìœ¼ë¡œ íŒŒë¼ë¯¸í„° ì ‘ê·¼ (ì„±ëŠ¥ ìµœì í™”)
     private readonly int hashSpeed = Animator.StringToHash("Speed");
     private readonly int hashAttack = Animator.StringToHash("Attack");
     private readonly int hashShield = Animator.StringToHash("Shield");
@@ -19,7 +19,7 @@ public class PlayerAnimation : MonoBehaviourPun
 
     private void Start()
     {
-        // ¿ø°İ ÇÃ·¹ÀÌ¾î Ã¹ »ı¼º ½Ã Idle »óÅÂ·Î °­Á¦ ÃÊ±âÈ­
+        // ì›ê²© í”Œë ˆì´ì–´ ì²« ìƒì„± ì‹œ Idle ìƒíƒœë¡œ ê°•ì œ ì´ˆê¸°í™”
         if (!photonView.IsMine && animator != null)
         {
             animator.Play("Idle", 0, 0f);
@@ -27,7 +27,7 @@ public class PlayerAnimation : MonoBehaviourPun
         }
     }
 
-    // ¾Ö´Ï¸ŞÀÌÅÍ¸¦ ¿ÏÀüÈ÷ ÃÊ±âÈ­ÇÏ°í Idle »óÅÂ·Î º¹±Í (ºÎÈ° ½Ã »ç¿ë)
+    // ì• ë‹ˆë©”ì´í„°ë¥¼ ì™„ì „íˆ ì´ˆê¸°í™”í•˜ê³  Idle ìƒíƒœë¡œ ë³µê·€ (ë¶€í™œ ì‹œ ì‚¬ìš©)
     public void ResetAnimation()
     {
         if (animator == null) return;
@@ -37,7 +37,7 @@ public class PlayerAnimation : MonoBehaviourPun
         ForceIdleState();
     }
 
-    // ¸ğµç Æ®¸®°Å/ÆÄ¶ó¹ÌÅÍ¸¦ ¸®¼ÂÇÏ°í Idle Å¬¸³ Àç»ı
+    // ëª¨ë“  íŠ¸ë¦¬ê±°/íŒŒë¼ë¯¸í„°ë¥¼ ë¦¬ì…‹í•˜ê³  Idle í´ë¦½ ì¬ìƒ
     public void ForceIdleState()
     {
         if (animator == null) return;
@@ -50,7 +50,7 @@ public class PlayerAnimation : MonoBehaviourPun
         animator.Update(0f);
     }
 
-    // ÀÌµ¿ ¼Óµµ¸¦ ºí·»µùÀ¸·Î ºÎµå·´°Ô ¹İ¿µ
+    // ì´ë™ ì†ë„ë¥¼ ë¸”ë Œë”©ìœ¼ë¡œ ë¶€ë“œëŸ½ê²Œ ë°˜ì˜
     public void SetMoveSpeed(float speed)
     {
         if (animator == null) return;
@@ -69,7 +69,7 @@ public class PlayerAnimation : MonoBehaviourPun
         animator.SetBool(hashShield, value);
     }
 
-    // »ç¸Á ¾Ö´Ï¸ŞÀÌ¼Ç - ÀÌµ¿/¹æ¾î »óÅÂ Á¤¸® ÈÄ Æ®¸®°Å
+    // ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ - ì´ë™/ë°©ì–´ ìƒíƒœ ì •ë¦¬ í›„ íŠ¸ë¦¬ê±°
     public void PlayDie()
     {
         if (animator == null) return;

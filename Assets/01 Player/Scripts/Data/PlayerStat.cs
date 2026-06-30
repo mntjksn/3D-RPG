@@ -1,13 +1,13 @@
 using System;
 using UnityEngine;
 
-// ÇÃ·¹ÀÌ¾î ½ºÅÈ °è»ê ¹× »óÅÂ °ü¸® (HP, EXP, °ñµå, ·¹º§)
+// í”Œë ˆì´ì–´ ìŠ¤íƒ¯ ê³„ì‚° ë° ìƒíƒœ ê´€ë¦¬ (HP, EXP, ê³¨ë“œ, ë ˆë²¨)
 public class PlayerStat : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private PlayerData playerData;
 
-    // ½ºÅÈ º¯°æ ½Ã UI µî ¿ÜºÎ¿¡¼­ ±¸µ¶ÇÒ ÀÌº¥Æ®
+    // ìŠ¤íƒ¯ ë³€ê²½ ì‹œ UI ë“± ì™¸ë¶€ì—ì„œ êµ¬ë…í•  ì´ë²¤íŠ¸
     public event Action<int> OnLevelChanged;
     public event Action<int, int> OnExpChanged;
     public event Action<float, float> OnHpChanged;
@@ -18,15 +18,15 @@ public class PlayerStat : MonoBehaviour
     private float currentHp;
     private int gold;
 
-    private float lastMaxHp; // Àåºñ º¯°æ ½Ã HP º¸Á¤À» À§ÇÑ ÀÌÀü ÃÖ´ë HP
+    private float lastMaxHp; // ì¥ë¹„ ë³€ê²½ ì‹œ HP ë³´ì •ì„ ìœ„í•œ ì´ì „ ìµœëŒ€ HP
 
-    // ÀĞ±â Àü¿ë ÇÁ·ÎÆÛÆ¼
+    // ì½ê¸° ì „ìš© í”„ë¡œí¼í‹°
     public int Level => level;
     public int CurrentExp => currentExp;
     public float CurrentHp => currentHp;
     public int Gold => gold;
 
-    // Àåºñ/¾÷±×·¹ÀÌµå Æ÷ÇÔ °è»ê °á°ú ÇÁ·ÎÆÛÆ¼
+    // ì¥ë¹„/ì—…ê·¸ë ˆì´ë“œ í¬í•¨ ê³„ì‚° ê²°ê³¼ í”„ë¡œí¼í‹°
     public float MaxHp => GetMaxHp();
     public float AttackPower => GetAttackPower();
     public float ShieldPower => GetShieldPower();
@@ -50,18 +50,18 @@ public class PlayerStat : MonoBehaviour
             EquipmentManager.Instance.OnEquipmentChanged -= HandleEquipmentChanged;
     }
 
-    // °­Á¦·Î ¸ğµç ÀÌº¥Æ®¸¦ ´Ù½Ã ¹ßÇà (·Îµå ÈÄ UI °»½Å µî¿¡ »ç¿ë)
+    // ê°•ì œë¡œ ëª¨ë“  ì´ë²¤íŠ¸ë¥¼ ë‹¤ì‹œ ë°œí–‰ (ë¡œë“œ í›„ UI ê°±ì‹  ë“±ì— ì‚¬ìš©)
     public void ForceNotify()
     {
         NotifyAll();
     }
 
-    // ½ºÅÈ ÃÊ±âÈ­ - °ÔÀÓ ½ÃÀÛ ¶Ç´Â ¼¼ÀÌºê ¾øÀ» ¶§ È£Ãâ
+    // ìŠ¤íƒ¯ ì´ˆê¸°í™” - ê²Œì„ ì‹œì‘ ë˜ëŠ” ì„¸ì´ë¸Œ ì—†ì„ ë•Œ í˜¸ì¶œ
     public void InitializeStat()
     {
         if (playerData == null)
         {
-            Debug.LogWarning("PlayerData°¡ ºñ¾î ÀÖ½À´Ï´Ù.");
+            Debug.LogWarning("PlayerDataê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -76,7 +76,7 @@ public class PlayerStat : MonoBehaviour
         NotifyAll();
     }
 
-    // HP¸¦ Á÷Á¢ ¼³Á¤ (0 ~ MaxHp »çÀÌ·Î Å¬·¥ÇÁ)
+    // HPë¥¼ ì§ì ‘ ì„¤ì • (0 ~ MaxHp ì‚¬ì´ë¡œ í´ë¨í”„)
     public void SetCurrentHp(float value)
     {
         float maxHp = GetMaxHp();
@@ -111,7 +111,7 @@ public class PlayerStat : MonoBehaviour
         MarkDirty();
     }
 
-    // °ñµå Â÷°¨ - ÀÜ¾× ºÎÁ· ½Ã false ¹İÈ¯
+    // ê³¨ë“œ ì°¨ê° - ì”ì•¡ ë¶€ì¡± ì‹œ false ë°˜í™˜
     public bool UseGold(int amount)
     {
         if (amount <= 0 || gold < amount)
@@ -123,7 +123,7 @@ public class PlayerStat : MonoBehaviour
         return true;
     }
 
-    // °æÇèÄ¡ Ãß°¡ ¹× ·¹º§¾÷ Ã³¸®
+    // ê²½í—˜ì¹˜ ì¶”ê°€ ë° ë ˆë²¨ì—… ì²˜ë¦¬
     public void AddExp(int amount)
     {
         if (playerData == null || amount <= 0) return;
@@ -137,13 +137,13 @@ public class PlayerStat : MonoBehaviour
         MarkDirty();
     }
 
-    // ´ÙÀ½ ·¹º§±îÁö ÇÊ¿äÇÑ °æÇèÄ¡
+    // ë‹¤ìŒ ë ˆë²¨ê¹Œì§€ í•„ìš”í•œ ê²½í—˜ì¹˜
     public int GetExpToNextLevel()
     {
         return playerData != null ? playerData.expToLevelUp * level : 0;
     }
 
-    // ±âº»°ª + Àåºñ º¸³Ê½º + ¾÷±×·¹ÀÌµå º¸³Ê½º¸¦ ÇÕ»êÇÑ ÃÖ´ë HP
+    // ê¸°ë³¸ê°’ + ì¥ë¹„ ë³´ë„ˆìŠ¤ + ì—…ê·¸ë ˆì´ë“œ ë³´ë„ˆìŠ¤ë¥¼ í•©ì‚°í•œ ìµœëŒ€ HP
     public int GetMaxHp()
     {
         if (playerData == null) return 0;
@@ -160,7 +160,7 @@ public class PlayerStat : MonoBehaviour
         return total;
     }
 
-    // ±âº»°ª + ¹«±â º¸³Ê½º + ¾÷±×·¹ÀÌµå º¸³Ê½º¸¦ ÇÕ»êÇÑ °ø°İ·Â
+    // ê¸°ë³¸ê°’ + ë¬´ê¸° ë³´ë„ˆìŠ¤ + ì—…ê·¸ë ˆì´ë“œ ë³´ë„ˆìŠ¤ë¥¼ í•©ì‚°í•œ ê³µê²©ë ¥
     public int GetAttackPower()
     {
         if (playerData == null) return 0;
@@ -177,7 +177,7 @@ public class PlayerStat : MonoBehaviour
         return total;
     }
 
-    // ±âº»°ª + ¹æÆĞ º¸³Ê½º¸¦ ÇÕ»êÇÑ ¹æ¾î·Â
+    // ê¸°ë³¸ê°’ + ë°©íŒ¨ ë³´ë„ˆìŠ¤ë¥¼ í•©ì‚°í•œ ë°©ì–´ë ¥
     public int GetShieldPower()
     {
         if (playerData == null) return 0;
@@ -191,7 +191,7 @@ public class PlayerStat : MonoBehaviour
         return total;
     }
 
-    // ±âº»°ª + ½Å¹ß º¸³Ê½º¸¦ ÇÕ»êÇÑ ÀÌµ¿ ¼Óµµ
+    // ê¸°ë³¸ê°’ + ì‹ ë°œ ë³´ë„ˆìŠ¤ë¥¼ í•©ì‚°í•œ ì´ë™ ì†ë„
     public int GetSpeed()
     {
         if (playerData == null) return 0;
@@ -205,7 +205,7 @@ public class PlayerStat : MonoBehaviour
         return total;
     }
 
-    // ±âº»°ª + ¾÷±×·¹ÀÌµå º¸³Ê½º¸¦ ÇÕ»êÇÑ HP Àç»ı·®
+    // ê¸°ë³¸ê°’ + ì—…ê·¸ë ˆì´ë“œ ë³´ë„ˆìŠ¤ë¥¼ í•©ì‚°í•œ HP ì¬ìƒëŸ‰
     public float GetRegen()
     {
         if (playerData == null) return 0f;
@@ -218,7 +218,7 @@ public class PlayerStat : MonoBehaviour
         return total;
     }
 
-    // ÇöÀç ½ºÅÈÀ» ¼¼ÀÌºê µ¥ÀÌÅÍ ±¸Á¶Ã¼·Î ¹İÈ¯
+    // í˜„ì¬ ìŠ¤íƒ¯ì„ ì„¸ì´ë¸Œ ë°ì´í„° êµ¬ì¡°ì²´ë¡œ ë°˜í™˜
     public PlayerSaveData GetSaveData()
     {
         return new PlayerSaveData
@@ -230,7 +230,7 @@ public class PlayerStat : MonoBehaviour
         };
     }
 
-    // ¼¼ÀÌºê µ¥ÀÌÅÍ¸¦ ½ºÅÈ¿¡ Àû¿ë (ÃÖ¼Ú°ª º¸Á¤ Æ÷ÇÔ)
+    // ì„¸ì´ë¸Œ ë°ì´í„°ë¥¼ ìŠ¤íƒ¯ì— ì ìš© (ìµœì†Ÿê°’ ë³´ì • í¬í•¨)
     public void LoadFromSaveData(PlayerSaveData saveData)
     {
         if (saveData == null || playerData == null) return;
@@ -246,7 +246,7 @@ public class PlayerStat : MonoBehaviour
         NotifyAll();
     }
 
-    // Àåºñ º¯°æ ½Ã ÃÖ´ë HP Áõ°¨ºĞ¸¸Å­ ÇöÀç HPµµ Á¶Á¤
+    // ì¥ë¹„ ë³€ê²½ ì‹œ ìµœëŒ€ HP ì¦ê°ë¶„ë§Œí¼ í˜„ì¬ HPë„ ì¡°ì •
     private void HandleEquipmentChanged()
     {
         float newMaxHp = GetMaxHp();
@@ -264,7 +264,7 @@ public class PlayerStat : MonoBehaviour
         return currentExp >= GetExpToNextLevel();
     }
 
-    // ·¹º§¾÷ Ã³¸® - EXP Â÷°¨, ·¹º§ Áõ°¡, HP ÀüÃ¼ È¸º¹
+    // ë ˆë²¨ì—… ì²˜ë¦¬ - EXP ì°¨ê°, ë ˆë²¨ ì¦ê°€, HP ì „ì²´ íšŒë³µ
     private void LevelUp()
     {
         currentExp -= GetExpToNextLevel();
@@ -278,7 +278,7 @@ public class PlayerStat : MonoBehaviour
         OnHpChanged?.Invoke(currentHp, maxHp);
     }
 
-    // ¸ğµç ½ºÅÈ ÀÌº¥Æ®¸¦ ÀÏ°ı ¹ßÇà
+    // ëª¨ë“  ìŠ¤íƒ¯ ì´ë²¤íŠ¸ë¥¼ ì¼ê´„ ë°œí–‰
     private void NotifyAll()
     {
         float maxHp = GetMaxHp();

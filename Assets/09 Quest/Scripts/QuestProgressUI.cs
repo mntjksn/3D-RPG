@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ÇöÀç ÁøÇà Áß Äù½ºÆ® UI Ç¥½Ã ´ã´ç
+// í˜„ì¬ ì§„í–‰ ì¤‘ í€˜ìŠ¤íŠ¸ UI í‘œì‹œ ë‹´ë‹¹
 public class QuestProgressUI : MonoBehaviour
 {
     [Header("UI")]
@@ -30,7 +30,7 @@ public class QuestProgressUI : MonoBehaviour
         UnbindEvents();
     }
 
-    // ÀÌº¥Æ® µî·Ï
+    // ì´ë²¤íŠ¸ ë“±ë¡
     private void BindEvents()
     {
         if (isSubscribed) return;
@@ -46,7 +46,7 @@ public class QuestProgressUI : MonoBehaviour
         isSubscribed = true;
     }
 
-    // ÀÌº¥Æ® ÇØÁ¦
+    // ì´ë²¤íŠ¸ í•´ì œ
     private void UnbindEvents()
     {
         if (!isSubscribed) return;
@@ -62,13 +62,13 @@ public class QuestProgressUI : MonoBehaviour
         isSubscribed = false;
     }
 
-    // ÀÌº¥Æ®¿ë ¿À¹ö·Îµå
+    // ì´ë²¤íŠ¸ìš© ì˜¤ë²„ë¡œë“œ
     private void RefreshUI(QuestData _)
     {
         RefreshUI();
     }
 
-    // UI °»½Å
+    // UI ê°±ì‹ 
     public void RefreshUI()
     {
         var manager = QuestManager.Instance;
@@ -114,7 +114,7 @@ public class QuestProgressUI : MonoBehaviour
         }
     }
 
-    // Ç¥½Ã ¿©ºÎ ¼³Á¤
+    // í‘œì‹œ ì—¬ë¶€ ì„¤ì •
     private void SetVisible(bool visible)
     {
         panelRoot?.SetActive(visible);

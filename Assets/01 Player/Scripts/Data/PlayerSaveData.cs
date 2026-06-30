@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 
-// ÇÃ·¹ÀÌ¾î ÀüÃ¼ ÀúÀå µ¥ÀÌÅÍ
+// í”Œë ˆì´ì–´ ì „ì²´ ì €ì¥ ë°ì´í„°
 [System.Serializable]
 public class PlayerSaveData
 {
-    public int level;          // ÇöÀç ·¹º§
-    public int currentExp;     // ÇöÀç °æÇèÄ¡
-    public float currentHp;    // ÇöÀç Ã¼·Â
-    public int gold;           // °ñµå
+    public int level;          // í˜„ì¬ ë ˆë²¨
+    public int currentExp;     // í˜„ì¬ ê²½í—˜ì¹˜
+    public float currentHp;    // í˜„ì¬ ì²´ë ¥
+    public int gold;           // ê³¨ë“œ
 
-    public List<InventoryItemSaveData> inventoryItems = new();   // ÀÎº¥Åä¸®
-    public EquipmentSaveData equipmentData = new();              // Àåºñ
-    public PotionSlotSaveData potionSlot = new();                // Æ÷¼Ç ½½·Ô
-    public UpgradeSaveData upgradeData = new();                  // ¾÷±×·¹ÀÌµå
-    public QuestSaveData questData = new();                      // Äù½ºÆ®
+    public List<InventoryItemSaveData> inventoryItems = new();   // ì¸ë²¤í† ë¦¬
+    public EquipmentSaveData equipmentData = new();              // ì¥ë¹„
+    public PotionSlotSaveData potionSlot = new();                // í¬ì…˜ ìŠ¬ë¡¯
+    public UpgradeSaveData upgradeData = new();                  // ì—…ê·¸ë ˆì´ë“œ
+    public QuestSaveData questData = new();                      // í€˜ìŠ¤íŠ¸
 }

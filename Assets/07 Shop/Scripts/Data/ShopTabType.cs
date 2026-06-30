@@ -1,6 +1,6 @@
-// »óÁ¡ ÅÇ Á¾·ù
+// ìƒì  íƒ­ ì¢…ë¥˜
 public enum ShopTabType
 {
-    Equipment = 0,  // Àåºñ
-    Item            // ¾ÆÀÌÅÛ
+    Equipment = 0,  // ì¥ë¹„
+    Item            // ì•„ì´í…œ
 }

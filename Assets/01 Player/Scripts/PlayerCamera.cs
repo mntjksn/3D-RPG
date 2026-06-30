@@ -1,7 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 
-// 3ÀÎÄª Ä«¸Ş¶ó - ¸¶¿ì½º È¸Àü, »óÇÏ °¢µµ º¸°£, º® Ãæµ¹ ½Ã °Å¸® Á¶Á¤
+// 3ì¸ì¹­ ì¹´ë©”ë¼ - ë§ˆìš°ìŠ¤ íšŒì „, ìƒí•˜ ê°ë„ ë³´ê°„, ë²½ ì¶©ëŒ ì‹œ ê±°ë¦¬ ì¡°ì •
 public class PlayerCamera : MonoBehaviourPun
 {
     [Header("Target")]
@@ -34,7 +34,7 @@ public class PlayerCamera : MonoBehaviourPun
 
     private void Start()
     {
-        // ³» ÇÃ·¹ÀÌ¾î°¡ ¾Æ´Ï¸é Ä«¸Ş¶ó ºñÈ°¼ºÈ­
+        // ë‚´ í”Œë ˆì´ì–´ê°€ ì•„ë‹ˆë©´ ì¹´ë©”ë¼ ë¹„í™œì„±í™”
         if (!photonView.IsMine)
         {
             cameraTransform?.gameObject.SetActive(false);
@@ -52,7 +52,7 @@ public class PlayerCamera : MonoBehaviourPun
         currentCameraDistance = cameraDistance;
     }
 
-    // ¸¶¿ì½º ÀÔ·ÂÀ¸·Î Ä«¸Ş¶ó »óÇÏ È¸Àü ¹× ÇÃ·¹ÀÌ¾î ÁÂ¿ì È¸Àü
+    // ë§ˆìš°ìŠ¤ ì…ë ¥ìœ¼ë¡œ ì¹´ë©”ë¼ ìƒí•˜ íšŒì „ ë° í”Œë ˆì´ì–´ ì¢Œìš° íšŒì „
     private void Update()
     {
         if (!photonView.IsMine) return;
@@ -71,7 +71,7 @@ public class PlayerCamera : MonoBehaviourPun
         transform.localRotation = Quaternion.Euler(currentXRotation, 0f, 0f);
     }
 
-    // Ä«¸Ş¶ó À§Ä¡ °»½Å - SphereCast·Î º® °¨Áö ½Ã °Å¸® ÁÙÀÓ
+    // ì¹´ë©”ë¼ ìœ„ì¹˜ ê°±ì‹  - SphereCastë¡œ ë²½ ê°ì§€ ì‹œ ê±°ë¦¬ ì¤„ì„
     private void LateUpdate()
     {
         if (!photonView.IsMine || cameraTransform == null) return;

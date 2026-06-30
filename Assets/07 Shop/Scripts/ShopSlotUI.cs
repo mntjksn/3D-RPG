@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-// »óÁ¡ ½½·Ô UI, Å¬¸¯ ¹× ÅøÆÁ Ã³¸® ´ã´ç
+// ìƒì  ìŠ¬ë¡¯ UI, í´ë¦­ ë° íˆ´íŒ ì²˜ë¦¬ ë‹´ë‹¹
 public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image iconImage;
@@ -21,14 +21,14 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         button?.onClick.AddListener(OnClickSlot);
     }
 
-    // ½½·Ô ÀÎµ¦½º ¼³Á¤
+    // ìŠ¬ë¡¯ ì¸ë±ìŠ¤ ì„¤ì •
     public void SetIndex(int index)
     {
         slotIndex = index;
         gameObject.name = $"ShopSlot_{index}";
     }
 
-    // ½½·Ô ºñ¿ì±â
+    // ìŠ¬ë¡¯ ë¹„ìš°ê¸°
     public void SetEmpty()
     {
         currentItemData = null;
@@ -42,7 +42,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         countText?.SetText(string.Empty);
     }
 
-    // ½½·Ô ¾ÆÀÌÅÛ ¼³Á¤
+    // ìŠ¬ë¡¯ ì•„ì´í…œ ì„¤ì •
     public void SetItem(ItemData itemData)
     {
         currentItemData = itemData;
@@ -56,7 +56,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         countText?.SetText(string.Empty);
     }
 
-    // ¸¶¿ì½º ¿À¹ö ½Ã ÅøÆÁ Ç¥½Ã
+    // ë§ˆìš°ìŠ¤ ì˜¤ë²„ ì‹œ íˆ´íŒ í‘œì‹œ
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (currentItemData == null) return;
@@ -69,7 +69,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         ItemTooltipUI.Instance?.Hide();
     }
 
-    // ½½·Ô Å¬¸¯ Ã³¸®
+    // ìŠ¬ë¡¯ í´ë¦­ ì²˜ë¦¬
     private void OnClickSlot()
     {
         if (slotIndex < 0 || currentItemData == null)

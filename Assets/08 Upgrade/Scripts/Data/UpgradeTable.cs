@@ -2,19 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UpgradeTable", menuName = "Upgrade/Upgrade Table")]
-// ¾÷±×·¹ÀÌµå ´Ü°èº° µ¥ÀÌÅÍ Å×ÀÌºí
+// ì—…ê·¸ë ˆì´ë“œ ë‹¨ê³„ë³„ ë°ì´í„° í…Œì´ë¸”
 public class UpgradeTable : ScriptableObject
 {
-    [Tooltip("1->2, 2->3, 3->4 ... ¼ø¼­´ë·Î ³Ö±â")]
+    [Tooltip("1->2, 2->3, 3->4 ... ìˆœì„œëŒ€ë¡œ ë„£ê¸°")]
     public List<UpgradeLevelData> levels = new();
 
-    // ´ÙÀ½ ·¹º§ ¾÷±×·¹ÀÌµå µ¥ÀÌÅÍ ¹ÝÈ¯
+    // ë‹¤ìŒ ë ˆë²¨ ì—…ê·¸ë ˆì´ë“œ ë°ì´í„° ë°˜í™˜
     public UpgradeLevelData GetLevelData(int currentLevel, int maxLevel = 10)
     {
         if (currentLevel >= maxLevel)
             return null;
 
-        int index = currentLevel - 1; // 1·¹º§ ¡æ 0¹ø
+        int index = currentLevel - 1; // 1ë ˆë²¨ â†’ 0ë²ˆ
 
         if (index < 0 || index >= levels.Count)
             return null;

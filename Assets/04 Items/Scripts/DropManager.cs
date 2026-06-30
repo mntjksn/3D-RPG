@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-// °ñµå¿Í ¾ÆÀÌÅÛ µå¶ø »ı¼º ´ã´ç
+// ê³¨ë“œì™€ ì•„ì´í…œ ë“œë ìƒì„± ë‹´ë‹¹
 public class DropManager : MonoBehaviour
 {
     public static DropManager Instance { get; private set; }
@@ -16,7 +16,7 @@ public class DropManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -27,7 +27,7 @@ public class DropManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // µå¶ø ¸ñ·Ï »ı¼º
+    // ë“œë ëª©ë¡ ìƒì„±
     public void SpawnDrops(Vector3 position, int goldAmount, List<(ItemData itemData, int amount)> items, int ownerActorNumber)
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -41,7 +41,7 @@ public class DropManager : MonoBehaviour
             SpawnItem(position, item.itemData, item.amount, ownerActorNumber);
     }
 
-    // °ñµå µå¶ø »ı¼º
+    // ê³¨ë“œ ë“œë ìƒì„±
     private void SpawnGold(Vector3 center, int goldAmount, int ownerActorNumber)
     {
         Vector3 spawnPos = center + Vector3.up * 0.5f + GetRandomOffset();
@@ -55,7 +55,7 @@ public class DropManager : MonoBehaviour
         obj.GetComponent<WorldDrop>()?.SetupGold(goldAmount, ownerActorNumber);
     }
 
-    // ¾ÆÀÌÅÛ µå¶ø »ı¼º
+    // ì•„ì´í…œ ë“œë ìƒì„±
     private void SpawnItem(Vector3 center, ItemData itemData, int amount, int ownerActorNumber)
     {
         if (itemData == null || amount <= 0) return;
@@ -71,7 +71,7 @@ public class DropManager : MonoBehaviour
         obj.GetComponent<WorldDrop>()?.SetupItem(itemData, amount, ownerActorNumber);
     }
 
-    // ·£´ı µå¶ø À§Ä¡ °è»ê
+    // ëœë¤ ë“œë ìœ„ì¹˜ ê³„ì‚°
     private Vector3 GetRandomOffset()
     {
         return new Vector3(

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// ÀÎº¥ ½½·Ô UI, µå·¡±× ¹× ÅøÆÁ Ã³¸® ´ã´ç
+// ì¸ë²¤ ìŠ¬ë¡¯ UI, ë“œë˜ê·¸ ë° íˆ´íŒ ì²˜ë¦¬ ë‹´ë‹¹
 public class InventorySlotUI : MonoBehaviour,
     IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler,
     IPointerEnterHandler, IPointerExitHandler
@@ -32,7 +32,7 @@ public class InventorySlotUI : MonoBehaviour,
         gameObject.name = $"Slot_{index}";
     }
 
-    // ½½·Ô ºñ¿ì±â
+    // ìŠ¬ë¡¯ ë¹„ìš°ê¸°
     public void SetEmpty()
     {
         currentItemData = null;
@@ -47,7 +47,7 @@ public class InventorySlotUI : MonoBehaviour,
         countText?.SetText(string.Empty);
     }
 
-    // ½½·Ô¿¡ ¾ÆÀÌÅÛ ¼³Á¤
+    // ìŠ¬ë¡¯ì— ì•„ì´í…œ ì„¤ì •
     public void SetItem(ItemData itemData, int count)
     {
         currentItemData = itemData;
@@ -62,7 +62,7 @@ public class InventorySlotUI : MonoBehaviour,
         countText?.SetText(count > 1 ? count.ToString() : string.Empty);
     }
 
-    // ¸¶¿ì½º ¿À¹ö ½Ã ÅøÆÁ Ç¥½Ã
+    // ë§ˆìš°ìŠ¤ ì˜¤ë²„ ì‹œ íˆ´íŒ í‘œì‹œ
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isDragging) return;
@@ -76,7 +76,7 @@ public class InventorySlotUI : MonoBehaviour,
         ItemTooltipUI.Instance?.Hide();
     }
 
-    // µå·¡±× ½ÃÀÛ
+    // ë“œë˜ê·¸ ì‹œì‘
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (slotIndex < 0 || currentItemData == null) return;
@@ -118,14 +118,14 @@ public class InventorySlotUI : MonoBehaviour,
         InventoryDragData.Clear();
     }
 
-    // µå·Ó Ã³¸®
+    // ë“œë¡­ ì²˜ë¦¬
     public void OnDrop(PointerEventData eventData)
     {
         ItemTooltipUI.Instance?.Hide();
 
         if (InventoryManager.Instance == null) return;
 
-        // ÀÎº¥ ¡æ ÀÎº¥ ÀÌµ¿
+        // ì¸ë²¤ â†’ ì¸ë²¤ ì´ë™
         if (InventoryDragData.SourceSlot != null)
         {
             int fromIndex = InventoryDragData.SourceSlot.SlotIndex;
@@ -137,14 +137,14 @@ public class InventorySlotUI : MonoBehaviour,
             return;
         }
 
-        // Àåºñ ¡æ ÀÎº¥ (ÇØÁ¦)
+        // ì¥ë¹„ â†’ ì¸ë²¤ (í•´ì œ)
         if (InventoryDragData.SourceEquipmentSlot != null)
         {
             EquipmentManager.Instance?.UnequipItem(InventoryDragData.SourceEquipmentSlot.SlotType);
         }
     }
 
-    // Å¬¸¯ ½Ã ÀåÂø
+    // í´ë¦­ ì‹œ ì¥ì°©
     public void OnClickSlot()
     {
         if (slotIndex < 0 || currentItemData == null) return;
@@ -152,7 +152,7 @@ public class InventorySlotUI : MonoBehaviour,
         EquipmentManager.Instance?.EquipItemFromSlot(slotIndex);
     }
 
-    // µå·¡±× ¾ÆÀÌÄÜ »ı¼º
+    // ë“œë˜ê·¸ ì•„ì´ì½˜ ìƒì„±
     private void CreateDragIcon()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
@@ -173,7 +173,7 @@ public class InventorySlotUI : MonoBehaviour,
         InventoryDragData.DragIconImage = dragImage;
     }
 
-    // µå·¡±× ¾ÆÀÌÄÜ À§Ä¡ °»½Å
+    // ë“œë˜ê·¸ ì•„ì´ì½˜ ìœ„ì¹˜ ê°±ì‹ 
     private void UpdateDragIconPosition(PointerEventData eventData)
     {
         if (InventoryDragData.DragIconObject == null) return;

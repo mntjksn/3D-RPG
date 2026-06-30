@@ -1,15 +1,15 @@
 using System;
 using UnityEngine;
 
-// ¾ÆÀÌÅÛ µå¶ø Á¤º¸
+// ì•„ì´í…œ ë“œë ì •ë³´
 [Serializable]
 public class DropEntry
 {
     public ItemData itemData;
 
     [Range(0f, 1f)]
-    public float dropChance = 1f;   // µå¶ø È®·ü (0~1)
+    public float dropChance = 1f;   // ë“œë í™•ë¥  (0~1)
 
-    public int minAmount = 1;       // ÃÖ¼Ò ¼ö·®
-    public int maxAmount = 1;       // ÃÖ´ë ¼ö·®
+    public int minAmount = 1;       // ìµœì†Œ ìˆ˜ëŸ‰
+    public int maxAmount = 1;       // ìµœëŒ€ ìˆ˜ëŸ‰
 }

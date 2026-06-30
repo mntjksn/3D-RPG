@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// ¹æ¾î ÆÇÁ¤ Æ®¸®°Å - ¹üÀ§ ³» EnemyAttackÀ» PlayerShield¿¡ µî·Ï/ÇØÁ¦
+// ë°©ì–´ íŒì • íŠ¸ë¦¬ê±° - ë²”ìœ„ ë‚´ EnemyAttackì„ PlayerShieldì— ë“±ë¡/í•´ì œ
 public class PlayerShieldTrigger : MonoBehaviour
 {
     [SerializeField] private PlayerShield playerShield;
 
-    // Inspector Reset ½Ã ºÎ¸ğ¿¡¼­ PlayerShield ÀÚµ¿ ÇÒ´ç
+    // Inspector Reset ì‹œ ë¶€ëª¨ì—ì„œ PlayerShield ìë™ í• ë‹¹
     private void Reset()
     {
         playerShield = GetComponentInParent<PlayerShield>();
@@ -14,7 +14,7 @@ public class PlayerShieldTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (playerShield == null) return;
-        if (other.transform.root == transform.root) return; // ÀÚ±â ÀÚ½Å ¹«½Ã
+        if (other.transform.root == transform.root) return; // ìê¸° ìì‹  ë¬´ì‹œ
 
         EnemyAttack enemyAttack = other.GetComponentInParent<EnemyAttack>();
         if (enemyAttack == null) return;

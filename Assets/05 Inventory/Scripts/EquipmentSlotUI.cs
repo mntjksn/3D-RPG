@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-// Àåºñ ½½·Ô UI, µå·¡±× ¹× ÀåÂø Ã³¸® ´ã´ç
+// ì¥ë¹„ ìŠ¬ë¡¯ UI, ë“œë˜ê·¸ ë° ì¥ì°© ì²˜ë¦¬ ë‹´ë‹¹
 public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private EquipmentSlotType slotType;
@@ -39,7 +39,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         RefreshUI();
     }
 
-    // µå·¡±× ½ÃÀÛ
+    // ë“œë˜ê·¸ ì‹œì‘
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (EquipmentManager.Instance == null) return;
@@ -82,7 +82,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         InventoryDragData.Clear();
     }
 
-    // µå·Ó ½Ã ÀåÂø Ã³¸®
+    // ë“œë¡­ ì‹œ ì¥ì°© ì²˜ë¦¬
     public void OnDrop(PointerEventData eventData)
     {
         if (EquipmentManager.Instance == null) return;
@@ -97,7 +97,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         EquipmentManager.Instance.EquipItemFromSlot(sourceSlot.SlotIndex);
     }
 
-    // UI °»½Å
+    // UI ê°±ì‹ 
     public void RefreshUI()
     {
         ItemData equippedItem = EquipmentManager.Instance?.GetEquippedItem(slotType);
@@ -119,7 +119,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         UpdateInfoText(equippedItem);
     }
 
-    // Àåºñ Á¤º¸ ÅØ½ºÆ® °»½Å
+    // ì¥ë¹„ ì •ë³´ í…ìŠ¤íŠ¸ ê°±ì‹ 
     private void UpdateInfoText(ItemData equippedItem)
     {
         if (infoText == null) return;
@@ -127,19 +127,19 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         switch (slotType)
         {
             case EquipmentSlotType.Weapon:
-                infoText.SetText($"°ø°İ·Â + {GetAttackValue(equippedItem)}");
+                infoText.SetText($"ê³µê²©ë ¥ + {GetAttackValue(equippedItem)}");
                 break;
 
             case EquipmentSlotType.Armor:
-                infoText.SetText($"Ã¼·Â + {GetHpValue(equippedItem):N0}");
+                infoText.SetText($"ì²´ë ¥ + {GetHpValue(equippedItem):N0}");
                 break;
 
             case EquipmentSlotType.Shield:
-                infoText.SetText($"¹æ¾î·Â + {GetDefensePercentValue(equippedItem)}%");
+                infoText.SetText($"ë°©ì–´ë ¥ + {GetDefensePercentValue(equippedItem)}%");
                 break;
 
             case EquipmentSlotType.Shoes:
-                infoText.SetText($"¼Óµµ + {GetSpeedValue(equippedItem)}");
+                infoText.SetText($"ì†ë„ + {GetSpeedValue(equippedItem)}");
                 break;
 
             default:
@@ -148,7 +148,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         }
     }
 
-    // µå·¡±× ¾ÆÀÌÄÜ »ı¼º
+    // ë“œë˜ê·¸ ì•„ì´ì½˜ ìƒì„±
     private void CreateDragIcon(ItemData itemData)
     {
         if (itemData == null || itemData.icon == null) return;
@@ -171,7 +171,7 @@ public class EquipmentSlotUI : MonoBehaviour, IDropHandler, IBeginDragHandler, I
         InventoryDragData.DragIconImage = dragImage;
     }
 
-    // µå·¡±× ¾ÆÀÌÄÜ À§Ä¡ °»½Å
+    // ë“œë˜ê·¸ ì•„ì´ì½˜ ìœ„ì¹˜ ê°±ì‹ 
     private void UpdateDragIconPosition(PointerEventData eventData)
     {
         if (InventoryDragData.DragIconObject == null) return;

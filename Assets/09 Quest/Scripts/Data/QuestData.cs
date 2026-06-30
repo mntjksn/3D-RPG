@@ -1,36 +1,36 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "QuestData", menuName = "Quest/Quest Data")]
-// Äù½ºÆ® Á¤ÀÇ µ¥ÀÌÅÍ
+// í€˜ìŠ¤íŠ¸ ì •ì˜ ë°ì´í„°
 public class QuestData : ScriptableObject
 {
     [Header("ID")]
     public string questId;
 
-    [Header("ÀÌ¸§")]
+    [Header("ì´ë¦„")]
     public string questName;
 
-    [Header("¼³¸í")]
+    [Header("ì„¤ëª…")]
     [TextArea]
     public string description;
 
-    [Header("Äù½ºÆ® Å¸ÀÔ")]
+    [Header("í€˜ìŠ¤íŠ¸ íƒ€ì…")]
     public QuestType questType;
 
-    [Header("¸ñÇ¥")]
+    [Header("ëª©í‘œ")]
     public string targetId;
     public int targetCount;
 
-    [Header("º¸»ó")]
+    [Header("ë³´ìƒ")]
     public int rewardGold;
     public int rewardExp;
     public ItemData rewardItem;
     public int rewardItemCount;
 
-    [Header("´ëÈ­")]
+    [Header("ëŒ€í™”")]
     public QuestDialogueData startDialogue;
     public QuestDialogueData completeDialogue;
 
-    [Header("¿¬°è")]
+    [Header("ì—°ê³„")]
     public QuestData nextQuest;
 }

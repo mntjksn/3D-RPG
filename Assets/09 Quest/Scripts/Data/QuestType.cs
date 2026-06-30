@@ -1,10 +1,10 @@
-// дЫ╫╨ф╝ е╦ют
+// М─≤Л┼╓М┼╦ М┐─Л·┘
 public enum QuestType
 {
-    KillMonster = 0, // ╦С╫╨ем цЁд║
-    CollectItem,     // ╬фюлеш х╧╣Ф
-    BuyItem,         // ╬фюлеш ╠╦╦е
-    EquipItem,       // ╬фюлеш бЬ©К
-    SellItem,        // ╬фюлеш фг╦е
-    Upgrade          // ╬В╠в╥╧юл╣Е
+    KillMonster = 0, // К╙╛Л┼╓М└╟ Л╡≤Л╧≤
+    CollectItem,     // Л∙└Л²╢М┘° М █К⌠²
+    BuyItem,         // Л∙└Л²╢М┘° Й╣╛К╖╓
+    EquipItem,       // Л∙└Л²╢М┘° Л╟╘Л ╘
+    SellItem,        // Л∙└Л²╢М┘° М▄░К╖╓
+    Upgrade          // Л≈┘Й╥╦К═┬Л²╢К⌠°
 }

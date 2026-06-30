@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// »óÁ¡ ÀÎº¥ UI »ı¼º, ÅÇ ÀüÈ¯, ½½·Ô Ç¥½Ã ´ã´ç
+// ìƒì  ì¸ë²¤ UI ìƒì„±, íƒ­ ì „í™˜, ìŠ¬ë¡¯ í‘œì‹œ ë‹´ë‹¹
 public class ShopInventoryUI : MonoBehaviour
 {
     [Header("Slot Settings")]
@@ -41,14 +41,14 @@ public class ShopInventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
     }
 
-    // ¹öÆ° ÀÌº¥Æ® ¿¬°á
+    // ë²„íŠ¼ ì´ë²¤íŠ¸ ì—°ê²°
     private void BindButtons()
     {
         equipmentButton?.onClick.AddListener(OnClickEquipmentTab);
         itemButton?.onClick.AddListener(OnClickItemTab);
     }
 
-    // ½½·Ô »ı¼º
+    // ìŠ¬ë¡¯ ìƒì„±
     private void CreateSlots()
     {
         if (slotPrefab == null || slotParent == null)
@@ -65,7 +65,7 @@ public class ShopInventoryUI : MonoBehaviour
         }
     }
 
-    // ±âÁ¸ ½½·Ô Á¦°Å
+    // ê¸°ì¡´ ìŠ¬ë¡¯ ì œê±°
     private void ClearSlots()
     {
         slots.Clear();
@@ -77,7 +77,7 @@ public class ShopInventoryUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
-    // ÇöÀç ÅÇ ±âÁØÀ¸·Î ½½·Ô °»½Å
+    // í˜„ì¬ íƒ­ ê¸°ì¤€ìœ¼ë¡œ ìŠ¬ë¡¯ ê°±ì‹ 
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -135,14 +135,14 @@ public class ShopInventoryUI : MonoBehaviour
             || itemData.itemType == ItemType.Consumable;
     }
 
-    // Àåºñ ÅÇ ¿­±â
+    // ì¥ë¹„ íƒ­ ì—´ê¸°
     public void OnClickEquipmentTab()
     {
         currentTab = InventoryTabType.Equipment;
         RefreshUI();
     }
 
-    // ¾ÆÀÌÅÛ ÅÇ ¿­±â
+    // ì•„ì´í…œ íƒ­ ì—´ê¸°
     public void OnClickItemTab()
     {
         currentTab = InventoryTabType.Item;

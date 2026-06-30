@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// NPC »óÈ£ÀÛ¿ë - ¹üÀ§ ÁøÀÔ ½Ã UI Ç¥½Ã, F Å°·Î ÆĞ³Î ¿ÀÇÂ
+// NPC ìƒí˜¸ì‘ìš© - ë²”ìœ„ ì§„ì… ì‹œ UI í‘œì‹œ, F í‚¤ë¡œ íŒ¨ë„ ì˜¤í”ˆ
 public class NPCInteraction : MonoBehaviour
 {
     [Header("Open Panel")]
@@ -13,7 +13,7 @@ public class NPCInteraction : MonoBehaviour
 
     private void Start()
     {
-        // ½ÃÀÛ ½Ã UI ¼û±è
+        // ì‹œì‘ ì‹œ UI ìˆ¨ê¹€
         interactUI?.SetActive(false);
     }
 
@@ -37,12 +37,12 @@ public class NPCInteraction : MonoBehaviour
     {
         if (!playerInRange) return;
 
-        // F Å°·Î »óÈ£ÀÛ¿ë
+        // F í‚¤ë¡œ ìƒí˜¸ì‘ìš©
         if (Input.GetKeyDown(KeyCode.F))
             Interact();
     }
 
-    // UI ÆĞ³Î ¿­±â ½Ãµµ
+    // UI íŒ¨ë„ ì—´ê¸° ì‹œë„
     private void Interact()
     {
         if (UIManager.Instance == null) return;

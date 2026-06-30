@@ -1,4 +1,4 @@
-// µ¥¹ÌÁö¸¦ ¹ŞÀ» ¼ö ÀÖ´Â ´ë»ó ÀÎÅÍÆäÀÌ½º
+// ë°ë¯¸ì§€ë¥¼ ë°›ì„ ìˆ˜ ìˆëŠ” ëŒ€ìƒ ì¸í„°í˜ì´ìŠ¤
 public interface IDamageable
 {
     void TakeDamage(float damage);

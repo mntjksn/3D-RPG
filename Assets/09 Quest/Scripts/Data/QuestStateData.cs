@@ -1,6 +1,6 @@
 using System;
 
-// Äù½ºÆ® ÁøÇà »óÅÂ µ¥ÀÌÅÍ
+// í€˜ìŠ¤íŠ¸ ì§„í–‰ ìƒíƒœ ë°ì´í„°
 [Serializable]
 public class QuestStateData
 {

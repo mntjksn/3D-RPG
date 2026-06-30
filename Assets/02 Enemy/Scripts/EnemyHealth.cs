@@ -2,7 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
-// Àû HP °ü¸®, ÇÇÇØ/È¸º¹ Ã³¸®, »ç¸Á ½Ã µå¶ø/°æÇèÄ¡/¸®½ºÆù ¿äÃ»
+// ì  HP ê´€ë¦¬, í”¼í•´/íšŒë³µ ì²˜ë¦¬, ì‚¬ë§ ì‹œ ë“œë/ê²½í—˜ì¹˜/ë¦¬ìŠ¤í° ìš”ì²­
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
     [Header("Data")]
@@ -24,7 +24,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private int myPoolIndex = -1;
     private bool isInitialized = false;
 
-    // µå¶ø ¾ÆÀÌÅÛ ±Í¼Ó Ã³¸®¿¡ »ç¿ë
+    // ë“œë ì•„ì´í…œ ê·€ì† ì²˜ë¦¬ì— ì‚¬ìš©
     private int lastAttackerActorNumber = -1;
 
     public EnemyData EnemyData => enemyData;
@@ -36,7 +36,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     [Header("Auto Heal")]
     [SerializeField] private float regen = 0.05f;
-    [SerializeField] private float healDelay = 5f; // ÇÇ°İ ÈÄ ÀÚµ¿ È¸º¹ ½ÃÀÛ±îÁö ´ë±â ½Ã°£
+    [SerializeField] private float healDelay = 5f; // í”¼ê²© í›„ ìë™ íšŒë³µ ì‹œì‘ê¹Œì§€ ëŒ€ê¸° ì‹œê°„
 
     private void Awake()
     {
@@ -53,7 +53,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         isInitialized = false;
     }
 
-    // ÀÚµ¿ HP Àç»ı - ¸¶½ºÅÍ Å¬¶óÀÌ¾ğÆ®¿¡¼­¸¸ °è»ê ÈÄ µ¿±âÈ­
+    // ìë™ HP ì¬ìƒ - ë§ˆìŠ¤í„° í´ë¼ì´ì–¸íŠ¸ì—ì„œë§Œ ê³„ì‚° í›„ ë™ê¸°í™”
     private void Update()
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -68,7 +68,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
-    // ½ºÆ÷³Ê/Ç® ÀÎµ¦½º Æ÷ÇÔ ÀüÃ¼ ÃÊ±âÈ­ (Ç®¿¡¼­ ²¨³¾ ¶§ È£Ãâ)
+    // ìŠ¤í¬ë„ˆ/í’€ ì¸ë±ìŠ¤ í¬í•¨ ì „ì²´ ì´ˆê¸°í™” (í’€ì—ì„œ êº¼ë‚¼ ë•Œ í˜¸ì¶œ)
     public void SetData(EnemyData data, int sIndex, int pIndex)
     {
         enemyData = data;
@@ -83,13 +83,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemySpawner = ownerSpawner;
     }
 
-    // IDamageable ÀÎÅÍÆäÀÌ½º ±¸Çö - °ø°İÀÚ Á¤º¸ ¾øÀ» ¶§ ·ÎÄÃ ÇÃ·¹ÀÌ¾î·Î Ã³¸®
+    // IDamageable ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„ - ê³µê²©ì ì •ë³´ ì—†ì„ ë•Œ ë¡œì»¬ í”Œë ˆì´ì–´ë¡œ ì²˜ë¦¬
     public void TakeDamage(float damage)
     {
         TakeDamage(damage, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
-    // ¸¶½ºÅÍ¸é Á÷Á¢ ºê·ÎµåÄ³½ºÆ®, Å¬¶óÀÌ¾ğÆ®¸é ¸¶½ºÅÍ¿¡°Ô ¿äÃ»
+    // ë§ˆìŠ¤í„°ë©´ ì§ì ‘ ë¸Œë¡œë“œìºìŠ¤íŠ¸, í´ë¼ì´ì–¸íŠ¸ë©´ ë§ˆìŠ¤í„°ì—ê²Œ ìš”ì²­
     public void TakeDamage(float damage, int attackerActorNumber)
     {
         if (!isInitialized) return;
@@ -105,7 +105,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
-    // ³×Æ®¿öÅ© µ¿±âÈ­¸¦ ÅëÇØ ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡¼­ ½ÇÁ¦ ÇÇÇØ Àû¿ë
+    // ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™”ë¥¼ í†µí•´ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì‹¤ì œ í”¼í•´ ì ìš©
     public void ApplyDamage(float damage, int attackerActorNumber)
     {
         lastAttackerActorNumber = attackerActorNumber;
@@ -121,7 +121,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             Die();
     }
 
-    // ³×Æ®¿öÅ© µ¿±âÈ­¸¦ ÅëÇØ ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡¼­ È¸º¹°ª Àû¿ë
+    // ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™”ë¥¼ í†µí•´ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ì„œ íšŒë³µê°’ ì ìš©
     public void ApplyHeal(float hp)
     {
         currentHp = hp;
@@ -133,7 +133,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         return !isDead && enemyData != null;
     }
 
-    // »ç¸Á Ã³¸® - Äİ¶óÀÌ´õ ºñÈ°¼ºÈ­, ¾Ö´Ï¸ŞÀÌ¼Ç, µå¶ø/°æÇèÄ¡/¸®½ºÆùÀº ¸¶½ºÅÍ¸¸ Ã³¸®
+    // ì‚¬ë§ ì²˜ë¦¬ - ì½œë¼ì´ë” ë¹„í™œì„±í™”, ì• ë‹ˆë©”ì´ì…˜, ë“œë/ê²½í—˜ì¹˜/ë¦¬ìŠ¤í°ì€ ë§ˆìŠ¤í„°ë§Œ ì²˜ë¦¬
     private void Die()
     {
         if (isDead) return;
@@ -158,7 +158,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
-    // HP ¹× »óÅÂ¸¦ ÃÊ±â°ªÀ¸·Î ¸®¼Â
+    // HP ë° ìƒíƒœë¥¼ ì´ˆê¸°ê°’ìœ¼ë¡œ ë¦¬ì…‹
     private void ResetHealthState()
     {
         if (enemyData == null) return;
@@ -171,7 +171,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         enemyHealthBar?.UpdateHealthBar(currentHp, MaxHp);
     }
 
-    // »ç¸Á ÈÄ ÀÏÁ¤ ½Ã°£ µÚ Ç®¿¡ ¹İÈ¯ (¸¶½ºÅÍ¸¸ ½ÇÇà)
+    // ì‚¬ë§ í›„ ì¼ì • ì‹œê°„ ë’¤ í’€ì— ë°˜í™˜ (ë§ˆìŠ¤í„°ë§Œ ì‹¤í–‰)
     private IEnumerator ReturnToPoolRoutine()
     {
         yield return new WaitForSeconds(enemyData.deadBodyDuration);
@@ -180,13 +180,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             enemyPool?.ReturnToPool();
     }
 
-    // ·ÎÄÃ ÇÃ·¹ÀÌ¾î¿¡°Ô °æÇèÄ¡ Áö±Ş
+    // ë¡œì»¬ í”Œë ˆì´ì–´ì—ê²Œ ê²½í—˜ì¹˜ ì§€ê¸‰
     private void GiveExpToPlayer()
     {
         PlayerManager.Instance?.AddExp(enemyData.exp);
     }
 
-    // µå¶ø ¾ÆÀÌÅÛ ¹× °ñµå »ı¼º - ¸¶Áö¸· Å¸°İÀÚ¿¡°Ô ±Í¼Ó
+    // ë“œë ì•„ì´í…œ ë° ê³¨ë“œ ìƒì„± - ë§ˆì§€ë§‰ íƒ€ê²©ìì—ê²Œ ê·€ì†
     private void HandleDrops()
     {
         if (lastAttackerActorNumber <= 0) return;

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-// Äù½ºÆ® ´ë»ç Ç¥½Ã ¹× ¼ö¶ô / º¸»ó Ã³¸® ´ã´ç
+// í€˜ìŠ¤íŠ¸ ëŒ€ì‚¬ í‘œì‹œ ë° ìˆ˜ë½ / ë³´ìƒ ì²˜ë¦¬ ë‹´ë‹¹
 public class QuestPanelUI : MonoBehaviour
 {
     [Header("Quest")]
@@ -39,7 +39,7 @@ public class QuestPanelUI : MonoBehaviour
             NextLine();
     }
 
-    // ´ë»ç ½ÃÀÛ
+    // ëŒ€ì‚¬ ì‹œì‘
     private void StartDialogue()
     {
         currentDisplayQuestData = GetDisplayQuestData();
@@ -58,7 +58,7 @@ public class QuestPanelUI : MonoBehaviour
         RefreshText();
     }
 
-    // ÇöÀç Ç¥½ÃÇÒ Äù½ºÆ® °áÁ¤
+    // í˜„ì¬ í‘œì‹œí•  í€˜ìŠ¤íŠ¸ ê²°ì •
     private QuestData GetDisplayQuestData()
     {
         if (questData == null)
@@ -70,22 +70,22 @@ public class QuestPanelUI : MonoBehaviour
         {
             QuestStateData state = QuestManager.Instance?.GetState(currentQuest.questId);
 
-            // ¾ÆÁ÷ ¾È ¹ŞÀº Äù½ºÆ®
+            // ì•„ì§ ì•ˆ ë°›ì€ í€˜ìŠ¤íŠ¸
             if (state == null || !state.isAccepted)
                 return currentQuest;
 
-            // ÁøÇà ÁßÀÌ°Å³ª ¿Ï·á ÈÄ º¸»ó ¹Ì¼ö·É
+            // ì§„í–‰ ì¤‘ì´ê±°ë‚˜ ì™„ë£Œ í›„ ë³´ìƒ ë¯¸ìˆ˜ë ¹
             if (!state.isRewardClaimed)
                 return currentQuest;
 
-            // ´ÙÀ½ Äù½ºÆ® È®ÀÎ
+            // ë‹¤ìŒ í€˜ìŠ¤íŠ¸ í™•ì¸
             currentQuest = currentQuest.nextQuest;
         }
 
         return null;
     }
 
-    // ÇöÀç »óÈ²¿¡ ¸Â´Â ´ë»ç °áÁ¤
+    // í˜„ì¬ ìƒí™©ì— ë§ëŠ” ëŒ€ì‚¬ ê²°ì •
     private QuestDialogueData GetCurrentDialogue(QuestData displayQuestData)
     {
         isNoQuestMode = false;
@@ -98,15 +98,15 @@ public class QuestPanelUI : MonoBehaviour
 
         QuestStateData state = QuestManager.Instance?.GetState(displayQuestData.questId);
 
-        // ¾ÆÁ÷ ¾È ¹ŞÀº »óÅÂ
+        // ì•„ì§ ì•ˆ ë°›ì€ ìƒíƒœ
         if (state == null || !state.isAccepted)
             return displayQuestData.startDialogue;
 
-        // ÁøÇà Áß
+        // ì§„í–‰ ì¤‘
         if (!state.isCompleted)
             return progressDialogue;
 
-        // ¿Ï·á ÈÄ º¸»ó ¹Ì¼ö·É
+        // ì™„ë£Œ í›„ ë³´ìƒ ë¯¸ìˆ˜ë ¹
         if (!state.isRewardClaimed)
             return displayQuestData.completeDialogue;
 
@@ -114,7 +114,7 @@ public class QuestPanelUI : MonoBehaviour
         return noQuestDialogue;
     }
 
-    // ´ÙÀ½ ´ë»ç·Î ÀÌµ¿
+    // ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì´ë™
     private void NextLine()
     {
         currentIndex++;
@@ -128,7 +128,7 @@ public class QuestPanelUI : MonoBehaviour
         RefreshText();
     }
 
-    // ÇöÀç ´ë»ç Ç¥½Ã
+    // í˜„ì¬ ëŒ€ì‚¬ í‘œì‹œ
     private void RefreshText()
     {
         if (dialogueText == null || currentDialogue == null)
@@ -140,12 +140,12 @@ public class QuestPanelUI : MonoBehaviour
         dialogueText.SetText(currentDialogue.lines[currentIndex]);
     }
 
-    // ´ë»ç Á¾·á Ã³¸®
+    // ëŒ€ì‚¬ ì¢…ë£Œ ì²˜ë¦¬
     private void FinishDialogue()
     {
         isPlaying = false;
 
-        // ÀÓ¹« ¾øÀ½ ´ë»ç´Â ¹Ù·Î ´İ±â
+        // ì„ë¬´ ì—†ìŒ ëŒ€ì‚¬ëŠ” ë°”ë¡œ ë‹«ê¸°
         if (isNoQuestMode)
         {
             ClosePanel();
@@ -156,12 +156,12 @@ public class QuestPanelUI : MonoBehaviour
         {
             QuestStateData state = QuestManager.Instance.GetState(currentDisplayQuestData.questId);
 
-            // ¾ÆÁ÷ ¾È ¹Ş¾ÒÀ¸¸é ¼ö¶ô
+            // ì•„ì§ ì•ˆ ë°›ì•˜ìœ¼ë©´ ìˆ˜ë½
             if (state == null || !state.isAccepted)
             {
                 QuestManager.Instance.AcceptQuest(currentDisplayQuestData);
             }
-            // ¿Ï·áÇß°í º¸»ó ¾È ¹Ş¾ÒÀ¸¸é º¸»ó Áö±Ş
+            // ì™„ë£Œí–ˆê³  ë³´ìƒ ì•ˆ ë°›ì•˜ìœ¼ë©´ ë³´ìƒ ì§€ê¸‰
             else if (state.isCompleted && !state.isRewardClaimed)
             {
                 QuestService.ClaimReward(currentDisplayQuestData);
@@ -171,7 +171,7 @@ public class QuestPanelUI : MonoBehaviour
         ClosePanel();
     }
 
-    // ÆĞ³Î ´İ±â
+    // íŒ¨ë„ ë‹«ê¸°
     private void ClosePanel()
     {
         UIManager.Instance?.ClosePanel(UIPanelType.Quest);

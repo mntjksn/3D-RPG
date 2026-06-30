@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// »óÁ¡ ½½·Ô »ı¼º, ÅÇ ÀüÈ¯, ¾ÆÀÌÅÛ Ç¥½Ã ´ã´ç
+// ìƒì  ìŠ¬ë¡¯ ìƒì„±, íƒ­ ì „í™˜, ì•„ì´í…œ í‘œì‹œ ë‹´ë‹¹
 public class ShopUI : MonoBehaviour
 {
     [Header("Shop Data")]
@@ -37,14 +37,14 @@ public class ShopUI : MonoBehaviour
         RefreshUI();
     }
 
-    // ¹öÆ° ÀÌº¥Æ® ¿¬°á
+    // ë²„íŠ¼ ì´ë²¤íŠ¸ ì—°ê²°
     private void BindButtons()
     {
         equipmentButton?.onClick.AddListener(OnClickEquipmentTab);
         itemButton?.onClick.AddListener(OnClickItemTab);
     }
 
-    // ½½·Ô »ı¼º
+    // ìŠ¬ë¡¯ ìƒì„±
     private void CreateSlots()
     {
         if (slotPrefab == null || slotParent == null)
@@ -61,7 +61,7 @@ public class ShopUI : MonoBehaviour
         }
     }
 
-    // ±âÁ¸ ½½·Ô Á¦°Å
+    // ê¸°ì¡´ ìŠ¬ë¡¯ ì œê±°
     private void ClearSlots()
     {
         slots.Clear();
@@ -73,7 +73,7 @@ public class ShopUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
-    // ÇöÀç ÅÇ ±âÁØÀ¸·Î ½½·Ô °»½Å
+    // í˜„ì¬ íƒ­ ê¸°ì¤€ìœ¼ë¡œ ìŠ¬ë¡¯ ê°±ì‹ 
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -112,7 +112,7 @@ public class ShopUI : MonoBehaviour
         }
     }
 
-    // »óÁ¡ ÀÎµ¦½º·Î ¾ÆÀÌÅÛ Á¶È¸
+    // ìƒì  ì¸ë±ìŠ¤ë¡œ ì•„ì´í…œ ì¡°íšŒ
     public ItemData GetItemDataByShopIndex(int shopIndex)
     {
         if (shopData == null || shopData.items == null)
@@ -138,14 +138,14 @@ public class ShopUI : MonoBehaviour
             || itemData.itemType == ItemType.Consumable;
     }
 
-    // Àåºñ ÅÇ ¿­±â
+    // ì¥ë¹„ íƒ­ ì—´ê¸°
     public void OnClickEquipmentTab()
     {
         currentTab = ShopTabType.Equipment;
         RefreshUI();
     }
 
-    // ¾ÆÀÌÅÛ ÅÇ ¿­±â
+    // ì•„ì´í…œ íƒ­ ì—´ê¸°
     public void OnClickItemTab()
     {
         currentTab = ShopTabType.Item;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// °­È­ ÀÎº¥ UI »ı¼º ¹× Àç·á ½½·Ô Ç¥½Ã ´ã´ç
+// ê°•í™” ì¸ë²¤ UI ìƒì„± ë° ì¬ë£Œ ìŠ¬ë¡¯ í‘œì‹œ ë‹´ë‹¹
 public class UpgradeInventoryUI : MonoBehaviour
 {
     [Header("Slot Settings")]
@@ -35,7 +35,7 @@ public class UpgradeInventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
     }
 
-    // ½½·Ô »ı¼º
+    // ìŠ¬ë¡¯ ìƒì„±
     private void CreateSlots()
     {
         if (slotPrefab == null || slotParent == null)
@@ -52,7 +52,7 @@ public class UpgradeInventoryUI : MonoBehaviour
         }
     }
 
-    // ±âÁ¸ ½½·Ô Á¦°Å
+    // ê¸°ì¡´ ìŠ¬ë¡¯ ì œê±°
     private void ClearSlots()
     {
         slots.Clear();
@@ -64,7 +64,7 @@ public class UpgradeInventoryUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
-    // Àç·á ¾ÆÀÌÅÛ ±âÁØÀ¸·Î ½½·Ô °»½Å
+    // ì¬ë£Œ ì•„ì´í…œ ê¸°ì¤€ìœ¼ë¡œ ìŠ¬ë¡¯ ê°±ì‹ 
     public void RefreshUI()
     {
         if (!isInitialized)

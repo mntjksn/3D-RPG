@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Äù½ºÆ® »óÅÂ °ü¸® ¹× ÁøÇà Ã³¸® ´ã´ç
+// í€˜ìŠ¤íŠ¸ ìƒíƒœ ê´€ë¦¬ ë° ì§„í–‰ ì²˜ë¦¬ ë‹´ë‹¹
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance { get; private set; }
@@ -19,7 +19,7 @@ public class QuestManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -29,13 +29,13 @@ public class QuestManager : MonoBehaviour
         Instance = this;
     }
 
-    // ÃÊ±âÈ­
+    // ì´ˆê¸°í™”
     public void InitializeQuest()
     {
         questStates.Clear();
     }
 
-    // Äù½ºÆ® ¼ö¶ô ¿©ºÎ È®ÀÎ
+    // í€˜ìŠ¤íŠ¸ ìˆ˜ë½ ì—¬ë¶€ í™•ì¸
     public bool HasAcceptedQuest(string questId)
     {
         if (string.IsNullOrEmpty(questId))
@@ -44,7 +44,7 @@ public class QuestManager : MonoBehaviour
         return questStates.TryGetValue(questId, out var state) && state.isAccepted;
     }
 
-    // »óÅÂ µ¥ÀÌÅÍ Á¶È¸
+    // ìƒíƒœ ë°ì´í„° ì¡°íšŒ
     public QuestStateData GetState(string questId)
     {
         if (string.IsNullOrEmpty(questId))
@@ -54,7 +54,7 @@ public class QuestManager : MonoBehaviour
         return state;
     }
 
-    // Äù½ºÆ® µ¥ÀÌÅÍ Á¶È¸
+    // í€˜ìŠ¤íŠ¸ ë°ì´í„° ì¡°íšŒ
     public QuestData GetQuestData(string questId)
     {
         if (string.IsNullOrEmpty(questId))
@@ -72,7 +72,7 @@ public class QuestManager : MonoBehaviour
         return null;
     }
 
-    // ÁøÇà Áß Äù½ºÆ® ¸ñ·Ï
+    // ì§„í–‰ ì¤‘ í€˜ìŠ¤íŠ¸ ëª©ë¡
     public List<QuestData> GetActiveQuestDatas()
     {
         List<QuestData> result = new();
@@ -94,7 +94,7 @@ public class QuestManager : MonoBehaviour
         return result;
     }
 
-    // Äù½ºÆ® ¼ö¶ô
+    // í€˜ìŠ¤íŠ¸ ìˆ˜ë½
     public void AcceptQuest(QuestData questData)
     {
         if (questData == null || string.IsNullOrEmpty(questData.questId))
@@ -120,7 +120,7 @@ public class QuestManager : MonoBehaviour
         SaveManager.Instance?.MarkDirty();
     }
 
-    // ÁøÇàµµ ¼³Á¤
+    // ì§„í–‰ë„ ì„¤ì •
     public void SetProgress(QuestData questData, int value)
     {
         if (questData == null)
@@ -147,7 +147,7 @@ public class QuestManager : MonoBehaviour
         SaveManager.Instance?.MarkDirty();
     }
 
-    // º¸»ó ¼ö·É Ã³¸®
+    // ë³´ìƒ ìˆ˜ë ¹ ì²˜ë¦¬
     public void MarkRewardClaimed(QuestData questData)
     {
         if (questData == null)
@@ -164,7 +164,7 @@ public class QuestManager : MonoBehaviour
         SaveManager.Instance?.MarkDirty();
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    // ì €ì¥ ë°ì´í„° ìƒì„±
     public QuestSaveData GetSaveData()
     {
         QuestSaveData saveData = new();
@@ -186,7 +186,7 @@ public class QuestManager : MonoBehaviour
         return saveData;
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ ·Îµå
+    // ì €ì¥ ë°ì´í„° ë¡œë“œ
     public void LoadFromSaveData(QuestSaveData saveData)
     {
         questStates.Clear();
@@ -210,7 +210,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    // ÇöÀç È°¼º Äù½ºÆ® ¹İÈ¯
+    // í˜„ì¬ í™œì„± í€˜ìŠ¤íŠ¸ ë°˜í™˜
     public QuestData GetCurrentActiveQuest()
     {
         foreach (QuestData questData in questDatabase)
@@ -229,7 +229,7 @@ public class QuestManager : MonoBehaviour
         return null;
     }
 
-    // ÁøÇà·ü (0~1)
+    // ì§„í–‰ë¥  (0~1)
     public float GetProgress01(QuestData questData)
     {
         if (questData == null || questData.targetCount <= 0)
@@ -242,7 +242,7 @@ public class QuestManager : MonoBehaviour
         return Mathf.Clamp01((float)state.currentCount / questData.targetCount);
     }
 
-    // ´ÙÀ½ ÁøÇà Äù½ºÆ®
+    // ë‹¤ìŒ ì§„í–‰ í€˜ìŠ¤íŠ¸
     public QuestData GetNextQuestInOrder()
     {
         for (int i = 0; i < questDatabase.Count; i++)
@@ -260,7 +260,7 @@ public class QuestManager : MonoBehaviour
         return null;
     }
 
-    // NPC ¸Ó¸® À§ ¸¶Å© »óÅÂ ¹İÈ¯
+    // NPC ë¨¸ë¦¬ ìœ„ ë§ˆí¬ ìƒíƒœ ë°˜í™˜
     public QuestMarkState GetNextQuestMarkState()
     {
         QuestData questData = GetNextQuestInOrder();

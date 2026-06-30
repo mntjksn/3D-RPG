@@ -4,7 +4,7 @@ using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyHealth))]
-// Àû Ã¼·Â °ü·Ã µ¥¹ÌÁö, È¸º¹ ³×Æ®¿öÅ© µ¿±âÈ­ ´ã´ç
+// ì  ì²´ë ¥ ê´€ë ¨ ë°ë¯¸ì§€, íšŒë³µ ë„¤íŠ¸ì›Œí¬ ë™ê¸°í™” ë‹´ë‹¹
 public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
 {
     private const byte DamageRequestEvent = 60;
@@ -28,7 +28,7 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 
-    // ¸¶½ºÅÍ¿¡°Ô µ¥¹ÌÁö ¿äÃ»
+    // ë§ˆìŠ¤í„°ì—ê²Œ ë°ë¯¸ì§€ ìš”ì²­
     public void RequestDamage(float damage, int attackerActorNumber)
     {
         object[] data =
@@ -46,7 +46,7 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         );
     }
 
-    // ÀüÃ¼ Å¬¶ó¿¡ µ¥¹ÌÁö Àû¿ë ºê·ÎµåÄ³½ºÆ®
+    // ì „ì²´ í´ë¼ì— ë°ë¯¸ì§€ ì ìš© ë¸Œë¡œë“œìºìŠ¤íŠ¸
     public void BroadcastDamage(float damage, int attackerActorNumber)
     {
         object[] data =
@@ -64,7 +64,7 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         );
     }
 
-    // ´Ù¸¥ Å¬¶ó¿¡ È¸º¹ µ¿±âÈ­
+    // ë‹¤ë¥¸ í´ë¼ì— íšŒë³µ ë™ê¸°í™”
     public void BroadcastHeal(float hp)
     {
         object[] data =
@@ -81,7 +81,7 @@ public class EnemyHealthNetworkSync : MonoBehaviour, IOnEventCallback
         );
     }
 
-    // ³×Æ®¿öÅ© ÀÌº¥Æ® ¼ö½Å
+    // ë„¤íŠ¸ì›Œí¬ ì´ë²¤íŠ¸ ìˆ˜ì‹ 
     public void OnEvent(EventData photonEvent)
     {
         if (!health.IsInitialized) return;

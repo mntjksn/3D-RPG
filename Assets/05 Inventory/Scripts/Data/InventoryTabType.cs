@@ -1,6 +1,6 @@
-// ÀÎº¥Åä¸® ÅÇ Á¾·ù
+// ì¸ë²¤í† ë¦¬ íƒ­ ì¢…ë¥˜
 public enum InventoryTabType
 {
-    Equipment = 0,  // Àåºñ ÅÇ
-    Item            // ¾ÆÀÌÅÛ ÅÇ
+    Equipment = 0,  // ì¥ë¹„ íƒ­
+    Item            // ì•„ì´í…œ íƒ­
 }

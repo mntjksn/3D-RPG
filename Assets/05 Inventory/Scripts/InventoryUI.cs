@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ÀÎº¥ UI »ı¼º, ÅÇ ÀüÈ¯, ½½·Ô Ç¥½Ã ´ã´ç
+// ì¸ë²¤ UI ìƒì„±, íƒ­ ì „í™˜, ìŠ¬ë¡¯ í‘œì‹œ ë‹´ë‹¹
 public class InventoryUI : MonoBehaviour
 {
     [Header("Slot Settings")]
@@ -45,7 +45,7 @@ public class InventoryUI : MonoBehaviour
             InventoryManager.Instance.OnInventoryChanged -= RefreshUI;
     }
 
-    // ¹öÆ° ÀÌº¥Æ® ¿¬°á
+    // ë²„íŠ¼ ì´ë²¤íŠ¸ ì—°ê²°
     private void BindButtons()
     {
         equipmentButton?.onClick.AddListener(OnClickEquipmentTab);
@@ -53,7 +53,7 @@ public class InventoryUI : MonoBehaviour
         closeButton?.onClick.AddListener(CloseInventory);
     }
 
-    // ½½·Ô »ı¼º
+    // ìŠ¬ë¡¯ ìƒì„±
     private void CreateSlots()
     {
         if (slotPrefab == null || slotParent == null)
@@ -70,7 +70,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    // ±âÁ¸ ½½·Ô Á¦°Å
+    // ê¸°ì¡´ ìŠ¬ë¡¯ ì œê±°
     private void ClearSlots()
     {
         slots.Clear();
@@ -82,7 +82,7 @@ public class InventoryUI : MonoBehaviour
             Destroy(slotParent.GetChild(i).gameObject);
     }
 
-    // ÇöÀç ÅÇ ±âÁØÀ¸·Î ½½·Ô °»½Å
+    // í˜„ì¬ íƒ­ ê¸°ì¤€ìœ¼ë¡œ ìŠ¬ë¡¯ ê°±ì‹ 
     public void RefreshUI()
     {
         if (!isInitialized)
@@ -120,7 +120,7 @@ public class InventoryUI : MonoBehaviour
             if (displayIndex >= slots.Count)
                 break;
 
-            // È­¸é ½½·Ô°ú ½ÇÁ¦ ÀÎº¥ ½½·Ô ¹øÈ£ ¿¬°á
+            // í™”ë©´ ìŠ¬ë¡¯ê³¼ ì‹¤ì œ ì¸ë²¤ ìŠ¬ë¡¯ ë²ˆí˜¸ ì—°ê²°
             slots[displayIndex].SetIndex(realIndex);
             slots[displayIndex].SetItem(itemData, slotData.amount);
 
@@ -142,21 +142,21 @@ public class InventoryUI : MonoBehaviour
             || itemData.itemType == ItemType.Consumable;
     }
 
-    // Àåºñ ÅÇ ¿­±â
+    // ì¥ë¹„ íƒ­ ì—´ê¸°
     public void OnClickEquipmentTab()
     {
         currentTab = InventoryTabType.Equipment;
         RefreshUI();
     }
 
-    // ¾ÆÀÌÅÛ ÅÇ ¿­±â
+    // ì•„ì´í…œ íƒ­ ì—´ê¸°
     public void OnClickItemTab()
     {
         currentTab = InventoryTabType.Item;
         RefreshUI();
     }
 
-    // ÀÎº¥ ´İ±â
+    // ì¸ë²¤ ë‹«ê¸°
     public void CloseInventory()
     {
         UIManager.Instance?.ClosePanel(UIPanelType.Inventory);

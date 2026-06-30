@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-// »óÁ¡ °Å·¡ ¼º°ø ÀÌº¥Æ® °ü¸®
+// ìƒì  ê±°ë˜ ì„±ê³µ ì´ë²¤íŠ¸ ê´€ë¦¬
 public class ShopManager : MonoBehaviour
 {
     public static ShopManager Instance { get; private set; }
@@ -10,7 +10,7 @@ public class ShopManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -20,7 +20,7 @@ public class ShopManager : MonoBehaviour
         Instance = this;
     }
 
-    // °Å·¡ ¼º°ø ¾Ë¸²
+    // ê±°ë˜ ì„±ê³µ ì•Œë¦¼
     public void NotifyTradeSuccess()
     {
         OnTradeSuccess?.Invoke();

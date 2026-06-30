@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ÇÇ°İ ½Ã ¸ÓÆ¼¸®¾ó »ö»ó º¯È­ ¿¬Ãâ
+// í”¼ê²© ì‹œ ë¨¸í‹°ë¦¬ì–¼ ìƒ‰ìƒ ë³€í™” ì—°ì¶œ
 public class HitFlash : MonoBehaviour
 {
     [SerializeField] private Renderer[] renderers;
@@ -12,7 +12,7 @@ public class HitFlash : MonoBehaviour
 
     private void Awake()
     {
-        // ·»´õ·¯ ÀÚµ¿ Å½»ö
+        // ë Œë”ëŸ¬ ìë™ íƒìƒ‰
         if (renderers == null || renderers.Length == 0)
             renderers = GetComponentsInChildren<Renderer>();
 
@@ -28,11 +28,11 @@ public class HitFlash : MonoBehaviour
 
         materials = list.ToArray();
 
-        // ÃÊ±â »óÅÂ
+        // ì´ˆê¸° ìƒíƒœ
         SetHitAmount(0f);
     }
 
-    // ÇÇ°İ È¿°ú ½ÇÇà
+    // í”¼ê²© íš¨ê³¼ ì‹¤í–‰
     public void PlayFlash()
     {
         if (flashCoroutine != null)
@@ -45,7 +45,7 @@ public class HitFlash : MonoBehaviour
     {
         float time = 0f;
 
-        // ºü¸£°Ô »¡°³Áü
+        // ë¹ ë¥´ê²Œ ë¹¨ê°œì§
         while (time < 0.05f)
         {
             time += Time.deltaTime;
@@ -56,7 +56,7 @@ public class HitFlash : MonoBehaviour
 
         time = 0f;
 
-        // ÃµÃµÈ÷ ¿ø·¡´ë·Î
+        // ì²œì²œíˆ ì›ë˜ëŒ€ë¡œ
         while (time < 0.2f)
         {
             time += Time.deltaTime;
@@ -69,7 +69,7 @@ public class HitFlash : MonoBehaviour
         flashCoroutine = null;
     }
 
-    // ½¦ÀÌ´õ °ª Àû¿ë
+    // ì‰ì´ë” ê°’ ì ìš©
     private void SetHitAmount(float value)
     {
         for (int i = 0; i < materials.Length; i++)

@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-// ¿ùµå µå¶ø ¼³Á¤, È¸Àü Ã³¸®, È¹µæ Ã³¸® ´ã´ç
+// ì›”ë“œ ë“œëž ì„¤ì •, íšŒì „ ì²˜ë¦¬, íšë“ ì²˜ë¦¬ ë‹´ë‹¹
 public class WorldDrop : MonoBehaviourPun
 {
     [Header("Visual")]
@@ -33,7 +33,7 @@ public class WorldDrop : MonoBehaviourPun
         iconRenderer.transform.rotation = mainCamera.transform.rotation;
     }
 
-    // °ñµå µå¶ø Á¤º¸ ¼³Á¤
+    // ê³¨ë“œ ë“œëž ì •ë³´ ì„¤ì •
     public void SetupGold(int gold, int ownerActorNumber)
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -41,7 +41,7 @@ public class WorldDrop : MonoBehaviourPun
         photonView.RPC(nameof(RPC_SetupGold), RpcTarget.AllBuffered, gold, ownerActorNumber);
     }
 
-    // ¾ÆÀÌÅÛ µå¶ø Á¤º¸ ¼³Á¤
+    // ì•„ì´í…œ ë“œëž ì •ë³´ ì„¤ì •
     public void SetupItem(ItemData item, int itemAmount, int ownerActorNumber)
     {
         if (!PhotonNetwork.IsMasterClient) return;
@@ -87,7 +87,7 @@ public class WorldDrop : MonoBehaviourPun
 
         int actorNumber = playerView.OwnerActorNr;
 
-        // ÁöÁ¤µÈ ÇÃ·¹ÀÌ¾î¸¸ È¹µæ °¡´É
+        // ì§€ì •ëœ í”Œë ˆì´ì–´ë§Œ íšë“ ê°€ëŠ¥
         if (actorNumber != allowedActorNumber) return;
 
         isPicked = true;
@@ -97,7 +97,7 @@ public class WorldDrop : MonoBehaviourPun
     [PunRPC]
     private void RPC_Pickup(int actorNumber)
     {
-        // ´ë»ó ÇÃ·¹ÀÌ¾î º»ÀÎ Å¬¶ó¿¡¼­¸¸ º¸»ó Áö±Þ
+        // ëŒ€ìƒ í”Œë ˆì´ì–´ ë³¸ì¸ í´ë¼ì—ì„œë§Œ ë³´ìƒ ì§€ê¸‰
         if (PhotonNetwork.LocalPlayer.ActorNumber == actorNumber)
         {
             if (goldAmount > 0)

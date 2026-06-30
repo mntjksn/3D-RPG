@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Àû HP¹Ù UI - °¡Àå °¡±î¿î ÇÃ·¹ÀÌ¾î°¡ Å½Áö ¹üÀ§ ³»¿¡ ÀÖÀ» ¶§¸¸ Ç¥½Ã
+// ì  HPë°” UI - ê°€ì¥ ê°€ê¹Œìš´ í”Œë ˆì´ì–´ê°€ íƒì§€ ë²”ìœ„ ë‚´ì— ìˆì„ ë•Œë§Œ í‘œì‹œ
 public class EnemyHealthBar : MonoBehaviour
 {
     [SerializeField] private Image fillImage;
-    [SerializeField] private float targetSearchInterval = 0.5f; // °¡Àå °¡±î¿î ÇÃ·¹ÀÌ¾î ÀçÅ½»ö ÁÖ±â
-    [SerializeField] private float visibleCheckInterval = 0.2f; // HP¹Ù Ç¥½Ã ¿©ºÎ °»½Å ÁÖ±â
+    [SerializeField] private float targetSearchInterval = 0.5f; // ê°€ì¥ ê°€ê¹Œìš´ í”Œë ˆì´ì–´ ì¬íƒìƒ‰ ì£¼ê¸°
+    [SerializeField] private float visibleCheckInterval = 0.2f; // HPë°” í‘œì‹œ ì—¬ë¶€ ê°±ì‹  ì£¼ê¸°
 
     private EnemyHealth enemyHealth;
     private Transform player;
@@ -31,7 +31,7 @@ public class EnemyHealthBar : MonoBehaviour
     {
         if (enemyHealth == null || enemyHealth.EnemyData == null) return;
 
-        // ÁÖ±âÀûÀ¸·Î °¡Àå °¡±î¿î ÇÃ·¹ÀÌ¾î °»½Å
+        // ì£¼ê¸°ì ìœ¼ë¡œ ê°€ì¥ ê°€ê¹Œìš´ í”Œë ˆì´ì–´ ê°±ì‹ 
         targetSearchTimer -= Time.deltaTime;
         if (targetSearchTimer <= 0f)
         {
@@ -39,7 +39,7 @@ public class EnemyHealthBar : MonoBehaviour
             FindNearestPlayer();
         }
 
-        // ÁÖ±âÀûÀ¸·Î HP¹Ù Ç¥½Ã ¿©ºÎ °»½Å
+        // ì£¼ê¸°ì ìœ¼ë¡œ HPë°” í‘œì‹œ ì—¬ë¶€ ê°±ì‹ 
         visibleCheckTimer -= Time.deltaTime;
         if (visibleCheckTimer > 0f) return;
 
@@ -47,7 +47,7 @@ public class EnemyHealthBar : MonoBehaviour
         SetVisible(ShouldShowHealthBar());
     }
 
-    // È°¼º »óÅÂÀÎ ÇÃ·¹ÀÌ¾î Áß °¡Àå °¡±î¿î ´ë»óÀ» Å½»ö
+    // í™œì„± ìƒíƒœì¸ í”Œë ˆì´ì–´ ì¤‘ ê°€ì¥ ê°€ê¹Œìš´ ëŒ€ìƒì„ íƒìƒ‰
     private void FindNearestPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -69,7 +69,7 @@ public class EnemyHealthBar : MonoBehaviour
         player = nearest;
     }
 
-    // ÇÃ·¹ÀÌ¾î°¡ Å½Áö ¹üÀ§ ³»¿¡ ÀÖ°í ÀûÀÌ »ì¾Æ ÀÖÀ» ¶§¸¸ true
+    // í”Œë ˆì´ì–´ê°€ íƒì§€ ë²”ìœ„ ë‚´ì— ìˆê³  ì ì´ ì‚´ì•„ ìˆì„ ë•Œë§Œ true
     private bool ShouldShowHealthBar()
     {
         if (player == null || enemyHealth.IsDead) return false;
@@ -84,7 +84,7 @@ public class EnemyHealthBar : MonoBehaviour
         fillImage.fillAmount = Mathf.Clamp01(currentHp / maxHp);
     }
 
-    // Canvas°¡ ÀÖÀ¸¸é enabled·Î Á¦¾î, ¾øÀ¸¸é ÇÏÀ§ Renderer ÀüÃ¼ Á¦¾î
+    // Canvasê°€ ìˆìœ¼ë©´ enabledë¡œ ì œì–´, ì—†ìœ¼ë©´ í•˜ìœ„ Renderer ì „ì²´ ì œì–´
     private void SetVisible(bool visible)
     {
         if (canvas != null)

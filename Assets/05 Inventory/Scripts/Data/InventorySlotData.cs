@@ -1,6 +1,6 @@
 using System;
 
-// ÀÎº¥Åä¸® ½½·Ô µ¥ÀÌÅÍ (·±Å¸ÀÓ)
+// ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ë°ì´í„° (ëŸ°íƒ€ì„)
 [Serializable]
 public class InventorySlotData
 {
@@ -19,13 +19,13 @@ public class InventorySlotData
         this.amount = amount;
     }
 
-    // ½½·ÔÀÌ ºñ¾îÀÖ´ÂÁö È®ÀÎ
+    // ìŠ¬ë¡¯ì´ ë¹„ì–´ìˆëŠ”ì§€ í™•ì¸
     public bool IsEmpty()
     {
         return string.IsNullOrEmpty(itemId) || amount <= 0;
     }
 
-    // ½½·Ô ÃÊ±âÈ­
+    // ìŠ¬ë¡¯ ì´ˆê¸°í™”
     public void Clear()
     {
         itemId = string.Empty;

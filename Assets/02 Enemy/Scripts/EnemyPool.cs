@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Àû ¿ÀºêÁ§Æ® Ç® ÂüÁ¶ ÄÄÆ÷³ÍÆ® - ½ºÆ÷³Ê¿¡ ÀÚ½ÅÀ» ¹İÈ¯ÇÏ´Â ¿ªÇÒ
+// ì  ì˜¤ë¸Œì íŠ¸ í’€ ì°¸ì¡° ì»´í¬ë„ŒíŠ¸ - ìŠ¤í¬ë„ˆì— ìì‹ ì„ ë°˜í™˜í•˜ëŠ” ì—­í• 
 public class EnemyPool : MonoBehaviour
 {
     private EnemySpawner ownerSpawner;
@@ -21,7 +21,7 @@ public class EnemyPool : MonoBehaviour
         lastSpawnPosition = pos;
     }
 
-    // »ç¸Á ÈÄ ½ºÆ÷³ÊÀÇ Ç®·Î ¹İÈ¯
+    // ì‚¬ë§ í›„ ìŠ¤í¬ë„ˆì˜ í’€ë¡œ ë°˜í™˜
     public void ReturnToPool()
     {
         ownerSpawner?.ReturnEnemy(this);

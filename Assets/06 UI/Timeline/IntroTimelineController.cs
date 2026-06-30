@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
-// ÀÎÆ®·Î Å¸ÀÓ¶óÀÎ Àç»ý ¹× ÆäÀÌµå ¿¬Ãâ ´ã´ç
+// ì¸íŠ¸ë¡œ íƒ€ìž„ë¼ì¸ ìž¬ìƒ ë° íŽ˜ì´ë“œ ì—°ì¶œ ë‹´ë‹¹
 public class IntroTimelineController : MonoBehaviour
 {
     [SerializeField] private PlayableDirector director;
@@ -15,7 +15,7 @@ public class IntroTimelineController : MonoBehaviour
 
         director.stopped += OnTimelineStopped;
 
-        // Å¸ÀÓ¶óÀÎ ÀÏ½ÃÁ¤Áö »óÅÂ·Î ½ÃÀÛ
+        // íƒ€ìž„ë¼ì¸ ì¼ì‹œì •ì§€ ìƒíƒœë¡œ ì‹œìž‘
         director.initialTime = 0;
         director.Play();
         director.Pause();
@@ -23,7 +23,7 @@ public class IntroTimelineController : MonoBehaviour
 
     private void Start()
     {
-        // Ã¹ ÆäÀÌµå ÀÎ ÈÄ Å¸ÀÓ¶óÀÎ Àç»ý
+        // ì²« íŽ˜ì´ë“œ ì¸ í›„ íƒ€ìž„ë¼ì¸ ìž¬ìƒ
         fadeUI?.FadeIn(false, () =>
         {
             director?.Resume();
@@ -36,7 +36,7 @@ public class IntroTimelineController : MonoBehaviour
             director.stopped -= OnTimelineStopped;
     }
 
-    // Å¸ÀÓ¶óÀÎ Á¾·á ÈÄ ÆäÀÌµå ÀüÈ¯
+    // íƒ€ìž„ë¼ì¸ ì¢…ë£Œ í›„ íŽ˜ì´ë“œ ì „í™˜
     private void OnTimelineStopped(PlayableDirector obj)
     {
         fadeUI?.FadeOut(() =>

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// °Å·¡ ÆË¾÷ Ç¥½Ã, ¼ö·® ÀÔ·Â, ±¸¸Å/ÆÇ¸Å È®Á¤ ´ã´ç
+// ê±°ë˜ íŒì—… í‘œì‹œ, ìˆ˜ëŸ‰ ì…ë ¥, êµ¬ë§¤/íŒë§¤ í™•ì • ë‹´ë‹¹
 public class TradePopupUI : MonoBehaviour
 {
     [Header("UI")]
@@ -26,7 +26,7 @@ public class TradePopupUI : MonoBehaviour
         quantityInputField?.onValueChanged.AddListener(OnValueChangedQuantity);
     }
 
-    // ±¸¸Å ÆË¾÷ ¿­±â
+    // êµ¬ë§¤ íŒì—… ì—´ê¸°
     public void OpenBuy(ItemData itemData, int slotIndex, int maxBuyQuantity)
     {
         if (itemData == null) return;
@@ -42,7 +42,7 @@ public class TradePopupUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    // ÆÇ¸Å ÆË¾÷ ¿­±â
+    // íŒë§¤ íŒì—… ì—´ê¸°
     public void OpenSell(ItemData itemData, int slotIndex, int maxSellQuantity)
     {
         if (itemData == null) return;
@@ -58,7 +58,7 @@ public class TradePopupUI : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    // °íÁ¤ UI °»½Å
+    // ê³ ì • UI ê°±ì‹ 
     private void RefreshStaticUI()
     {
         if (currentItemData == null) return;
@@ -70,8 +70,8 @@ public class TradePopupUI : MonoBehaviour
         }
 
         titleText?.SetText(currentTradeType == TradeType.Buy
-            ? "±¸¸ÅÇÏ½Ã°Ú½À´Ï±î?"
-            : "ÆÇ¸ÅÇÏ½Ã°Ú½À´Ï±î?");
+            ? "êµ¬ë§¤í•˜ì‹œê² ìŠµë‹ˆê¹Œ?"
+            : "íŒë§¤í•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
 
         if (nameText != null)
         {
@@ -82,7 +82,7 @@ public class TradePopupUI : MonoBehaviour
         RefreshPriceText();
     }
 
-    // ¼ö·® ¼³Á¤
+    // ìˆ˜ëŸ‰ ì„¤ì •
     private void SetQuantity(int quantity)
     {
         quantity = Mathf.Clamp(quantity, 1, maxQuantity);
@@ -91,14 +91,14 @@ public class TradePopupUI : MonoBehaviour
         RefreshPriceText();
     }
 
-    // ¼ö·® ÀÔ·Â º¯°æ Ã³¸®
+    // ìˆ˜ëŸ‰ ì…ë ¥ ë³€ê²½ ì²˜ë¦¬
     public void OnValueChangedQuantity(string value)
     {
         ClampQuantity();
         RefreshPriceText();
     }
 
-    // ÇöÀç ¼ö·® ¹İÈ¯
+    // í˜„ì¬ ìˆ˜ëŸ‰ ë°˜í™˜
     private int GetQuantity()
     {
         if (quantityInputField == null) return 1;
@@ -109,7 +109,7 @@ public class TradePopupUI : MonoBehaviour
         return Mathf.Clamp(quantity, 1, maxQuantity);
     }
 
-    // ¼ö·® ¹üÀ§ º¸Á¤
+    // ìˆ˜ëŸ‰ ë²”ìœ„ ë³´ì •
     private void ClampQuantity()
     {
         if (quantityInputField == null) return;
@@ -118,7 +118,7 @@ public class TradePopupUI : MonoBehaviour
         quantityInputField.SetTextWithoutNotify(quantity.ToString());
     }
 
-    // °¡°İ ÅØ½ºÆ® °»½Å
+    // ê°€ê²© í…ìŠ¤íŠ¸ ê°±ì‹ 
     private void RefreshPriceText()
     {
         if (currentItemData == null || priceText == null) return;
@@ -131,11 +131,11 @@ public class TradePopupUI : MonoBehaviour
         int totalPrice = unitPrice * quantity;
 
         priceText.SetText(currentTradeType == TradeType.Buy
-            ? $"±¸¸ÅÇÒ °¡°İ : {totalPrice:N0}"
-            : $"ÆÇ¸ÅÇÒ °¡°İ : {totalPrice:N0}");
+            ? $"êµ¬ë§¤í•  ê°€ê²© : {totalPrice:N0}"
+            : $"íŒë§¤í•  ê°€ê²© : {totalPrice:N0}");
     }
 
-    // °Å·¡ È®Á¤
+    // ê±°ë˜ í™•ì •
     public void OnClickConfirm()
     {
         if (currentItemData == null) return;
@@ -150,13 +150,13 @@ public class TradePopupUI : MonoBehaviour
         Close();
     }
 
-    // °Å·¡ Ãë¼Ò
+    // ê±°ë˜ ì·¨ì†Œ
     public void OnClickCancel()
     {
         Close();
     }
 
-    // ÆË¾÷ ´İ±â
+    // íŒì—… ë‹«ê¸°
     public void Close()
     {
         currentItemData = null;

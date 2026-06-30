@@ -1,13 +1,13 @@
 using TMPro;
 using UnityEngine;
 
-// ½ºÅÈ ºí·Ï UI ÅØ½ºÆ® ¼³Á¤ ´ã´ç
+// ìŠ¤íƒ¯ ë¸”ë¡ UI í…ìŠ¤íŠ¸ ì„¤ì • ë‹´ë‹¹
 public class StatBlockUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text mainText;
     [SerializeField] private TMP_Text subText;
 
-    // ¸ŞÀÎ / ¼­ºê ÅØ½ºÆ® ¼³Á¤
+    // ë©”ì¸ / ì„œë¸Œ í…ìŠ¤íŠ¸ ì„¤ì •
     public void Set(string main, string sub)
     {
         if (mainText != null)

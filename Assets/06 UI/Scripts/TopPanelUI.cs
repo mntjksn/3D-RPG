@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// »ó´Ü ÆÐ³Î ·¹º§, °æÇèÄ¡, °ñµå Ç¥½Ã ´ã´ç
+// ìƒë‹¨ íŒ¨ë„ ë ˆë²¨, ê²½í—˜ì¹˜, ê³¨ë“œ í‘œì‹œ ë‹´ë‹¹
 public class TopPanelUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text levelText;
@@ -24,14 +24,14 @@ public class TopPanelUI : MonoBehaviour
         Unsubscribe();
     }
 
-    // PlayerStat ¿¬°á
+    // PlayerStat ì—°ê²°
     private void Bind()
     {
         if (PlayerManager.Instance != null)
             playerStat = PlayerManager.Instance.Stat;
     }
 
-    // ÀÌº¥Æ® µî·Ï
+    // ì´ë²¤íŠ¸ ë“±ë¡
     private void Subscribe()
     {
         if (playerStat == null) return;
@@ -43,7 +43,7 @@ public class TopPanelUI : MonoBehaviour
         playerStat.OnGoldChanged += UpdateGoldUI;
     }
 
-    // ÀÌº¥Æ® ÇØÁ¦
+    // ì´ë²¤íŠ¸ í•´ì œ
     private void Unsubscribe()
     {
         if (playerStat == null) return;
@@ -53,7 +53,7 @@ public class TopPanelUI : MonoBehaviour
         playerStat.OnGoldChanged -= UpdateGoldUI;
     }
 
-    // ÇöÀç °ª ¹Ù·Î °»½Å
+    // í˜„ìž¬ ê°’ ë°”ë¡œ ê°±ì‹ 
     private void RefreshNow()
     {
         if (playerStat == null) return;
@@ -63,13 +63,13 @@ public class TopPanelUI : MonoBehaviour
         UpdateGoldUI(playerStat.Gold);
     }
 
-    // ·¹º§ UI °»½Å
+    // ë ˆë²¨ UI ê°±ì‹ 
     private void UpdateLevelUI(int level)
     {
         levelText?.SetText(level.ToString());
     }
 
-    // °æÇèÄ¡ UI °»½Å
+    // ê²½í—˜ì¹˜ UI ê°±ì‹ 
     private void UpdateExpUI(int currentExp, int maxExp)
     {
         float percent = maxExp > 0 ? (float)currentExp / maxExp : 0f;
@@ -83,7 +83,7 @@ public class TopPanelUI : MonoBehaviour
         expPercentText?.SetText($"{Mathf.RoundToInt(percent * 100f)}%");
     }
 
-    // °ñµå UI °»½Å
+    // ê³¨ë“œ UI ê°±ì‹ 
     private void UpdateGoldUI(int gold)
     {
         goldText?.SetText(gold.ToString("N0"));

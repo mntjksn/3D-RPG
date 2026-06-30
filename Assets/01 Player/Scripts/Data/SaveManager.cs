@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using Firebase.Database;
 using Firebase.Auth;
 
-// Firebase ±â¹İ ¼¼ÀÌºê/·Îµå ¹× ÀÚµ¿ ÀúÀå °ü¸®
+// Firebase ê¸°ë°˜ ì„¸ì´ë¸Œ/ë¡œë“œ ë° ìë™ ì €ì¥ ê´€ë¦¬
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
@@ -14,17 +14,17 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private float autoSaveInterval = 15f;
 
     private float autoSaveTimer;
-    private bool isDirty;              // ÀúÀåÀÌ ÇÊ¿äÇÑ º¯°æ »çÇ× Á¸Àç ¿©ºÎ
-    private bool hasLoadedInThisScene; // ¾À´ç Áßº¹ ·Îµå ¹æÁö ÇÃ·¡±×
-    private bool isSaving;             // µ¿½Ã ÀúÀå ¹æÁö ÇÃ·¡±×
+    private bool isDirty;              // ì €ì¥ì´ í•„ìš”í•œ ë³€ê²½ ì‚¬í•­ ì¡´ì¬ ì—¬ë¶€
+    private bool hasLoadedInThisScene; // ì”¬ë‹¹ ì¤‘ë³µ ë¡œë“œ ë°©ì§€ í”Œë˜ê·¸
+    private bool isSaving;             // ë™ì‹œ ì €ì¥ ë°©ì§€ í”Œë˜ê·¸
 
     private DatabaseReference dbRef;
     private Coroutine loadCoroutine;
 
-    // ÇöÀç ·Î±×ÀÎµÈ À¯Àú UID
+    // í˜„ì¬ ë¡œê·¸ì¸ëœ ìœ ì € UID
     private string Uid => FirebaseAuth.DefaultInstance.CurrentUser?.UserId;
 
-    // Firebase ÀúÀå °æ·Î
+    // Firebase ì €ì¥ ê²½ë¡œ
     private DatabaseReference SaveDataRef => dbRef.Child("players").Child(Uid).Child("saveData");
 
     private void Awake()
@@ -79,7 +79,7 @@ public class SaveManager : MonoBehaviour
             _ = SavePlayerSafe();
     }
 
-    // ¾À ÀüÈ¯ ½Ã È£Ãâ - Main ¾ÀÀº PlayerSpawner°¡ ·Îµå¸¦ ´ã´çÇÏ¹Ç·Î Á¦¿Ü
+    // ì”¬ ì „í™˜ ì‹œ í˜¸ì¶œ - Main ì”¬ì€ PlayerSpawnerê°€ ë¡œë“œë¥¼ ë‹´ë‹¹í•˜ë¯€ë¡œ ì œì™¸
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         hasLoadedInThisScene = false;
@@ -90,7 +90,7 @@ public class SaveManager : MonoBehaviour
         RestartLoadCoroutine(LoadWhenReady());
     }
 
-    // ½ÇÇà ÁßÀÎ ·Îµå ÄÚ·çÆ¾À» Áß´ÜÇÏ°í »õ ÄÚ·çÆ¾À¸·Î ±³Ã¼
+    // ì‹¤í–‰ ì¤‘ì¸ ë¡œë“œ ì½”ë£¨í‹´ì„ ì¤‘ë‹¨í•˜ê³  ìƒˆ ì½”ë£¨í‹´ìœ¼ë¡œ êµì²´
     private void RestartLoadCoroutine(IEnumerator routine)
     {
         if (loadCoroutine != null)
@@ -99,7 +99,7 @@ public class SaveManager : MonoBehaviour
         loadCoroutine = StartCoroutine(routine);
     }
 
-    // ÇÊ¿äÇÑ ¸Å´ÏÀú°¡ ¸ğµÎ ÁØºñµÉ ¶§±îÁö ´ë±â ÈÄ ·Îµå (ÃÖ´ë 5ÃÊ)
+    // í•„ìš”í•œ ë§¤ë‹ˆì €ê°€ ëª¨ë‘ ì¤€ë¹„ë  ë•Œê¹Œì§€ ëŒ€ê¸° í›„ ë¡œë“œ (ìµœëŒ€ 5ì´ˆ)
     private IEnumerator LoadWhenReady()
     {
         float timer = 0f;
@@ -118,7 +118,7 @@ public class SaveManager : MonoBehaviour
         hasLoadedInThisScene = true;
     }
 
-    // ·Îµå¿¡ ÇÊ¿äÇÑ ¸ğµç ¸Å´ÏÀú ÀÎ½ºÅÏ½º°¡ ÁØºñµÇ¾ú´ÂÁö È®ÀÎ
+    // ë¡œë“œì— í•„ìš”í•œ ëª¨ë“  ë§¤ë‹ˆì € ì¸ìŠ¤í„´ìŠ¤ê°€ ì¤€ë¹„ë˜ì—ˆëŠ”ì§€ í™•ì¸
     private bool AreManagersReady()
     {
         return PlayerManager.Instance != null
@@ -129,13 +129,13 @@ public class SaveManager : MonoBehaviour
             && QuestManager.Instance != null;
     }
 
-    // º¯°æ »çÇ× ¹ß»ı ½Ã ¿ÜºÎ¿¡¼­ È£Ãâ - ´ÙÀ½ ÀÚµ¿ ÀúÀå ÁÖ±â¿¡ ÀúÀåµÊ
+    // ë³€ê²½ ì‚¬í•­ ë°œìƒ ì‹œ ì™¸ë¶€ì—ì„œ í˜¸ì¶œ - ë‹¤ìŒ ìë™ ì €ì¥ ì£¼ê¸°ì— ì €ì¥ë¨
     public void MarkDirty()
     {
         isDirty = true;
     }
 
-    // µ¿½Ã ÀúÀåÀ» ¹æÁöÇÏ´Â ¾ÈÀüÇÑ ÀúÀå ·¡ÆÛ
+    // ë™ì‹œ ì €ì¥ì„ ë°©ì§€í•˜ëŠ” ì•ˆì „í•œ ì €ì¥ ë˜í¼
     public async Task SavePlayerSafe()
     {
         if (isSaving) return;
@@ -152,12 +152,12 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    // Firebase¿¡ ¼¼ÀÌºê µ¥ÀÌÅÍ¸¦ JSONÀ¸·Î Á÷·ÄÈ­ÇÏ¿© ÀúÀå
+    // Firebaseì— ì„¸ì´ë¸Œ ë°ì´í„°ë¥¼ JSONìœ¼ë¡œ ì§ë ¬í™”í•˜ì—¬ ì €ì¥
     public async Task SavePlayer()
     {
         if (string.IsNullOrEmpty(Uid))
         {
-            Debug.LogWarning("·Î±×ÀÎ »óÅÂ°¡ ¾Æ´Õ´Ï´Ù.");
+            Debug.LogWarning("ë¡œê·¸ì¸ ìƒíƒœê°€ ì•„ë‹™ë‹ˆë‹¤.");
             return;
         }
 
@@ -169,15 +169,15 @@ public class SaveManager : MonoBehaviour
             await SaveDataRef.SetRawJsonValueAsync(json);
 
             isDirty = false;
-            Debug.Log("Firebase ÀúÀå ¿Ï·á");
+            Debug.Log("Firebase ì €ì¥ ì™„ë£Œ");
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Firebase ÀúÀå ½ÇÆĞ: {e.Message}");
+            Debug.LogError($"Firebase ì €ì¥ ì‹¤íŒ¨: {e.Message}");
         }
     }
 
-    // °¢ ¸Å´ÏÀú¿¡¼­ ¼¼ÀÌºê µ¥ÀÌÅÍ¸¦ ¼öÁıÇØ ÇÏ³ªÀÇ ±¸Á¶Ã¼·Î Á¶¸³
+    // ê° ë§¤ë‹ˆì €ì—ì„œ ì„¸ì´ë¸Œ ë°ì´í„°ë¥¼ ìˆ˜ì§‘í•´ í•˜ë‚˜ì˜ êµ¬ì¡°ì²´ë¡œ ì¡°ë¦½
     private PlayerSaveData BuildSaveData()
     {
         PlayerSaveData saveData = new PlayerSaveData();
@@ -212,12 +212,12 @@ public class SaveManager : MonoBehaviour
         return saveData;
     }
 
-    // Firebase¿¡¼­ µ¥ÀÌÅÍ¸¦ ÀĞ¾î °¢ ¸Å´ÏÀú¿¡ Àû¿ë, ½ÇÆĞ ½Ã ±âº»°ªÀ¸·Î ÃÊ±âÈ­
+    // Firebaseì—ì„œ ë°ì´í„°ë¥¼ ì½ì–´ ê° ë§¤ë‹ˆì €ì— ì ìš©, ì‹¤íŒ¨ ì‹œ ê¸°ë³¸ê°’ìœ¼ë¡œ ì´ˆê¸°í™”
     private IEnumerator LoadPlayerCoroutine()
     {
         if (string.IsNullOrEmpty(Uid))
         {
-            Debug.LogWarning("·Î±×ÀÎ »óÅÂ°¡ ¾Æ´Õ´Ï´Ù.");
+            Debug.LogWarning("ë¡œê·¸ì¸ ìƒíƒœê°€ ì•„ë‹™ë‹ˆë‹¤.");
             InitializeAll();
             yield break;
         }
@@ -227,7 +227,7 @@ public class SaveManager : MonoBehaviour
 
         if (task.IsFaulted || task.IsCanceled)
         {
-            Debug.LogWarning("Firebase ºÒ·¯¿À±â ½ÇÆĞ. ±âº»°ªÀ¸·Î ½ÃÀÛÇÕ´Ï´Ù.");
+            Debug.LogWarning("Firebase ë¶ˆëŸ¬ì˜¤ê¸° ì‹¤íŒ¨. ê¸°ë³¸ê°’ìœ¼ë¡œ ì‹œì‘í•©ë‹ˆë‹¤.");
             InitializeAll();
             isDirty = false;
             yield break;
@@ -237,7 +237,7 @@ public class SaveManager : MonoBehaviour
 
         if (!snapshot.Exists)
         {
-            Debug.Log("ÀúÀå µ¥ÀÌÅÍ ¾øÀ½. ±âº»°ªÀ¸·Î ½ÃÀÛÇÕ´Ï´Ù.");
+            Debug.Log("ì €ì¥ ë°ì´í„° ì—†ìŒ. ê¸°ë³¸ê°’ìœ¼ë¡œ ì‹œì‘í•©ë‹ˆë‹¤.");
             InitializeAll();
             isDirty = false;
             yield break;
@@ -248,7 +248,7 @@ public class SaveManager : MonoBehaviour
 
         if (saveData == null)
         {
-            Debug.LogWarning("µ¥ÀÌÅÍ ÆÄ½Ì ½ÇÆĞ. ±âº»°ªÀ¸·Î ½ÃÀÛÇÕ´Ï´Ù.");
+            Debug.LogWarning("ë°ì´í„° íŒŒì‹± ì‹¤íŒ¨. ê¸°ë³¸ê°’ìœ¼ë¡œ ì‹œì‘í•©ë‹ˆë‹¤.");
             InitializeAll();
             isDirty = false;
             yield break;
@@ -256,16 +256,16 @@ public class SaveManager : MonoBehaviour
 
         ApplySaveData(saveData);
 
-        // ÇÑ ÇÁ·¹ÀÓ ´ë±â ÈÄ UI °»½Å ÀÌº¥Æ® °­Á¦ ¹ßÇà
+        // í•œ í”„ë ˆì„ ëŒ€ê¸° í›„ UI ê°±ì‹  ì´ë²¤íŠ¸ ê°•ì œ ë°œí–‰
         yield return null;
 
         PlayerManager.Instance?.Stat?.ForceNotify();
 
         isDirty = false;
-        Debug.Log("Firebase ºÒ·¯¿À±â ¿Ï·á");
+        Debug.Log("Firebase ë¶ˆëŸ¬ì˜¤ê¸° ì™„ë£Œ");
     }
 
-    // ¼¼ÀÌºê µ¥ÀÌÅÍ¸¦ °¢ ¸Å´ÏÀú¿¡ ¼ø¼­´ë·Î Àû¿ë
+    // ì„¸ì´ë¸Œ ë°ì´í„°ë¥¼ ê° ë§¤ë‹ˆì €ì— ìˆœì„œëŒ€ë¡œ ì ìš©
     private void ApplySaveData(PlayerSaveData saveData)
     {
         InventoryManager.Instance?.LoadFromSaveData(saveData.inventoryItems);
@@ -274,17 +274,17 @@ public class SaveManager : MonoBehaviour
         UpgradeManager.Instance?.LoadFromSaveData(saveData.upgradeData);
         QuestManager.Instance?.LoadFromSaveData(saveData.questData);
 
-        // ÇÃ·¹ÀÌ¾î ½ºÅÈÀº Àåºñ/¾÷±×·¹ÀÌµå Àû¿ë ÈÄ ¸¶Áö¸·¿¡ ·Îµå
+        // í”Œë ˆì´ì–´ ìŠ¤íƒ¯ì€ ì¥ë¹„/ì—…ê·¸ë ˆì´ë“œ ì ìš© í›„ ë§ˆì§€ë§‰ì— ë¡œë“œ
         PlayerManager.Instance?.LoadFromSaveData(saveData);
     }
 
-    // ¿ÜºÎ¿¡¼­ ¼öµ¿À¸·Î ·Îµå ½ÃÀÛ (¿¹: ¾À ÀüÈ¯ ÈÄ PlayerSpawner È£Ãâ)
+    // ì™¸ë¶€ì—ì„œ ìˆ˜ë™ìœ¼ë¡œ ë¡œë“œ ì‹œì‘ (ì˜ˆ: ì”¬ ì „í™˜ í›„ PlayerSpawner í˜¸ì¶œ)
     public void LoadPlayer()
     {
         RestartLoadCoroutine(LoadPlayerCoroutine());
     }
 
-    // Firebase ÀúÀå µ¥ÀÌÅÍ »èÁ¦ ÈÄ ÀüÃ¼ ÃÊ±âÈ­
+    // Firebase ì €ì¥ ë°ì´í„° ì‚­ì œ í›„ ì „ì²´ ì´ˆê¸°í™”
     public async Task DeleteSave()
     {
         if (!string.IsNullOrEmpty(Uid))
@@ -292,11 +292,11 @@ public class SaveManager : MonoBehaviour
             try
             {
                 await SaveDataRef.RemoveValueAsync();
-                Debug.Log("ÀúÀå µ¥ÀÌÅÍ »èÁ¦ ¿Ï·á");
+                Debug.Log("ì €ì¥ ë°ì´í„° ì‚­ì œ ì™„ë£Œ");
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Firebase »èÁ¦ ½ÇÆĞ: {e.Message}");
+                Debug.LogError($"Firebase ì‚­ì œ ì‹¤íŒ¨: {e.Message}");
             }
         }
 
@@ -304,7 +304,7 @@ public class SaveManager : MonoBehaviour
         isDirty = false;
     }
 
-    // ¸ğµç ¸Å´ÏÀú¸¦ ±âº»°ªÀ¸·Î ÃÊ±âÈ­
+    // ëª¨ë“  ë§¤ë‹ˆì €ë¥¼ ê¸°ë³¸ê°’ìœ¼ë¡œ ì´ˆê¸°í™”
     private void InitializeAll()
     {
         PlayerManager.Instance?.InitializePlayer();

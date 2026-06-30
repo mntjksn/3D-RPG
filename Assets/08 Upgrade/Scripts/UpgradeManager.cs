@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-// ¾÷±×·¹ÀÌµå ·¹º§ ¹× Àç·á ¼±ÅÃ »óÅÂ °ü¸®
+// ì—…ê·¸ë ˆì´ë“œ ë ˆë²¨ ë° ì¬ë£Œ ì„ íƒ ìƒíƒœ ê´€ë¦¬
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance { get; private set; }
@@ -16,7 +16,7 @@ public class UpgradeManager : MonoBehaviour
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ¼³Á¤
+        // ì‹±ê¸€í†¤ ì„¤ì •
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -26,7 +26,7 @@ public class UpgradeManager : MonoBehaviour
         Instance = this;
     }
 
-    // ¾÷±×·¹ÀÌµå µ¥ÀÌÅÍ ÃÊ±âÈ­
+    // ì—…ê·¸ë ˆì´ë“œ ë°ì´í„° ì´ˆê¸°í™”
     public void InitializeUpgrade()
     {
         upgradeSaveData = new UpgradeSaveData();
@@ -36,7 +36,7 @@ public class UpgradeManager : MonoBehaviour
         selectedRegenMaterial = null;
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    // ì €ì¥ ë°ì´í„° ìƒì„±
     public UpgradeSaveData GetSaveData()
     {
         return new UpgradeSaveData
@@ -47,7 +47,7 @@ public class UpgradeManager : MonoBehaviour
         };
     }
 
-    // ÀúÀå µ¥ÀÌÅÍ ·Îµå
+    // ì €ì¥ ë°ì´í„° ë¡œë“œ
     public void LoadFromSaveData(UpgradeSaveData saveData)
     {
         if (saveData == null)
@@ -65,7 +65,7 @@ public class UpgradeManager : MonoBehaviour
         selectedRegenMaterial = null;
     }
 
-    // ÇöÀç ¾÷±×·¹ÀÌµå ·¹º§ Á¶È¸
+    // í˜„ì¬ ì—…ê·¸ë ˆì´ë“œ ë ˆë²¨ ì¡°íšŒ
     public int GetCurrentLevel(UpgradeType type)
     {
         switch (type)
@@ -84,7 +84,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // ¾÷±×·¹ÀÌµå ·¹º§ Áõ°¡
+    // ì—…ê·¸ë ˆì´ë“œ ë ˆë²¨ ì¦ê°€
     public void AddLevel(UpgradeType type)
     {
         switch (type)
@@ -106,7 +106,7 @@ public class UpgradeManager : MonoBehaviour
         OnUpgradeSuccess?.Invoke(type);
     }
 
-    // ¾÷±×·¹ÀÌµå Àç·á ¼±ÅÃ
+    // ì—…ê·¸ë ˆì´ë“œ ì¬ë£Œ ì„ íƒ
     public void SetSelectedMaterial(UpgradeType type, ItemData itemData)
     {
         if (itemData == null)
@@ -128,7 +128,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // ¼±ÅÃµÈ Àç·á Á¶È¸
+    // ì„ íƒëœ ì¬ë£Œ ì¡°íšŒ
     public ItemData GetSelectedMaterial(UpgradeType type)
     {
         switch (type)
@@ -147,7 +147,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // ¼±ÅÃµÈ Àç·á ÇØÁ¦
+    // ì„ íƒëœ ì¬ë£Œ í•´ì œ
     public void ClearSelectedMaterial(UpgradeType type)
     {
         switch (type)
@@ -166,7 +166,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // ¸ğµç ¼±ÅÃ Àç·á ÇØÁ¦
+    // ëª¨ë“  ì„ íƒ ì¬ë£Œ í•´ì œ
     public void ClearAllSelectedMaterials()
     {
         ClearSelectedMaterial(UpgradeType.Attack);
