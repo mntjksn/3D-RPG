@@ -191,6 +191,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             if (pv.GetComponent<PlayerManager>() == null) continue;
 
             AttachCanvas(pv.gameObject, newPlayer.NickName);
+            RefreshEnemyAttackCache();
             yield break;
         }
     }

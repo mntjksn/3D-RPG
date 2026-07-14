@@ -33,6 +33,7 @@ public class PlayerShield : MonoBehaviourPun
                 isShielding = true;
                 playerAnimation?.PlayShield(true);
                 actionLock?.SetShield(true);
+                photonView.RPC(nameof(RPC_SyncShield), RpcTarget.Others, true);
             }
         }
         else
@@ -42,21 +43,28 @@ public class PlayerShield : MonoBehaviourPun
                 isShielding = false;
                 playerAnimation?.PlayShield(false);
                 actionLock?.SetShield(false);
+                photonView.RPC(nameof(RPC_SyncShield), RpcTarget.Others, false);
             }
         }
+    }
+
+    [PunRPC]
+    private void RPC_SyncShield(bool shielding)
+    {
+        isShielding = shielding;
     }
 
     // ShieldTrigger에서 호출 - 방어 가능 대상 등록
     public void AddBlockTarget(Transform target)
     {
-        if (!photonView.IsMine || target == null) return;
+        if (target == null) return;
         blockersInRange.Add(target.root);
     }
 
     // ShieldTrigger에서 호출 - 방어 가능 대상 해제
     public void RemoveBlockTarget(Transform target)
     {
-        if (!photonView.IsMine || target == null) return;
+        if (target == null) return;
         blockersInRange.Remove(target.root);
     }
 
@@ -71,6 +79,9 @@ public class PlayerShield : MonoBehaviourPun
     public void ResetShieldState()
     {
         if (!photonView.IsMine) return;
+
+        if (isShielding)
+            photonView.RPC(nameof(RPC_SyncShield), RpcTarget.Others, false);
 
         isShielding = false;
         blockersInRange.Clear();

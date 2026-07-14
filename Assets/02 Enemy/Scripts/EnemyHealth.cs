@@ -150,9 +150,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         GiveExpToPlayer();
         StartCoroutine(ReturnToPoolRoutine());
 
+        QuestService.NotifyKill(enemyData.enemyName);
+
         if (PhotonNetwork.IsMasterClient)
         {
-            QuestService.NotifyKill(enemyData.enemyName);
             HandleDrops();
             enemySpawner?.RequestRespawn(enemyData);
         }
