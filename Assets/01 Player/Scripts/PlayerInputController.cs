@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Photon.Pun;
 
 // 키보드 단축키 입력 처리 - UI 패널 열기 및 포션 사용
@@ -30,6 +31,11 @@ public class PlayerInputController : MonoBehaviourPun
             ChatManager.Instance?.OnPressEnter();
             return;
         }
+
+        if (EventSystem.current != null &&
+            EventSystem.current.currentSelectedGameObject != null &&
+            EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>() != null)
+            return;
 
         if (actionLock != null && !actionLock.CanUI) return;
 

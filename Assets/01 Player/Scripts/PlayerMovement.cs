@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Photon.Pun;
 
 [RequireComponent(typeof(CharacterController))]
@@ -49,7 +50,10 @@ public class PlayerMovement : MonoBehaviourPun
 
         float x = 0f, z = 0f;
 
-        if (actionLock == null || actionLock.CanMove)
+        bool chatOpen = EventSystem.current != null &&
+            EventSystem.current.currentSelectedGameObject != null &&
+            EventSystem.current.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>() != null;
+        if (!chatOpen && (actionLock == null || actionLock.CanMove))
         {
             x = Input.GetAxis("Horizontal");
             z = Input.GetAxis("Vertical");

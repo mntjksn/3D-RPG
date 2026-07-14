@@ -74,6 +74,16 @@ public class EnemyAI : MonoBehaviour
             FindNearestTarget();
         }
 
+        // 원격 클라이언트였다가 마스터로 전환된 경우 NavMeshAgent 복구
+        if (agent != null && !agent.enabled)
+        {
+            agent.enabled = true;
+            networkPosition = Vector3.zero;
+            networkRotation = Quaternion.identity;
+            networkMoveSpeed = 0f;
+            enemyAttack?.RefreshCachedPlayers();
+        }
+
         if (enemyData == null || agent == null || !agent.enabled || !agent.isOnNavMesh)
             return;
 
